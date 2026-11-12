@@ -5,6 +5,10 @@ import JSZip from "jszip";
 const root = process.cwd();
 const downloads = path.join(root, "dist", "downloads");
 await fs.mkdir(downloads, { recursive: true });
+await fs.copyFile(
+  path.join(root, "src", "ui-fonts", "FONT-NOTICES.txt"),
+  path.join(root, "dist", "assets", "kollo-ui-font-notices.txt"),
+);
 const stamp = new Date("2026-01-01T00:00:00Z");
 const zipOptions = { date: stamp, createFolders: false };
 async function copyTree(zip, base, prefix = "", offlineExamples = false) {

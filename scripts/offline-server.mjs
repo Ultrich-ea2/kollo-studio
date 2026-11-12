@@ -13,6 +13,8 @@ const types = {
   ".md": "text/plain; charset=utf-8",
   ".zip": "application/zip",
   ".png": "image/png",
+  ".woff2": "font/woff2",
+  ".txt": "text/plain; charset=utf-8",
 };
 const server = http.createServer(async (req, res) => {
   try {
