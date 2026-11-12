@@ -947,12 +947,20 @@ function App() {
                   </label>
                   <textarea
                     id="speaker-notes"
+                    aria-describedby="speaker-notes-help"
                     value={current.notes}
                     maxLength={5000}
                     onChange={(e) => patch({ notes: e.target.value })}
                     placeholder="Was möchtest du zu dieser Folie sagen?"
                     rows={3}
                   />
+                  <p id="speaker-notes-help" className="notes-help">
+                    Setze <code>[KLICK]</code> vor die Erklärung einer neuen
+                    Einblendung und <code>[FOLIE]</code> an den Folienwechsel,
+                    jeweils auf eine eigene Zeile. Der Teleprompter zeigt dort
+                    ein privates Signal und hält die Leseführung an, bis du
+                    weiterdrückst.
+                  </p>
                 </div>
               </section>
               <aside className="inspector">

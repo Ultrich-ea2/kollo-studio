@@ -8,19 +8,39 @@ Schreibe sprechbare Sätze, die den sichtbaren Inhalt erklären, statt alle Stic
 
 Nutze Absätze als Atem- und Gedankenpausen. Stelle eine Verbindung zur nächsten Folie her, wenn sie für den Ablauf hilft. Bei einer geplanten Publikumsfrage genügt die Frage plus eine kurze Regiezeile; Antworten nicht vorwegnehmen. Eine Demo braucht klare sprachliche Unterscheidungen zwischen beobachtetem Ergebnis, erwarteter Wirkung und geplantem Schritt.
 
-Regiehinweise sind normale, sichtbare Notiztexte, zum Beispiel:
+## Signale für den nächsten manuellen Schritt
+
+Wenn ein Vortrag mit Klicksignalen gewünscht ist, plane den Sprechtext mit den tatsächlich sichtbaren Zuständen. Kollo erkennt in `notes` zwei private Marken, jeweils allein auf einer Zeile und genau in dieser Großschreibung:
+
+| Marke     | Bedeutung                                                 |
+| --------- | --------------------------------------------------------- |
+| `[KLICK]` | Jetzt die nächste Einblendung auf derselben Folie zeigen. |
+| `[FOLIE]` | Jetzt zur nächsten Folie wechseln.                        |
+
+Leerzeichen oder Tabulatoren vor und nach der Marke sind erlaubt. Die Marken sind keine gesprochenen Wörter. Im Teleprompter erscheinen sie als hervorgehobene Anweisungen. Erreicht die tempoabhängige Leseführung eine offene Marke, hält sie dort an. Erst **Weiter**, die entsprechende Tastaturtaste oder der Signal-Knopf führt den manuellen Schritt aus. Das Publikum wird nie allein durch eine Marke automatisch weitergeschaltet. War die Leseführung zuvor aktiv, kann sie nach Bestätigung fortsetzen; eine bewusst angehaltene Leseführung bleibt angehalten.
+
+Beispiel für eine Folie mit zwei zunächst verborgenen Gruppen und einer folgenden Folie:
 
 ```text
-Dieser Vergleich zeigt zunächst nur den beobachteten Unterschied.
+Wir vergleichen zwei Fassungen desselben Textes.
 
-[KLICK: zweite Gruppe einblenden]
-Jetzt betrachten wir die zweite Gruppe unter derselben Bedingung.
+[KLICK]
+Hier ist Fassung A als fortlaufender Text.
 
-[PAUSE: Rückfrage abwarten]
-Was müssten wir prüfen, bevor wir eine Ursache behaupten?
+[KLICK]
+Fassung B enthält dieselben Wörter mit Zwischenüberschriften.
+Auf der nächsten Folie sehen wir den Ablauf des Vergleichs.
+
+[FOLIE]
 ```
 
-Die Klammern sind eine frei lesbare Konvention. Sie lösen keine Klicks, Pausen oder Folienwechsel aus und fließen in die tempoabhängige Leseführung ein. Halte sie daher kurz. Keine eigenen Steuerfelder, ausführbaren Befehle oder vermeintlich unterstützte Markup-Syntax zur JSON-Datei hinzufügen.
+Bei `reveal: true` sind die zugehörigen Gruppen zunächst verborgen. Setze deshalb auch vor der Erklärung der **ersten** verborgenen Gruppe eine `[KLICK]`-Marke. Eine Gruppe kann mehrere Texte oder Formen enthalten. Zähle die tatsächlichen manuellen Schritte in der Vorschau, nicht Wörter, Codezeilen oder pauschal die Anzahl der `items`. Besonders bei Codeblöcken, Bildtexten und Zitaten können sich diese Zahlen unterscheiden. Bei `reveal: false` keine `[KLICK]`-Marken verwenden.
+
+Für einen vollständig markierten Ablauf eine passende Marke für jeden nötigen manuellen Schritt setzen. `[FOLIE]` steht einmal am Ende der Notizen, nach allen Einblendungen und dem abschließenden Sprechtext. Nach ihr darf kein noch vorzutragender Text stehen. Die letzte Folie bekommt keine `[FOLIE]`-Marke. Bestehende Notizen ohne Marken bleiben gültig; keine fremden Texte allein wegen dieser Konvention ungefragt umschreiben.
+
+Weitere Regiehinweise, etwa `[PAUSE: Frage abwarten]` oder die ältere Schreibweise `[KLICK: Vergleich zeigen]`, bleiben gewöhnlicher Notiztext. Sie erzeugen kein Signal und werden bei der Lesegeschwindigkeit mitgezählt. Auch ein mitten im Satz stehendes `[KLICK]` ist keine Marke. Für ein nutzbares Klicksignal die unterstützte Zeile verwenden; eine Beschreibung des folgenden Schrittes bei Bedarf daneben als eigenen Satz schreiben. Keine zusätzlichen JSON-Steuerfelder oder ausführbaren Befehle erfinden.
+
+**Automatisch laufende Medien:** Bei einer selbstständig ablaufenden Video- oder Animationssequenz keine manuellen Klicks für jeden Bildwechsel erfinden. Zuerst bestimmen, welche Steuerung tatsächlich erforderlich ist: Start, Pause, manuelle Szenenwahl oder echte Folienwechsel. Ein videobasierter Teleprompter kann dem Medienzeitpunkt folgen; das ist ein anderer Ablauf als die manuell gesteuerten Kollo-Folien. Der Skill darf diese Funktionen nicht allein durch neue JSON-Felder behaupten.
 
 `seconds` ist die geplante Sprechzeit pro Folie, `duration` die Gesamtdauer in Minuten. Beide ersetzen keine gesprochene Probe und schalten keine Folie automatisch weiter. Plane Erklärung, Klicks, bewusste Pausen und Fragenzeit mit ein. Wähle keine pauschale feste Wortzahl als Bestehensgrenze; sprechbare Notation und fachliche Dichte verändern das Tempo.
 
@@ -40,20 +60,22 @@ Nach Schließen oder Neuladen eines Zusatzfensters dieses über die Steuerzentra
 
 Die Schrift lässt sich von 22 bis 68 px einstellen, das Lesetempo von 60 bis 240 Wörtern pro Minute. Diese Werte steuern eine rechnerische Leseposition, nicht die Erkennung tatsächlich gesprochener Wörter. Beginne langsam und passe bei einer Probe an. **Spiegeln** dreht nur den Sprechtext für Teleprompterglas; **Lesefokus** blendet die Vorschauseite aus.
 
-**Leseführung starten** bewegt die Markierung durch den Sprechtext. Manuelles Scrollen pausiert sie. Ein Wort lässt sich als neue Leseposition anklicken; mit **Textanfang** gehst du zum Beginn der aktuellen Notizen zurück. Bei einem Folienwechsel beginnt deren Sprechtext vorn. Eine Einblendung innerhalb derselben Folie ändert den Sprechtext nicht automatisch.
+**Leseführung starten** bewegt die Markierung durch den Sprechtext und hält an offenen Klickmarken an. Manuelles Scrollen pausiert sie. Ein Wort lässt sich als neue Leseposition anklicken; mit **Textanfang** gehst du zum Beginn der aktuellen Notizen zurück. Dabei werden bereits sichtbare Einblendungen nicht zurückgesetzt. Ein früh bestätigter Einblendungsklick überspringt den noch nicht gelesenen Sprechtext auf derselben Folie nicht. Ein Folienwechsel zeigt dagegen die neuen Notizen von vorn. Rücksprünge und erneutes Lesen deshalb mit den konkreten Marken proben.
+
+Der Teleprompter zeigt außerdem den tatsächlich nächsten Schritt an: weitere Einblendung, nächste Folie oder Ende. Dieser Hinweis bleibt auch ohne Marken nützlich. Er bestimmt jedoch nicht, an welcher Stelle deiner Erklärung ein Klick fachlich passt; dafür braucht es den abgestimmten Sprechtext und eine Probe. Stimmen Marker und tatsächlicher Folienzustand nicht überein, den Ablauf korrigieren und keine zusätzlichen Klicks blind auslösen.
 
 Leseführung und Vortragsuhr haben getrennte Start-/Pause-Steuerungen. Das Pausieren der Uhr hält nicht automatisch die Folie an und löst keinen Folienwechsel aus. Für eine Gesprächspause die Leseführung gezielt pausieren. Die Uhr kann weiterlaufen, wenn die gesamte tatsächliche Redezeit gemessen werden soll.
 
-| Taste | Wirkung |
-| --- | --- |
-| Pfeil rechts, Bild ab, Leertaste | Nächste Einblendung, danach nächste Folie |
-| Pfeil links, Bild auf | Vorherige Einblendung beziehungsweise Folie |
-| Pos1 / Ende | Erste Folie beziehungsweise letzte Folie im Endzustand |
-| T oder P | Vortragsuhr starten/pausieren |
-| R | Vortragsuhr zurücksetzen |
-| B | Schwarzbild an/aus |
-| F | Vollbild im aktiven Fenster |
-| N | Notizen im Ausgangsfenster anzeigen/ausblenden |
+| Taste                            | Wirkung                                                |
+| -------------------------------- | ------------------------------------------------------ |
+| Pfeil rechts, Bild ab, Leertaste | Nächste Einblendung, danach nächste Folie              |
+| Pfeil links, Bild auf            | Vorherige Einblendung beziehungsweise Folie            |
+| Pos1 / Ende                      | Erste Folie beziehungsweise letzte Folie im Endzustand |
+| T oder P                         | Vortragsuhr starten/pausieren                          |
+| R                                | Vortragsuhr zurücksetzen                               |
+| B                                | Schwarzbild an/aus                                     |
+| F                                | Vollbild im aktiven Fenster                            |
+| N                                | Notizen im Ausgangsfenster anzeigen/ausblenden         |
 
 In Eingabefeldern gelten die üblichen Eingabetasten. Verwende für die Probe eine Tastatur oder einen Presenter, dessen Tasten den angebotenen Befehlen entsprechen. Die nächste Vorschau ist eine Orientierung; beim Weiterschalten können Einblendungen zunächst wieder verborgen sein.
 

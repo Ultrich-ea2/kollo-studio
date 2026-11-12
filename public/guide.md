@@ -90,7 +90,31 @@ Für einen Beamer oder zweiten Monitor die Anzeige im Betriebssystem **erweitern
 
 Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück. Ein Folienwechsel zeigt die neuen Notizen von vorn.
 
-Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter. Kurze Notizzeilen wie `[KLICK: Vergleich zeigen]` oder `[PAUSE: Frage abwarten]` helfen bei der Probe, sind aber keine automatischen Befehle.
+Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
+
+### Signale zum Weiterdrücken
+
+Der Teleprompter nennt die tatsächliche nächste Aktion: eine weitere Einblendung, die nächste Folie oder das Ende. Dieser Hinweis bleibt auch im Lesefokus und auf kleinen Bildschirmen sichtbar. Für Hinweise an einer bestimmten Stelle im Sprechtext verwende diese Zeilen in den Sprechernotizen:
+
+```text
+Wir betrachten zuerst die Ausgangslage.
+[KLICK]
+Der erste eingeblendete Punkt zeigt die Ausgangslage.
+[KLICK]
+Der zweite Punkt zeigt, was sich geändert hat.
+Damit können wir zur Auswertung übergehen.
+[FOLIE]
+```
+
+Dieses Beispiel passt zu zwei einzeln eingeblendeten Gruppen auf einer Folie, auf die eine weitere Folie folgt. Bei eingeschalteten Einblendungen sind diese Gruppen zunächst verborgen: Setze den ersten `[KLICK]` deshalb vor ihre erste Erklärung. Pro Einblendung ein `[KLICK]`, anschließend höchstens ein `[FOLIE]` am Ende der Notizen. Auf der letzten Folie entfällt `[FOLIE]`. Ohne Einblendungen sind keine `[KLICK]`-Zeilen nötig.
+
+Die exakt geschriebenen Marker stehen jeweils auf einer eigenen Zeile. Sie erscheinen als private Regiehinweise und zählen nicht zum gesprochenen Text. Erreicht die laufende Leseführung einen noch offenen Marker, hält sie an. **Weiter**, Pfeil rechts oder eine passende Presenter-Taste führt die tatsächliche nächste Aktion aus; eine vorher laufende Leseführung setzt anschließend fort. Die Präsentation schaltet niemals allein wegen eines Markers weiter. Prüfe im Sprechpult, ob die Hinweise zur Anzahl und Reihenfolge der Einblendungen passen.
+
+Ein vorzeitiger Klick überspringt keinen Sprechtext. **Textanfang** setzt die Leseposition zurück, nicht bereits sichtbare Einblendungen. Auch Präsentationen ohne Marker funktionieren weiterhin; dann gibt es den allgemeinen Hinweis zur nächsten Aktion, aber keinen Halt an einer bestimmten Textstelle. Andere Klammertexte wie `[PAUSE: Frage abwarten]` bleiben gewöhnliche Notizen.
+
+Die Signale gehören zur HTML-Präsentation und zum Studio. In PowerPoint-Notizen bleiben sie lesbarer Text; sie steuern PowerPoint nicht. Der KI-Skill erklärt die Konvention und die Prüfung. Bitte ihn ausdrücklich um einen Sprechtext mit einem vollständigen Klickplan.
+
+Beim separat angebotenen DELFI-Originalvideo wechseln die Szenen automatisch mit der Videozeit. Dort bleibt die zeitgebundene Leseführung erhalten; zum normalen Abspielen sind keine Klicksignale zwischen den Szenen erforderlich.
 
 | Taste                   | Wirkung                            |
 | ----------------------- | ---------------------------------- |

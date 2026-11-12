@@ -94,6 +94,8 @@ PowerPoint erhält nur einfache Folienübergänge: `none`, `fade` und `slide` al
 
 `seconds` dient zur Redezeitplanung. Es löst keinen automatischen Folienwechsel aus. Projekt-JSON und Arbeitskit enthalten die Notizen; im Arbeitskit auch die eigenständige HTML-Datei. Für einzeln heruntergeladenes HTML/PPTX steuert die Anwendung die Mitgabe von Notizen gesondert.
 
+In `notes` unterstützt der Kollo-Teleprompter optional die alleinstehenden Zeilen `[KLICK]` für eine manuelle Einblendung und `[FOLIE]` für den manuellen Folienwechsel. Es gibt dafür keine neuen Datenfelder. Großschreibung und eigener Zeilenplatz sind erforderlich; gewöhnliche Klammertexte bleiben Sprechtext. Die Marken sind private Lesehinweise, keine automatisch ausgeführten Publikumsaktionen. Reihenfolge, erste verborgene Gruppe und Grenzen stehen in [Präsentieren und Teleprompter](presenting-and-teleprompter.md). PPTX-Notizen übernehmen den Text, aber nicht die interaktive Leseführung.
+
 ## Prüfung
 
 `scripts/validate_deck.py` prüft ohne Fremdpakete Dateigröße, Version, Pflichtfelder, Typen, Wertebereiche, eindeutige IDs, Layouts und eingebettete Bilddaten. Er lädt keine URLs und verändert keine Datei. Der Studio-Import und die Vorschau bleiben die maßgebliche Prüfung für die verwendete Anwendungsversion. Überlauf, fachliche Richtigkeit und Quellenqualität lassen sich nicht allein aus dem JSON bestätigen.

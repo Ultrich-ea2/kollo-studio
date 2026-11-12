@@ -8,12 +8,12 @@ Entscheide vor der Ausarbeitung, wie der Inhalt gesehen werden soll. Ein philolo
 
 Die optionale `theme.composition` wählt `classic`, `editorial`, `technical` oder `stage`; ohne Angabe gilt `classic`. Das ändert die Anordnung der unterstützten Layouts, nicht das Datenmodell. Die drei zusätzlichen Beispielreihen zeigen unterschiedliche Richtungen. Ihre fiktiven Themen, Texte, Zahlen und Ablaufpläne sind kein wissenschaftliches Ausgangsmaterial.
 
-| Richtung | Sinnvolle Verwendung | Worauf achten |
-| --- | --- | --- |
-| `classic` | Bestehende Kollo-Dateien, klare akademische Erklärung | Gewohnte Hierarchie bewahren; nicht jede Folie als Liste behandeln |
-| `editorial` | Textargument, gesellschaftliche Frage, begründeter Vergleich | Großzügige Fläche, kurze Überschriften, kontrollierte Textmenge |
-| `technical` | Ablauf, System, Messung, nachvollziehbare Demo | Präzise Labels, Einheiten und Leserichtung; keine technisch wirkende Dekoration ohne Bedeutung |
-| `stage` | Pointierter Einstieg, Projektidee, mündlich getragene Argumentation | Starke Größenunterschiede brauchen kurze Texte; Evidenz und Einschränkungen bleiben lesbar |
+| Richtung    | Sinnvolle Verwendung                                                | Worauf achten                                                                                  |
+| ----------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `classic`   | Bestehende Kollo-Dateien, klare akademische Erklärung               | Gewohnte Hierarchie bewahren; nicht jede Folie als Liste behandeln                             |
+| `editorial` | Textargument, gesellschaftliche Frage, begründeter Vergleich        | Großzügige Fläche, kurze Überschriften, kontrollierte Textmenge                                |
+| `technical` | Ablauf, System, Messung, nachvollziehbare Demo                      | Präzise Labels, Einheiten und Leserichtung; keine technisch wirkende Dekoration ohne Bedeutung |
+| `stage`     | Pointierter Einstieg, Projektidee, mündlich getragene Argumentation | Starke Größenunterschiede brauchen kurze Texte; Evidenz und Einschränkungen bleiben lesbar     |
 
 Ein eigenständiger Vortrag entsteht durch die passende Auswahl und Ausarbeitung, nicht durch eine behauptete „KI-freie“ Ästhetik. Prüfe insbesondere, ob jede Folie denselben austauschbaren Aufbau aus Überschrift und drei Kacheln wiederholt. Wechsle dort die Darstellung, wo sich die Beziehung der Inhalte ändert: Vergleich, Beleg, Prozess, Bild oder Antwort. Vermeide zufällige Variation ohne inhaltlichen Grund.
 
@@ -60,7 +60,7 @@ Gestalte einen gedanklichen Takt statt eines Effektkatalogs. Bei einem Prozess e
 
 Kollo kann vorhandene Inhaltsgruppen einblenden und Folien überblenden. Es bietet keine frei programmierbaren Bewegungspfade, Zeichenanimation von Diagrammverbindungen, Videozeitleiste, automatisch synchronisierte Stimme oder PowerPoint-Morph-Effekte. Eine gewünschte semantische Animation gegebenenfalls mit aufeinanderfolgenden Folienzuständen, einer übersichtlichen Prozessfolge oder einem geeigneten externen Werkzeug umsetzen. Zusätzliche Folien dürfen dabei nicht als verschiedene Forschungsergebnisse erscheinen. Keine nicht unterstützte Funktion als „fertig“ beschreiben.
 
-Plane für eine Demo bewusst den ersten sichtbaren Zustand und den Endzustand. Kontrolliere mit zurückgesetzten Einblendungen, ob eine Frage noch verständlich ist, bevor ihre Antwort erscheint. Sprechernotizen können eine Regiezeile wie `[KLICK: nächsten Schritt zeigen]` enthalten; diese Zeile ist eine lesbare Merkhilfe, keine ausführbare Anweisung. Einzelheiten in [Präsentieren und Teleprompter](presenting-and-teleprompter.md).
+Plane für eine Demo bewusst den ersten sichtbaren Zustand und den Endzustand. Kontrolliere mit zurückgesetzten Einblendungen, ob eine Frage noch verständlich ist, bevor ihre Antwort erscheint. Für gewünschte Klicksignale eine alleinstehende `[KLICK]`-Zeile vor der Erklärung jeder zunächst verborgenen Gruppe und `[FOLIE]` am tatsächlichen Folienende einsetzen. Der Teleprompter signalisiert die manuelle Aktion und hält dort die Leseführung an; er schaltet die Folie nicht selbst weiter. Frei formulierte Regiezeilen bleiben gewöhnlicher Text. Automatisch laufende Medien brauchen keine künstlichen manuellen Klicks. Die genaue Syntax und Probe stehen in [Präsentieren und Teleprompter](presenting-and-teleprompter.md).
 
 HTML erhält Browserfunktionen. PowerPoint erhält einfache Übergänge; Zoom wird Fade, Einblendungen werden nicht vollständig übertragen. PDF ist statisch. Ein Spannungsaufbau kann im PDF die Antwort sofort zeigen. Die statische Folie muss auch allein verständlich bleiben.
 

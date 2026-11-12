@@ -16,7 +16,7 @@ Zeit, Sprache, Dateien und Umfang anpassen. Persönliche Inhalte und Zugangsdate
 
 ## Sprechpult und Teleprompter vorbereiten
 
-> Bereite meine .kollo.json für einen Vortrag mit getrenntem Publikumsfenster und Teleprompter vor. Schreibe natürlich sprechbare Notizen, kennzeichne Klicks und Pausen als manuelle Regiehinweise und stimme sie mit Folien und Einblendungen ab. Plane die Redezeit realistisch. Prüfe die Fenster gemeinsam, inklusive Pause, Rücksprung, Schriftgröße und Wiederöffnen. Liefere einen HTML-Export mit ausdrücklich enthaltenen Notizen für meine eigene Probe und eine passende Ausgabe zum Teilen ohne private Notizen.
+> Bereite meine .kollo.json für einen Vortrag mit getrenntem Publikumsfenster und Teleprompter vor. Schreibe natürlich sprechbare Notizen und setze für jeden nötigen manuellen Schritt die unterstützte Marke [KLICK] oder [FOLIE] allein auf eine Zeile. Plane auch das Einblenden der ersten verborgenen Gruppe. Stimmen Sprechtext, Marken und tatsächliche Einblendungen nicht überein, korrigiere den Ablauf. Automatisch laufende Bildfolgen brauchen keine erfundenen Klicks. Plane die Redezeit realistisch. Prüfe die Fenster gemeinsam, inklusive Anhalten am Signal, Bestätigung, Rücksprung, Lesefokus, schmaler Ansicht und Wiederöffnen. Liefere einen HTML-Export mit ausdrücklich enthaltenen Notizen für meine eigene Probe und eine passende Ausgabe zum Teilen ohne private Notizen.
 
 ## Bestehende Kollo-Datei gezielt ändern
 

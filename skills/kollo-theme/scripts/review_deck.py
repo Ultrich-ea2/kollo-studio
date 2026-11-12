@@ -17,6 +17,7 @@ LIMITATIONS = [
     "Kontrastwerte vergleichen nur die fünf Themenfarben mit dem Hintergrund. Karten, Bilder, Schriftgröße und weitere visuelle Inhalte sind nicht vollständig geprüft.",
     "4,5:1 gilt als WCAG-Referenz für normalen Text, 3:1 für großen Text. Die Werte bescheinigen keine vollständige Barrierefreiheit.",
     "Zeitwerte sind geplante Sekunden, keine gemessene Vortragsdauer und kein automatischer Folienwechsel.",
+    "Klickmarken werden auf Reihenfolge und offensichtliche Widersprüche geprüft. Anzahl und Zeitpunkt der tatsächlich gerenderten Einblendungen müssen im Sprechpult geprüft werden.",
     "Quellen- und Notizfelder werden nur auf Vorhandensein geprüft. Behauptungen, Zitate, URLs, Bibliografien und die Herkunft von Daten werden nicht verifiziert.",
     "Die Bildprüfung liest Formatheader und Grenzen; sie ersetzt keine echte Bilddecodierung und keine visuelle Prüfung.",
 ]
@@ -30,6 +31,20 @@ def contrast_ratio(foreground, background):
         return sum(c * weight for c, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
     a, b = sorted((luminance(foreground), luminance(background)), reverse=True)
     return (a + 0.05) / (b + 0.05)
+
+
+def cue_plan(notes):
+    """Match the private presenter convention; preserve legacy bracket text."""
+    lines = re.split(r"\r\n?|\n", notes)
+    markers = []
+    near_markers = []
+    for number, line in enumerate(lines):
+        match = re.fullmatch(r"[ \t]*\[(KLICK|FOLIE)\][ \t]*", line)
+        if match:
+            markers.append((number, match.group(1)))
+        elif re.fullmatch(r"[ \t]*\[(?:KLICK|FOLIE)(?:[ \t]*:[^\]\r\n]*|[ \t]*)\][ \t]*", line, re.IGNORECASE):
+            near_markers.append(number)
+    return lines, markers, near_markers
 
 
 def review_deck(deck):
@@ -78,6 +93,30 @@ def review_deck(deck):
     for index, slide in enumerate(slides):
         path = f"slides[{index}]"
         layout = slide["layout"]
+        lines, markers, near_markers = cue_plan(slide["notes"])
+        if markers:
+            clicks = [line for line, kind in markers if kind == "KLICK"]
+            changes = [line for line, kind in markers if kind == "FOLIE"]
+            if clicks and not slide["reveal"]:
+                issue("CUE_CLICK_WITHOUT_REVEAL", "warning", path + ".notes",
+                      "[KLICK] verlangt eine Einblendung, aber für diese Folie sind Einblendungen deaktiviert. Marke oder Folienablauf berichtigen.", slide)
+            if len(changes) > 1:
+                issue("CUE_SLIDE_DUPLICATE", "warning", path + ".notes",
+                      "Mehrere [FOLIE]-Marken auf derselben Folie: Nur eine abschließende Wechselmarke verwenden.", slide)
+            if changes and index == len(slides) - 1:
+                issue("CUE_SLIDE_ON_LAST", "warning", path + ".notes",
+                      "Die letzte Folie hat keine nächste Folie; ihre [FOLIE]-Marke entfernen oder die Reihenfolge prüfen.", slide)
+            if changes and any(js_trim(line) for line in lines[changes[0] + 1:]):
+                issue("CUE_CONTENT_AFTER_SLIDE", "warning", path + ".notes",
+                      "Nach [FOLIE] stehen noch Text oder weitere Marken. Der Wechsel würde diesen Rest zurücklassen; erst den Sprechtext und alle Einblendungen abschließen.", slide)
+            if not changes and index < len(slides) - 1:
+                issue("CUE_SLIDE_MISSING", "info", path + ".notes",
+                      "Diese Folie enthält Klickmarken, aber keine abschließende [FOLIE]-Marke. Für einen vollständig markierten Vortrag den tatsächlichen Folienwechsel ergänzen.", slide)
+            if near_markers:
+                issue("CUE_MIXED_NOTATION", "info", path + ".notes",
+                      "Neben erkannten Marken stehen ähnlich geschriebene Klammerzeilen. Nur [KLICK] und [FOLIE] allein auf einer Zeile erzeugen ein Signal; Varianten bleiben normaler Sprechtext.", slide)
+            issue("CUE_PLAN_REVIEW", "info", path + ".notes",
+                  f"Markierter Ablauf: {len(clicks)} Einblendung(en), {len(changes)} Folienwechsel. Mit den tatsächlich gerenderten Schritten abgleichen, auch vor der ersten zunächst verborgenen Gruppe. Der Helfer rendert keine Folien.", slide)
         if slide["seconds"] == 0:
             issue("SLIDE_TIME_UNSET", "info", path + ".seconds", "Für diese Folie ist kein Zeitbudget eingetragen.", slide)
         if slide["image"] and layout != "image":

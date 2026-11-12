@@ -78,7 +78,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           subtitle: "Eine Frage. Zwei Formate. Ein begrenzter Befund.",
           seconds: 35,
           notes:
-            "Stellen Sie sich zwei Fassungen desselben Textes vor. Die erste läuft durch, die zweite enthält Zwischenüberschriften. Welche Fassung hilft beim Wiedergeben der Inhalte? Diese Präsentation führt durch ein erfundenes Lehrbeispiel. Alle Werte sind konstruiert. Wir üben daran, einen Vergleich zu erklären und seine Grenzen sichtbar zu halten.",
+            "Stellen Sie sich zwei Fassungen desselben Textes vor. Die erste läuft durch, die zweite enthält Zwischenüberschriften. Welche Fassung hilft beim Wiedergeben der Inhalte? Diese Präsentation führt durch ein erfundenes Lehrbeispiel. Alle Werte sind konstruiert. Wir üben daran, einen Vergleich zu erklären und seine Grenzen sichtbar zu halten.\n\n[FOLIE]",
         }),
         slide("reading-02", "columns", "Der Inhalt bleibt gleich.", {
           section: "ANORDNUNG / 02",
@@ -89,7 +89,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Zuerst sehen Sie Fassung A. Sie enthält den gesamten Text als fortlaufenden Absatz. Nun blenden wir Fassung B ein. Die Wörter bleiben gleich, aber Zwischenüberschriften markieren die Abschnitte. Damit ist die beabsichtigte Variation eingegrenzt. Das allein genügt noch nicht, um jeden anderen Einfluss auszuschließen.",
+            "[KLICK]\nZuerst sehen Sie Fassung A. Sie enthält den gesamten Text als fortlaufenden Absatz. Nun blenden wir Fassung B ein.\n\n[KLICK]\nDie Wörter bleiben gleich, aber Zwischenüberschriften markieren die Abschnitte. Damit ist die beabsichtigte Variation eingegrenzt. Das allein genügt noch nicht, um jeden anderen Einfluss auszuschließen.\n\n[FOLIE]",
         }),
         slide("reading-03", "process", "Ein Vergleich in drei Schritten.", {
           section: "VORGEHEN / 03",
@@ -97,7 +97,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           reveal: true,
           subtitle: "Gleiches Zeitfenster. Dieselben Verständnisfragen.",
           notes:
-            "Wir bauen den Ablauf von links nach rechts auf. Zuerst lesen die Personen ihre jeweilige Fassung. Danach beantworten sie dieselben Verständnisfragen, ohne erneut in den Text zu schauen. Schließlich vergleichen wir die Punktwerte. Für eine echte Untersuchung müssten unter anderem Zuteilung, Vorwissen, Material und Auswertung festgelegt werden.",
+            "Wir bauen den Ablauf von links nach rechts auf.\n\n[KLICK]\nZuerst lesen die Personen ihre jeweilige Fassung.\n\n[KLICK]\nDanach beantworten sie dieselben Verständnisfragen, ohne erneut in den Text zu schauen.\n\n[KLICK]\nSchließlich vergleichen wir die Punktwerte. Für eine echte Untersuchung müssten unter anderem Zuteilung, Vorwissen, Material und Auswertung festgelegt werden.\n\n[FOLIE]",
         }),
         slide("reading-04", "chart", "Im Beispiel: ein Punkt mehr.", {
           section: "BEFUND / 04",
@@ -106,7 +106,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           items: ["6 | Fassung A", "7 | Fassung B"],
           reveal: true,
           notes:
-            "Die Einheit steht über dem Diagramm und bleibt beim Einblenden sichtbar. Fassung A erreicht im erfundenen Beispiel sechs von zehn Punkten. Fassung B erreicht sieben. Der Unterschied beträgt einen Punkt auf dieser Skala. Wir sehen hier keine Verteilungen, keine Stichprobengröße und keine Unsicherheit. Aus den beiden Balken folgt deshalb noch keine belastbare Aussage über eine allgemeine Wirkung.",
+            "Die Einheit steht über dem Diagramm und bleibt beim Einblenden sichtbar.\n\n[KLICK]\nFassung A erreicht im erfundenen Beispiel sechs von zehn Punkten.\n\n[KLICK]\nFassung B erreicht sieben. Der Unterschied beträgt einen Punkt auf dieser Skala. Wir sehen hier keine Verteilungen, keine Stichprobengröße und keine Unsicherheit. Aus den beiden Balken folgt deshalb noch keine belastbare Aussage über eine allgemeine Wirkung.\n\n[FOLIE]",
         }),
         slide("reading-05", "columns", "Unterschied ist nicht Ursache.", {
           section: "EINORDNUNG / 05",
@@ -116,7 +116,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Links steht die Aussage, die sich aus den gezeigten Werten direkt ablesen lässt. Rechts stehen die fehlenden Informationen. Die Gestaltung trennt diese Ebenen, damit ein sichtbarer Unterschied nicht versehentlich als Ursachenbeleg gelesen wird. In einer tatsächlichen Arbeit würden wir die passenden Analysen und ihre Einschränkungen ergänzen.",
+            "[KLICK]\nLinks steht die Aussage, die sich aus den gezeigten Werten direkt ablesen lässt.\n\n[KLICK]\nRechts stehen die fehlenden Informationen. Die Gestaltung trennt diese Ebenen, damit ein sichtbarer Unterschied nicht versehentlich als Ursachenbeleg gelesen wird. In einer tatsächlichen Arbeit würden wir die passenden Analysen und ihre Einschränkungen ergänzen.\n\n[FOLIE]",
         }),
         slide("reading-06", "section", "Die nächste Frage ist genauer.", {
           section: "WEITERDENKEN / 06",
@@ -128,7 +128,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Aus der begrenzten Antwort entsteht eine präzisere nächste Frage. Erstens sollten wir das Vorwissen erfassen. Zweitens wäre zu prüfen, ob das Muster für unterschiedliche Textarten gilt. Drittens müssen Unsicherheiten berichtet werden. Das sind Vorschläge für ein weiteres Vorgehen, keine Ergebnisse dieses Beispiels.",
+            "Aus der begrenzten Antwort entsteht eine präzisere nächste Frage.\n\n[KLICK]\nErstens sollten wir das Vorwissen erfassen.\n\n[KLICK]\nZweitens wäre zu prüfen, ob das Muster für unterschiedliche Textarten gilt.\n\n[KLICK]\nDrittens müssen Unsicherheiten berichtet werden. Das sind Vorschläge für ein weiteres Vorgehen, keine Ergebnisse dieses Beispiels.\n\n[FOLIE]",
         }),
         slide("reading-07", "closing", "Eine gute Folie zeigt auch Grenzen.", {
           section: "MITNEHMEN / 07",
@@ -140,7 +140,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           reveal: true,
           seconds: 25,
           notes:
-            "Nehmen Sie drei Gestaltungsentscheidungen mit. Erklären Sie, was verglichen wird. Halten Sie Einheit und Bezugsgröße sichtbar. Und nennen Sie, wie weit die Aussage tatsächlich reicht. Die konkrete Gliederung können Sie verändern. Diese drei Entscheidungen helfen jedoch dabei, aus einer Zahlenfolie ein nachvollziehbares Argument zu machen.",
+            "Nehmen Sie drei Gestaltungsentscheidungen mit.\n\n[KLICK]\nErklären Sie, was verglichen wird.\n\n[KLICK]\nHalten Sie Einheit und Bezugsgröße sichtbar.\n\n[KLICK]\nUnd nennen Sie, wie weit die Aussage tatsächlich reicht. Die konkrete Gliederung können Sie verändern. Diese drei Entscheidungen helfen jedoch dabei, aus einer Zahlenfolie ein nachvollziehbares Argument zu machen.",
         }),
       ],
     ),
@@ -179,7 +179,7 @@ export const showcaseExamples: ShowcaseExample[] = [
               "Wie eine kleine Prüfung einen Fehler sichtbar behandelt.",
             seconds: 30,
             notes:
-              "Diese kleine Demo beginnt mit einem Grenzfall. Der Eingang ist eine leere Liste. Wir verfolgen, wo daraus ein Fehler entsteht und wie eine ausdrücklich formulierte Prüfung das Verhalten ändert. Der Code ist ein eigenständiges Lehrbeispiel. Er wird hier als Text gezeigt und führt keine Aktionen aus.",
+              "Diese kleine Demo beginnt mit einem Grenzfall. Der Eingang ist eine leere Liste. Wir verfolgen, wo daraus ein Fehler entsteht und wie eine ausdrücklich formulierte Prüfung das Verhalten ändert. Der Code ist ein eigenständiges Lehrbeispiel. Er wird hier als Text gezeigt und führt keine Aktionen aus.\n\n[FOLIE]",
           },
         ),
         slide("signal-02", "process", "Drei Stationen. Eine Verantwortung.", {
@@ -188,7 +188,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           items: ["Eingang", "Prüfung", "Ausgabe"],
           reveal: true,
           notes:
-            "Der Datenfluss wird schrittweise aufgebaut. Links kommt der Eingang an. In der Mitte entscheidet eine Prüfung, ob der nachfolgende Zugriff zulässig ist. Rechts steht die Ausgabe: entweder ein Betrag oder eine verständliche Rückmeldung. Die Verbindung zwischen den Stationen erscheint mit dem nächsten Schritt. So bleibt die Reihenfolge nachvollziehbar.",
+            "Der Datenfluss wird schrittweise aufgebaut.\n\n[KLICK]\nLinks kommt der Eingang an.\n\n[KLICK]\nIn der Mitte entscheidet eine Prüfung, ob der nachfolgende Zugriff zulässig ist.\n\n[KLICK]\nRechts steht die Ausgabe: entweder ein Betrag oder eine verständliche Rückmeldung. Die Verbindung zwischen den Stationen erscheint jeweils mit der nächsten Station. So bleibt die Reihenfolge nachvollziehbar.\n\n[FOLIE]",
         }),
         slide("signal-03", "code", "Die Liste ist leer. Der Zugriff folgt.", {
           section: "AUSGANGSLAGE / 02",
@@ -197,7 +197,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           body: "const prices = [];\n\nconst first = prices[0];\nconst total = first.net + first.tax;",
           reveal: true,
           notes:
-            "Die leere Liste ist bereits sichtbar. Jetzt blenden wir den Zugriff ein. prices an Position null liefert undefined. Der anschließende Zugriff auf net scheitert deshalb. Der Fehler liegt nicht in einer unbekannten Formel. Es fehlt eine ausdrücklich behandelte Voraussetzung: Die Liste muss einen ersten Eintrag enthalten.",
+            "Die leere Liste ist bereits sichtbar. Jetzt blenden wir den Zugriff ein.\n\n[KLICK]\nprices an Position null liefert undefined. Der anschließende Zugriff auf net scheitert deshalb. Der Fehler liegt nicht in einer unbekannten Formel. Es fehlt eine ausdrücklich behandelte Voraussetzung: Die Liste muss einen ersten Eintrag enthalten.\n\n[FOLIE]",
         }),
         slide("signal-04", "code", "Die Voraussetzung wird geprüft.", {
           section: "KORREKTUR / 03",
@@ -206,7 +206,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           body: 'const prices = [];\n\nif (prices.length === 0) {\n  console.log("Noch keine Preise vorhanden.");\n} else {\n  const first = prices[0];\n  console.log(first.net + first.tax);\n}',
           reveal: true,
           notes:
-            "Der Eingang bleibt unverändert. Mit dem nächsten Schritt erscheint die Schutzbedingung. Ist die Liste leer, gibt das Programm eine Rückmeldung aus. Andernfalls kann es auf den ersten Eintrag zugreifen. Diese Prüfung behandelt nur die leere Liste. Sie garantiert noch nicht, dass die Felder net und tax existieren oder gültige Zahlen enthalten.",
+            "Der Eingang bleibt unverändert. Mit dem nächsten Schritt erscheint die Schutzbedingung.\n\n[KLICK]\nIst die Liste leer, gibt das Programm eine Rückmeldung aus. Andernfalls kann es auf den ersten Eintrag zugreifen. Diese Prüfung behandelt nur die leere Liste. Sie garantiert noch nicht, dass die Felder net und tax existieren oder gültige Zahlen enthalten.\n\n[FOLIE]",
         }),
         slide("signal-05", "columns", "Zwei Eingänge. Zwei erwartete Wege.", {
           section: "PRÜFEN / 04",
@@ -216,7 +216,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Für die Korrektur betrachten wir zwei Wege. Im ersten Fall ist die Liste leer; wir erwarten die Rückmeldung. Im zweiten Fall enthält sie einen gültigen Eintrag; wir erwarten die Summe. Diese Folie beschreibt Erwartungen. Wer das Beispiel ausführt, sollte die tatsächlichen Ausgaben zusätzlich prüfen und dokumentieren.",
+            "Für die Korrektur betrachten wir zwei Wege.\n\n[KLICK]\nIm ersten Fall ist die Liste leer; wir erwarten die Rückmeldung.\n\n[KLICK]\nIm zweiten Fall enthält sie einen gültigen Eintrag; wir erwarten die Summe. Diese Folie beschreibt Erwartungen. Wer das Beispiel ausführt, sollte die tatsächlichen Ausgaben zusätzlich prüfen und dokumentieren.\n\n[FOLIE]",
         }),
         slide(
           "signal-06",
@@ -231,7 +231,7 @@ export const showcaseExamples: ShowcaseExample[] = [
             ],
             reveal: true,
             notes:
-              "Eine kleine Korrektur darf nicht mehr versprechen, als sie leistet. Sie behandelt leere Listen. Eine umfassende Eingabeprüfung würde außerdem Feldtypen und Wertebereiche kontrollieren. Und ob die Summe aus netto und Steuer fachlich die richtige Regel ist, hängt vom konkreten Anwendungsfall ab. Dieser Teil gehört nicht zum Beispiel.",
+              "Eine kleine Korrektur darf nicht mehr versprechen, als sie leistet.\n\n[KLICK]\nSie behandelt leere Listen.\n\n[KLICK]\nEine umfassende Eingabeprüfung würde außerdem Feldtypen und Wertebereiche kontrollieren.\n\n[KLICK]\nUnd ob die Summe aus netto und Steuer fachlich die richtige Regel ist, hängt vom konkreten Anwendungsfall ab. Dieser Teil gehört nicht zum Beispiel.\n\n[FOLIE]",
           },
         ),
         slide(
@@ -248,7 +248,7 @@ export const showcaseExamples: ShowcaseExample[] = [
             reveal: true,
             seconds: 30,
             notes:
-              "Die technische Demo endet mit drei Schritten. Zeigen Sie den Grenzfall so klein, dass er verständlich bleibt. Isolieren Sie die Änderung zwischen vorher und nachher. Und formulieren Sie eine überprüfbare Erwartung. Bewegung ist dann hilfreich, wenn sie genau diese Reihenfolge sichtbar macht.",
+              "Die technische Demo endet mit drei Schritten.\n\n[KLICK]\nZeigen Sie den Grenzfall so klein, dass er verständlich bleibt.\n\n[KLICK]\nIsolieren Sie die Änderung zwischen vorher und nachher.\n\n[KLICK]\nUnd formulieren Sie eine überprüfbare Erwartung. Bewegung ist dann hilfreich, wenn sie genau diese Reihenfolge sichtbar macht.",
           },
         ),
       ],
@@ -284,14 +284,14 @@ export const showcaseExamples: ShowcaseExample[] = [
             "Ein fiktiver Campusplatz wird zum gemeinsamen Aufenthaltsort.",
           seconds: 30,
           notes:
-            "Ein Platz kann gleichzeitig Weg, Treffpunkt und Rückzugsort sein. Dieser fiktive Entwurf fragt, wie diese Funktionen nebeneinander bestehen können. Er zeigt keine tatsächlich erhobenen Nutzungsdaten. Wir machen stattdessen die Entwurfsabsicht, die Kriterien und die noch offenen Fragen nachvollziehbar.",
+            "Ein Platz kann gleichzeitig Weg, Treffpunkt und Rückzugsort sein. Dieser fiktive Entwurf fragt, wie diese Funktionen nebeneinander bestehen können. Er zeigt keine tatsächlich erhobenen Nutzungsdaten. Wir machen stattdessen die Entwurfsabsicht, die Kriterien und die noch offenen Fragen nachvollziehbar.\n\n[FOLIE]",
         }),
         slide("space-02", "section", "Drei Tätigkeiten teilen einen Ort.", {
           section: "BEOBACHTUNGSFRAGE / 01",
           items: ["Ankommen", "Zusammenkommen", "Kurz zurückziehen"],
           reveal: true,
           notes:
-            "Wir beginnen mit drei Tätigkeiten. Menschen kommen an, treffen andere oder möchten sich kurz zurückziehen. Das sind hier angenommene Nutzungssituationen. In einem realen Projekt würden wir sie durch Beobachtungen und Gespräche prüfen. Für den Entwurf dienen sie zunächst als verständliche Ausgangspunkte.",
+            "Wir beginnen mit drei Tätigkeiten.\n\n[KLICK]\nMenschen kommen an.\n\n[KLICK]\nSie treffen andere.\n\n[KLICK]\nOder sie möchten sich kurz zurückziehen. Das sind hier angenommene Nutzungssituationen. In einem realen Projekt würden wir sie durch Beobachtungen und Gespräche prüfen. Für den Entwurf dienen sie zunächst als verständliche Ausgangspunkte.\n\n[FOLIE]",
         }),
         slide("space-03", "image", "Die Mitte bleibt offen.", {
           section: "ORDNUNG / 02",
@@ -300,7 +300,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           imageAlt:
             "Fiktiver Campusplatz: Ein durchgängiger Weg verbindet links und rechts. Oberhalb liegt die offene Mitte, unterhalb liegen drei Sitzbereiche am Rand. Skizze ohne Maßstab.",
           notes:
-            "Der Entwurf trennt zwei räumliche Angebote. Die offene Mitte lässt verschiedene Nutzungen zu. Der ruhigere Rand bietet Sitzmöglichkeiten mit Abstand zum Durchgang. Das ist eine gestalterische Entscheidung, keine nachgewiesene Wirkung. Ob sie im Alltag trägt, müsste am konkreten Ort geprüft werden.",
+            "Der Entwurf trennt zwei räumliche Angebote. Die offene Mitte lässt verschiedene Nutzungen zu. Der ruhigere Rand bietet Sitzmöglichkeiten mit Abstand zum Durchgang. Das ist eine gestalterische Entscheidung, keine nachgewiesene Wirkung. Ob sie im Alltag trägt, müsste am konkreten Ort geprüft werden.\n\n[FOLIE]",
         }),
         slide("space-04", "process", "Der Weg bleibt durchgängig.", {
           section: "SEQUENZ / 03",
@@ -308,7 +308,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           items: ["Zugang", "Freie Mitte", "Sitzrand"],
           reveal: true,
           notes:
-            "Wir lesen den Platz als Folge. Der Zugang bleibt erkennbar. Die Mitte bleibt frei von festen Hindernissen. Der Sitzrand liegt außerhalb des Hauptwegs. Blenden Sie die Stationen nacheinander ein. Die Folie behauptet damit noch keine baurechtliche oder barrierefreie Eignung; dafür braucht es Maße und eine gesonderte Prüfung.",
+            "Wir lesen den Platz als Folge.\n\n[KLICK]\nDer Zugang bleibt erkennbar.\n\n[KLICK]\nDie Mitte bleibt frei von festen Hindernissen.\n\n[KLICK]\nDer Sitzrand liegt außerhalb des Hauptwegs. Die Stationen sind jetzt nacheinander sichtbar geworden. Die Folie behauptet damit noch keine baurechtliche oder barrierefreie Eignung; dafür braucht es Maße und eine gesonderte Prüfung.\n\n[FOLIE]",
         }),
         slide("space-05", "columns", "Die Entscheidung folgt Kriterien.", {
           section: "ABWÄGUNG / 04",
@@ -318,7 +318,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Links stehen die Ziele des Entwurfs. Rechts stehen Punkte, die für eine belastbare Entscheidung noch geklärt werden müssen. Diese beiden Ebenen gehören zusammen. Ein attraktives Bild ersetzt weder Maße noch die Prüfung von Zugänglichkeit und Unterhalt. Gerade im Entwurf ist eine sichtbare offene Frage eine Stärke.",
+            "[KLICK]\nLinks stehen die Ziele des Entwurfs.\n\n[KLICK]\nRechts stehen Punkte, die für eine belastbare Entscheidung noch geklärt werden müssen. Diese beiden Ebenen gehören zusammen. Ein attraktives Bild ersetzt weder Maße noch die Prüfung von Zugänglichkeit und Unterhalt. Gerade im Entwurf ist eine sichtbare offene Frage eine Stärke.\n\n[FOLIE]",
         }),
         slide("space-06", "section", "Erst erproben. Dann festlegen.", {
           section: "NÄCHSTER SCHRITT / 05",
@@ -330,7 +330,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           ],
           reveal: true,
           notes:
-            "Der nächste Schritt ist eine vorläufige Anordnung im Modell. Anschließend können Rückmeldungen gesammelt werden. Für jede Änderung sollten wir festhalten, welche Beobachtung oder welches Kriterium sie begründet. Die vorgeschlagene Erprobung liegt noch in der Zukunft. Sie wird nicht als bereits durchgeführte Untersuchung dargestellt.",
+            "[KLICK]\nDer nächste Schritt ist eine vorläufige Anordnung im Modell.\n\n[KLICK]\nAnschließend können Rückmeldungen gesammelt werden.\n\n[KLICK]\nFür jede Änderung sollten wir festhalten, welche Beobachtung oder welches Kriterium sie begründet. Die vorgeschlagene Erprobung liegt noch in der Zukunft. Sie wird nicht als bereits durchgeführte Untersuchung dargestellt.\n\n[FOLIE]",
         }),
         slide("space-07", "closing", "Wo würdest du bleiben?", {
           section: "GESPRÄCH / 06",
@@ -338,7 +338,7 @@ export const showcaseExamples: ShowcaseExample[] = [
           reveal: true,
           seconds: 30,
           notes:
-            "Zum Schluss die Frage an das Publikum: Wo würden Sie sich aufhalten, und warum? Beziehen Sie Ihre Antwort auf Mitte, Rand oder Weg. So wird das Feedback konkret genug, um es am Entwurf zu prüfen. Die Präsentation endet nicht nur mit einem Bild, sondern mit einer gezielten Einladung zur Diskussion.",
+            "Zum Schluss die Frage an das Publikum: Wo würden Sie sich aufhalten, und warum?\n\n[KLICK]\nBeziehen Sie Ihre Antwort auf die Mitte,\n\n[KLICK]\nden Rand\n\n[KLICK]\noder den Weg. So wird das Feedback konkret genug, um es am Entwurf zu prüfen. Die Präsentation endet nicht nur mit einem Bild, sondern mit einer gezielten Einladung zur Diskussion.",
         }),
       ],
     ),

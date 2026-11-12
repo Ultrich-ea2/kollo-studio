@@ -722,6 +722,17 @@ button {
   line-height: 1.7;
   min-height: 100px;
 }
+.notes-help {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.notes-help code {
+  font-size: 12px;
+  background: #e4e8dc;
+  padding: 2px 4px;
+}
 .inspector {
   background: #f9f9f1;
   min-height: 100%;

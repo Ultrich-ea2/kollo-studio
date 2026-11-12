@@ -17,7 +17,7 @@ python scripts/validate_deck.py vortrag.kollo.json
 python scripts/review_deck.py vortrag.kollo.json --json
 ```
 
-Der Schema-Prüfer meldet unzulässige Felder, Typen, Werte oder Bilddaten. Der Review-Helfer gibt Hinweise zu bekannten Darstellungsgrenzen, Zeitplanung, Kontrast und Quellen. Diese Hinweise sind heuristisch. Ein Titel darf bewusst länger sein; eine Titelfolie braucht nicht automatisch einen Literaturbeleg. Warnungen fachlich beurteilen und nie durch erfundene Quellen „beheben“.
+Der Schema-Prüfer meldet unzulässige Felder, Typen, Werte oder Bilddaten. Der Review-Helfer gibt Hinweise zu bekannten Darstellungsgrenzen, Zeitplanung, Kontrast, Quellen und widersprüchlichen Klickmarken. Klickmarken bleiben Notiztext im Schema: etwa ein Folienwechsel auf der letzten Folie ist ein Ablaufproblem, kein ungültiges Datenformat. Der Helfer zählt keine tatsächlich gerenderten Einblendungsgruppen; diese im Sprechpult prüfen. Die übrigen Darstellungs- und Inhaltshinweise sind heuristisch. Ein Titel darf bewusst länger sein; eine Titelfolie braucht nicht automatisch einen Literaturbeleg. Warnungen fachlich beurteilen und nie durch erfundene Quellen „beheben“.
 
 Der Python-Lader lehnt doppelte JSON-Schlüssel ab. Solche Dateien nicht ausgeben, selbst wenn eine andere JSON-Implementierung den letzten Wert behalten würde. Prüfvermerke gehören in einen Begleitbericht oder passende Notizen, nicht in zusätzliche Schemafelder.
 
@@ -35,21 +35,21 @@ Bei einer neuen Gestaltung die dichteste Inhaltsfolie, längste Titel und alle v
 
 Bei einem entsprechenden Auftrag die Fenster tatsächlich gemeinsam öffnen. Folie und Einblendungsstand müssen zusammenbleiben; Vorwärts- und Rückwärtsnavigation, Pause und Schwarzschaltung prüfen, soweit die Oberfläche sie anbietet. Sprechernotizen dürfen nicht im sichtbaren Publikumsbild auftauchen. Sie können trotzdem in einer exportierten Datei enthalten sein: ausgeblendet bedeutet nicht vertraulich geschützt.
 
-Teste Schriftgröße, Textspiegelung, Scrolltempo und manuelles Lesen mit kurzem, langem und leerem Sprechtext. Nach einem Folienwechsel muss der richtige Text erscheinen. Regiehinweise sind nur Text, keine automatische Klick- oder Pausensteuerung. Die Probe mit gesprochener Sprache bleibt nötig; ein Zeitmesser ist keine Spracherkennung.
+Teste Schriftgröße, Textspiegelung, Scrolltempo und manuelles Lesen mit kurzem, langem und leerem Sprechtext. Nach einem Folienwechsel muss der richtige Text erscheinen. Bei einem Klickplan jede alleinstehende `[KLICK]`- oder `[FOLIE]`-Marke mit dem tatsächlichen nächsten Schritt abgleichen. Die Leseführung muss an einer offenen Marke anhalten; erst die manuelle Bestätigung zeigt die nächste Einblendung oder Folie. Auch vor der ersten verborgenen Gruppe ein Signal vorsehen. `[FOLIE]` gehört nach den gesamten Sprechtext, nie auf die letzte Folie. Prüfe frühes Weiterschalten, Rücksprünge, Lesefokus und eine schmale Ansicht. Gewöhnliche Klammerhinweise bleiben Text. Die Probe mit gesprochener Sprache bleibt nötig; ein Zeitmesser ist keine Spracherkennung.
 
 Öffne den tatsächlich heruntergeladenen HTML-Export lokal. Prüfe dort das zusätzliche Fenster, Popup-Blockierung, Schließen und Wiederöffnen, sowie die Meldung bei getrennter Steuerverbindung. Den Browser und geprüften Betriebsweg nennen. Zwei Browserfenster auf demselben Monitor sind ein sinnvoller Funktionstest, aber kein Nachweis für eine reale Beamer-/Mehrmonitorprobe. Für diese muss die Anzeige erweitert und das reine Publikumsfenster auf dem Zielbildschirm kontrolliert werden.
 
 ## Benötigte Ausgaben öffnen
 
-| Ausgabe           | Prüfen                                                                                                            |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
-| JSON              | Erneut importierbar, passende Version, Inhalte und IDs vollständig                                                |
-| Bearbeitbare PPTX | Im Zielprogramm öffnen: Folienzahl, Umbrüche, Schrift, editierbare Objekte, Bilder, Quellen und optionale Notizen |
-| Visuelle PPTX     | Feste Folienansicht und Auflösung; Texte sind Bestandteil eines Bildes                                            |
-| PDF               | Seitenzahl, Format, jede Seite, nichts abgeschnitten; keine durchsuchbare Textebene zugesichert                   |
-| HTML              | Offline öffnen, Navigation, Einblendungen, Notizenwahl, reduzierte Bewegung, Druckansicht                         |
-| Arbeitskit        | ZIP öffnen: aktuelles JSON und HTML, Ressourcen; Notizen sind enthalten                                           |
-| Offline-Studio    | Entpacken, lokalen Starter ausführen, Editor und Exporte prüfen; Node.js nötig                                    |
+| Ausgabe           | Prüfen                                                                                                                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JSON              | Erneut importierbar, passende Version, Inhalte und IDs vollständig                                                                                                                      |
+| Bearbeitbare PPTX | Im Zielprogramm öffnen: Folienzahl, Umbrüche, Schrift, editierbare Objekte, Bilder, Quellen und optionale Notizen                                                                       |
+| Visuelle PPTX     | Feste Folienansicht und Auflösung; Texte sind Bestandteil eines Bildes                                                                                                                  |
+| PDF               | Seitenzahl, Format, jede Seite, nichts abgeschnitten; keine durchsuchbare Textebene zugesichert                                                                                         |
+| HTML              | Offline öffnen, Navigation, Einblendungen, Notizenwahl, reduzierte Bewegung, Druckansicht                                                                                               |
+| Arbeitskit        | ZIP öffnen: aktuelles JSON und HTML, Ressourcen; Notizen sind enthalten                                                                                                                 |
+| Offline-Studio    | Entpacken, lokalen Starter ausführen, Editor und Exporte prüfen; Node.js nötig                                                                                                          |
 | Studentenpaket    | ZIP frisch entpacken; Startanleitung, Beispiele samt Vorschau, kompletter Skill, fertiges Studio und getrennten Quellcode auf Vollständigkeit und funktionierende relative Links prüfen |
 
 Teste die beauftragten Ausgaben und relevanten Risiken. Bei ausdrücklich ausführlicher Prüfung sind mehrere Formate und Rückimporte sinnvoll. Gib genaue Testergebnisse an und trenne sie von bloß vorgesehenen Tests.
