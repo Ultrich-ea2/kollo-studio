@@ -26,12 +26,59 @@ export function mountPresenter(root, options) {
     reading: false,
     readerPosition: 0,
     readerStarted: 0,
+    waitingCue: null,
+    resumeAfterCue: false,
   };
+  // Cues are a private notes convention, not new fields in the deck format.
+  // They consume no speaking time and never advance a slide automatically.
+  function parseNotes(notes) {
+    const parts = [];
+    const cues = [];
+    let total = 0;
+    let clicks = 0;
+    const lines = notes.replace(/\r\n?/g, "\n").split("\n");
+    const lastLine = lines.findLastIndex((line) => line.trim());
+    for (const [lineIndex, line] of lines.entries()) {
+      const marker = /^[ \t]*\[(KLICK|FOLIE)\][ \t]*$/.exec(line);
+      if (marker) {
+        const cue = {
+          kind: marker[1],
+          at: total,
+          order: marker[1] === "KLICK" ? ++clicks : 0,
+          final: lineIndex === lastLine,
+          id: cues.length,
+        };
+        cues.push(cue);
+        parts.push({ cue });
+      } else {
+        for (const text of line.split(/(\s+)/u)) {
+          if (!text) continue;
+          const space = /^\s+$/u.test(text);
+          const from = total;
+          if (!space)
+            total +=
+              1 + (/[.!?;:]$/u.test(text) ? 0.45 : /,$/u.test(text) ? 0.2 : 0);
+          parts.push({ text, space, from, to: total });
+        }
+      }
+      if (lineIndex < lines.length - 1) parts.push({ text: "\n", space: true });
+    }
+    return { parts, cues, total, clicks };
+  }
+  const scripts = slides.map((slide) =>
+    parseNotes(
+      slide.notes || "Für diese Folie sind keine Sprechernotizen enthalten.",
+    ),
+  );
   let disposed = false;
   let popupOrdinal = 0;
   let status = "Bereit. Fenster auf die gewünschten Bildschirme ziehen.";
   const reducedMotion = host.matchMedia?.("(prefers-reduced-motion: reduce)");
   const node = (view, selector) => view.root.querySelector(selector);
+  const text = (view, selector, value) => {
+    const element = node(view, selector);
+    if (element.textContent !== value) element.textContent = value;
+  };
   const listen = (view, target, type, fn, settings) => {
     target.addEventListener(type, fn, settings);
     view.cleanups.push(() => target.removeEventListener(type, fn, settings));
@@ -59,6 +106,12 @@ export function mountPresenter(root, options) {
     });
   }
   function setReading(value) {
+    if (value && state.waitingCue !== null) {
+      announce(
+        "Am Regiehinweis pausiert. Mit Weiter die angezeigte Aktion ausführen.",
+      );
+      return;
+    }
     state.readerPosition = readerPosition();
     state.readerStarted = Date.now();
     state.reading = value;
@@ -66,38 +119,105 @@ export function mountPresenter(root, options) {
   }
   function manualScroll() {
     if (state.reading) setReading(false);
+    state.resumeAfterCue = false;
+    if (state.waitingCue !== null) {
+      announce(
+        "Regiehinweis wartet. Mit Weiter die angezeigte Aktion ausführen; die Leseführung bleibt danach pausiert.",
+      );
+      return;
+    }
     announce(
       "Leseführung pausiert. Mit »Leseführung starten« an der markierten Stelle fortsetzen.",
     );
   }
   function transitionTo(index, step = 0) {
-    if (index !== state.index) {
-      state.readerPosition = 0;
-      state.readerStarted = Date.now();
-    }
+    state.readerPosition = 0;
+    state.readerStarted = Date.now();
     state.index = Math.max(0, Math.min(slides.length - 1, index));
     state.steps[state.index] = Math.max(
       0,
       Math.min(views[0]?.groups[state.index].length || 0, step),
     );
+    state.waitingCue = null;
+    state.resumeAfterCue = false;
+    announce(`Folie ${state.index + 1}: ${slides[state.index].title}.`);
     draw();
   }
   function groupCount() {
     return views[0]?.groups[state.index].length || 0;
   }
-  function next() {
+  function cueValid(cue) {
+    if (cue.kind === "KLICK")
+      return slides[state.index].reveal && cue.order <= groupCount();
+    return (
+      state.index < slides.length - 1 &&
+      cue.final &&
+      scripts[state.index].cues.filter((item) => item.kind === "FOLIE")
+        .length === 1
+    );
+  }
+  function cueDone(cue) {
+    return cue.kind === "KLICK" && state.steps[state.index] >= cue.order;
+  }
+  function nextAction() {
     if (slides[state.index].reveal && state.steps[state.index] < groupCount())
+      return `Einblendung ${state.steps[state.index] + 1} von ${groupCount()}`;
+    if (state.index < slides.length - 1)
+      return `Folie ${state.index + 2}: ${slides[state.index + 1].title}`;
+    return "Keine weitere Folie";
+  }
+  function cueWarning() {
+    const script = scripts[state.index];
+    if (!script.cues.length) return "";
+    if (script.cues.some((cue) => !cueValid(cue)))
+      return "Regieplan prüfen: Eine Marke passt nicht zu den Einblendungen oder steht nicht am Folienende. Weiter führt immer die tatsächliche nächste Aktion aus.";
+    const groups = slides[state.index].reveal ? groupCount() : 0;
+    if (script.clicks !== groups)
+      return `Regieplan prüfen: ${script.clicks} Klickmarken für ${groups} Einblendungen. Weiter zeigt die tatsächliche nächste Aktion.`;
+    return "";
+  }
+  function next() {
+    const resume = state.resumeAfterCue;
+    if (slides[state.index].reveal && state.steps[state.index] < groupCount()) {
       state.steps[state.index]++;
-    else if (state.index < slides.length - 1) {
+      announce(
+        `Einblendung ${state.steps[state.index]} von ${groupCount()} gezeigt.`,
+      );
+    } else if (state.index < slides.length - 1) {
+      // Carry the reading intent into draw: the new slide may begin with a
+      // cue at position zero, which must remember that it should resume later.
+      if (resume) state.reading = true;
       transitionTo(state.index + 1);
       return;
+    }
+    const waiting = scripts[state.index].cues[state.waitingCue];
+    if (waiting && cueDone(waiting)) {
+      state.waitingCue = null;
+      state.resumeAfterCue = false;
+      if (resume) {
+        state.reading = true;
+        state.readerStarted = Date.now();
+      }
     }
     draw();
   }
   function previous() {
-    if (slides[state.index].reveal && state.steps[state.index] > 0)
+    if (slides[state.index].reveal && state.steps[state.index] > 0) {
       state.steps[state.index]--;
-    else if (state.index > 0) {
+      const cue = scripts[state.index].cues.find(
+        (item) =>
+          item.kind === "KLICK" && item.order === state.steps[state.index] + 1,
+      );
+      if (cue) state.readerPosition = cue.at;
+      else state.readerPosition = readerPosition();
+      state.reading = false;
+      state.waitingCue = null;
+      state.resumeAfterCue = false;
+      announce(
+        `Zurück: ${state.steps[state.index]} von ${groupCount()} Einblendungen sichtbar. Leseführung pausiert.`,
+      );
+    } else if (state.index > 0) {
+      state.reading = false;
       transitionTo(state.index - 1);
       return;
     }
@@ -209,34 +329,45 @@ export function mountPresenter(root, options) {
     const script = node(view, ".prompt-script");
     script.replaceChildren();
     view.words = [];
-    let total = 0;
-    const notes =
-      slides[state.index].notes ||
-      "Für diese Folie sind keine Sprechernotizen enthalten.";
-    notes.split(/(\s+)/u).forEach((part) => {
-      if (!part) return;
-      if (/^\s+$/u.test(part)) {
-        script.append(view.doc.createTextNode(part));
+    view.cues = [];
+    scripts[state.index].parts.forEach((part) => {
+      if (part.cue) {
+        const marker = view.doc.createElement("span");
+        marker.className = "prompt-marker";
+        marker.textContent =
+          part.cue.kind === "KLICK"
+            ? `→ Weiter: Einblendung ${part.cue.order}`
+            : "→ Weiter: nächste Folie";
+        marker.dataset.cue = String(part.cue.id);
+        view.cues.push({ cue: part.cue, element: marker });
+        script.append(marker);
+        return;
+      }
+      if (part.space) {
+        script.append(view.doc.createTextNode(part.text));
         return;
       }
       const word = view.doc.createElement("span");
       word.className = "prompt-word";
-      word.textContent = part;
-      const from = total;
-      total += 1 + (/[.!?;:]$/u.test(part) ? 0.45 : /,$/u.test(part) ? 0.2 : 0);
-      view.words.push({ element: word, from, to: total });
+      word.textContent = part.text;
+      const from = part.from;
+      view.words.push({ element: word, from, to: part.to });
       // Clicking a word is a deliberate reading-position change, never a slide command.
       word.addEventListener("click", () => {
         state.readerPosition = from;
         state.readerStarted = Date.now();
         state.reading = false;
-        tick();
+        state.waitingCue = null;
+        state.resumeAfterCue = false;
         announce("Leseposition gesetzt. Die Leseführung ist pausiert.");
+        tick();
       });
       script.append(word);
     });
-    view.totalWords = total;
+    view.totalWords = scripts[state.index].total;
     view.highlight = -1;
+    view.highlightCue = null;
+    view.scrolledCue = null;
     node(view, ".prompt-reader").scrollTop = 0;
   }
   function buildView(view) {
@@ -252,7 +383,7 @@ export function mountPresenter(root, options) {
       content.innerHTML = `<main class="stage" aria-label="Präsentation"></main>${button("fullscreen", "Vollbild (F)", 'class="audience-fullscreen"')}`;
       addSlides(view);
     } else if (view.role === "teleprompter") {
-      content.innerHTML = `${header(view.role)}<div class="prompt-settings"><label>Schrift <input id="prompt-font" type="range" min="22" max="68" step="2" value="36" aria-label="Teleprompter-Schriftgröße"><output id="font-value">36 px</output></label><label>Tempo <input id="prompt-speed" type="range" min="60" max="240" step="10" value="130" aria-label="Lesetempo in Wörtern pro Minute"><output id="speed-value">130 W/min</output></label>${button("reader-toggle", "Leseführung starten", 'aria-pressed="false"')}${button("reader-reset", "Textanfang")}${button("mirror-toggle", "Spiegeln", 'aria-pressed="false"')}${button("focus-toggle", "Lesefokus", 'aria-pressed="false"')}</div><div class="prompt-workspace"><section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><p class="prompt-script"></p></div><div class="prompt-footer">Leseführung nach Tempo, keine Spracherkennung. Folienwechsel erfolgt manuell.</div></section><aside class="prompt-preview"><p class="preview-label">Jetzt im Publikum</p><div id="current-preview"></div><p class="prompt-cue" id="cue-status"></p><p class="preview-label">Als Nächstes</p><div id="next-preview"></div><p class="preview-title" id="next-title"></p><label class="preview-label" for="jump">Direkt zu Folie</label><select id="jump" aria-label="Zu Folie springen"></select></aside></div>${controlBar()}<p class="presenter-status" role="status" aria-live="polite"></p>`;
+      content.innerHTML = `${header(view.role)}<div class="prompt-settings"><label>Schrift <input id="prompt-font" type="range" min="22" max="68" step="2" value="36" aria-label="Teleprompter-Schriftgröße"><output id="font-value">36 px</output></label><label>Tempo <input id="prompt-speed" type="range" min="60" max="240" step="10" value="130" aria-label="Lesetempo in Wörtern pro Minute"><output id="speed-value">130 W/min</output></label>${button("reader-toggle", "Leseführung starten", 'aria-pressed="false"')}${button("reader-reset", "Textanfang")}${button("mirror-toggle", "Spiegeln", 'aria-pressed="false"')}${button("focus-toggle", "Lesefokus", 'aria-pressed="false"')}</div><div class="prompt-workspace"><section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><div class="prompt-script"></div></div><div class="prompt-action"><div><p id="cue-heading" class="presenter-label"></p><p id="next-action" role="status" aria-live="polite"></p></div>${button("cue-next", "Weiter →", 'aria-label="Angezeigte nächste Aktion ausführen"')}<p id="cue-warning" class="cue-warning" hidden></p></div><div class="prompt-footer">Leseführung nach Tempo, keine Spracherkennung. Folienwechsel erfolgt manuell.</div></section><aside class="prompt-preview"><p class="preview-label">Jetzt im Publikum</p><div id="current-preview"></div><p class="prompt-cue" id="cue-status"></p><p class="preview-label">Als Nächstes</p><div id="next-preview"></div><p class="preview-title" id="next-title"></p><label class="preview-label" for="jump">Direkt zu Folie</label><select id="jump" aria-label="Zu Folie springen"></select></aside></div>${controlBar()}<p class="presenter-status" role="status" aria-live="polite"></p>`;
       const select = node(view, "#jump");
       slides.forEach((slide, index) => {
         const option = view.doc.createElement("option");
@@ -287,6 +418,7 @@ export function mountPresenter(root, options) {
     const actions = {
       previous,
       next,
+      "cue-next": next,
       "timer-toggle": toggleTimer,
       "timer-reset": resetTimer,
       "black-toggle": toggleBlack,
@@ -307,6 +439,11 @@ export function mountPresenter(root, options) {
       "reader-reset": () => {
         state.readerPosition = 0;
         state.readerStarted = Date.now();
+        state.waitingCue = null;
+        state.resumeAfterCue = false;
+        announce(
+          "Textanfang. Bereits gezeigte Einblendungen bleiben sichtbar.",
+        );
         tick();
         const reader = node(view, ".prompt-reader");
         if (reader) reader.scrollTop = 0;
@@ -511,6 +648,20 @@ export function mountPresenter(root, options) {
   function tick() {
     if (disposed) return;
     const now = Date.now();
+    const script = scripts[state.index];
+    let position = readerPosition(now);
+    const reachedCue = script.cues.find(
+      (cue) => cueValid(cue) && !cueDone(cue) && cue.at <= position,
+    );
+    if (reachedCue && state.waitingCue !== reachedCue.id) {
+      state.resumeAfterCue = state.reading;
+      state.waitingCue = reachedCue.id;
+      state.readerPosition = reachedCue.at;
+      state.readerStarted = now;
+      state.reading = false;
+      position = reachedCue.at;
+      announce(`Regiehinweis erreicht. Jetzt Weiter: ${nextAction()}.`);
+    }
     const seconds = Math.floor(elapsed(now) / 1000);
     const time = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
     for (const view of [...views]) {
@@ -536,32 +687,77 @@ export function mountPresenter(root, options) {
         timer.setAttribute("aria-pressed", String(state.running));
       }
       if (view.role !== "teleprompter") continue;
+      const waiting = script.cues[state.waitingCue];
+      const action = node(view, ".prompt-action");
+      action.classList.toggle("is-waiting", Boolean(waiting));
+      text(
+        view,
+        "#cue-heading",
+        waiting
+          ? "Jetzt weiter · Leseführung wartet"
+          : position >= script.total && script.total > 0
+            ? "Sprechtext zu Ende"
+            : "Nächster Klick",
+      );
+      text(
+        view,
+        "#next-action",
+        `${state.black ? "Schwarzbild aktiv · " : ""}${nextAction()}`,
+      );
+      const cueButton = node(view, "#cue-next");
+      cueButton.setAttribute("aria-label", `Weiter: ${nextAction()}`);
+      node(view, "#cue-next").disabled =
+        state.index === slides.length - 1 &&
+        (!slides[state.index].reveal ||
+          state.steps[state.index] >= groupCount());
+      const warning = cueWarning();
+      node(view, "#cue-warning").hidden = !warning;
+      text(view, "#cue-warning", warning);
+      view.cues.forEach(({ cue, element }) => {
+        element.classList.toggle("is-current", cue.id === state.waitingCue);
+        element.classList.toggle("is-done", cueDone(cue));
+        element.classList.toggle("is-invalid", !cueValid(cue));
+      });
       const readerButton = node(view, "#reader-toggle");
       readerButton.textContent = state.reading
         ? "Leseführung pausieren"
         : "Leseführung starten";
       readerButton.setAttribute("aria-pressed", String(state.reading));
-      const position = readerPosition(now);
+      readerButton.disabled = Boolean(waiting);
       let current = view.words.findIndex((word) => position < word.to);
       if (current < 0) {
         current = Math.max(0, view.words.length - 1);
         if (state.reading) {
           state.readerPosition = position;
           state.reading = false;
+          announce("Leseführung beendet: Sprechtext zu Ende.");
           readerButton.textContent = "Leseführung starten";
           readerButton.setAttribute("aria-pressed", "false");
         }
       }
-      if (view.highlight !== current) {
+      if (
+        view.highlight !== current ||
+        view.highlightCue !== state.waitingCue
+      ) {
         view.words.forEach((word, index) => {
-          word.element.classList.toggle("is-current", index === current);
+          word.element.classList.toggle(
+            "is-current",
+            !waiting && index === current,
+          );
           word.element.classList.toggle("is-read", index < current);
         });
         view.highlight = current;
+        view.highlightCue = state.waitingCue;
       }
-      if (state.reading && view.words[current]) {
+      const cueElement =
+        waiting && view.cues.find((item) => item.cue === waiting)?.element;
+      const focusElement = cueElement || view.words[current]?.element;
+      if (
+        (state.reading || (waiting && view.scrolledCue !== state.waitingCue)) &&
+        focusElement
+      ) {
         const reader = node(view, ".prompt-reader");
-        const wordRect = view.words[current].element.getBoundingClientRect();
+        const wordRect = focusElement.getBoundingClientRect();
         const readerRect = reader.getBoundingClientRect();
         const target = Math.max(
           0,
@@ -572,7 +768,9 @@ export function mountPresenter(root, options) {
         );
         const delta = target - reader.scrollTop;
         if (Math.abs(delta) > 1)
-          reader.scrollTop += reducedMotion?.matches ? delta : delta * 0.32;
+          reader.scrollTop +=
+            waiting || reducedMotion?.matches ? delta : delta * 0.32;
+        view.scrolledCue = state.waitingCue;
       }
     }
   }
@@ -582,6 +780,7 @@ export function mountPresenter(root, options) {
     // Keep the controller intact for a possible back/forward-cache restoration.
     state.elapsed = elapsed();
     state.running = false;
+    state.resumeAfterCue = false;
     setReading(false);
     for (const view of [...views]) {
       if (view.role === "controller") continue;
