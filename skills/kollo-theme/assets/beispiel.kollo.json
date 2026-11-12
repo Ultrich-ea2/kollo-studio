@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "title": "Beispiel: Ein Forschungsvorhaben vorstellen",
+  "author": "Beispielperson",
+  "institution": "Beispielhochschule",
+  "date": "Beispiel – Datum einsetzen",
+  "duration": 10,
+  "theme": {
+    "background": "#080C17",
+    "foreground": "#F3F7FF",
+    "muted": "#B9C9E2",
+    "primary": "#5FCFFF",
+    "secondary": "#3FFFC4",
+    "font": "Arial",
+    "scale": 1,
+    "showProgress": true
+  },
+  "slides": [
+    {
+      "id": "titel",
+      "layout": "title",
+      "section": "Beispiel",
+      "title": "Ein Forschungsvorhaben vorstellen",
+      "subtitle": "Ein Formatbeispiel für Kollo Studio – keine abgeschlossene Studie",
+      "items": [],
+      "body": "",
+      "image": "",
+      "imageAlt": "",
+      "notes": "Dieses Beispiel enthält keine Messwerte oder wissenschaftlichen Befunde. Thema und Identität vor der Verwendung ersetzen.",
+      "source": "",
+      "transition": "fade",
+      "reveal": false,
+      "seconds": 0
+    },
+    {
+      "id": "fragen",
+      "layout": "bullets",
+      "section": "Planung",
+      "title": "Welche Frage soll die Untersuchung beantworten?",
+      "subtitle": "Beispiel für eine Planungsfolie",
+      "items": [
+        "Eine konkrete Forschungsfrage formulieren",
+        "Passende Materialien und eine Methode auswählen",
+        "Vor der Auswertung festlegen, woran Ergebnisse beurteilt werden"
+      ],
+      "body": "",
+      "image": "",
+      "imageAlt": "",
+      "notes": "Nur mit den tatsächlich vorliegenden Notizen füllen. Fehlende Ergebnisse als ausstehend kennzeichnen.",
+      "source": "",
+      "transition": "slide",
+      "reveal": true,
+      "seconds": 0
+    },
+    {
+      "id": "abschluss",
+      "layout": "closing",
+      "section": "Ausblick",
+      "title": "Nächste Schritte und offene Fragen",
+      "subtitle": "Beispiel: Die Untersuchung steht noch aus",
+      "items": [
+        "Untersuchungsplan mit der Betreuung abstimmen",
+        "Belege und Grenzen transparent dokumentieren"
+      ],
+      "body": "",
+      "image": "",
+      "imageAlt": "",
+      "notes": "Keine Ergebniskennzahlen ergänzen, solange keine geprüften Daten vorliegen.",
+      "source": "",
+      "transition": "fade",
+      "reveal": false,
+      "seconds": 0
+    }
+  ]
+}
