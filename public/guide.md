@@ -7,7 +7,7 @@ Unter **Mitnehmen** kannst du das **Studenten-Kit** als ein ZIP herunterladen. E
 | Ordner                | Inhalt und Verwendung                                                                                                                                                                                                     |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `examples/`           | `index.html` zeigt alle Beispiele. Die drei fiktiven Reihen enthalten jeweils `preview.svg`, den Offline-Vortrag `presentation.html`, das bearbeitbare Projekt `deck.kollo.json`, `bearbeitbar.pptx` und `GESTALTUNG.md`. |
-| `examples/delfi/`     | Zusätzliches Originalbeispiel: 6:32 Minuten Video mit Teleprompter in `presentation.html`, außerdem `preview.jpg`, `GESTALTUNG.md` und `provenance.json`. Keine Kollo-JSON- oder PowerPoint-Vorlage.                      |
+| `examples/delfi/`     | Zusätzliches Originalbeispiel: Video mit 6:32 Minuten Medienlänge, manuell gesteuerten Phasen und Teleprompter in `presentation.html`, außerdem `preview.jpg`, `GESTALTUNG.md` und `provenance.json`. Keine Kollo-JSON- oder PowerPoint-Vorlage. |
 | `skills/kollo-theme/` | Vollständiger KI-Skill mit Referenzen, Beispieldaten und lokalen Python-Helfern. Für eine KI diesen ganzen Ordner verwenden.                                                                                              |
 | `studio/`             | Fertiger Editor für den eigenen Rechner. Startanleitung und lokaler Server liegen dabei; keine npm-Paketinstallation nötig.                                                                                               |
 | `source/`             | `kollo-studio-source.zip` für eigene Codeänderungen. Das Archiv vor der Entwicklungsarbeit separat entpacken.                                                                                                             |
@@ -39,19 +39,19 @@ Du kannst auch nur mit einem Thema beginnen. Formuliere die Frage, die dein Publ
 
 ## Drei Beispiele, vier Kompositionen
 
-Die gestalteten Beispielreihen zeigen unterschiedliche visuelle Sprachen: offene redaktionelle Seiten, präzise technische Anordnungen und pointierte Bühnenfolien. Sie sind vollständig durchspielbar und enthalten Sprechtext, Einblendungen und Zeitplanung. In `GESTALTUNG.md` steht, warum eine Darstellung gewählt wurde und wie du sie sinnvoll anpasst.
+Die gestalteten Beispielreihen zeigen unterschiedliche visuelle Sprachen: offene redaktionelle Seiten, präzise technische Anordnungen und pointierte Bühnenfolien. Sie sind vollständig durchspielbar und enthalten Sprechtext, Einblendungen und Zeitplanung. Alle Beispiele, einschließlich DELFI, verwenden dieselbe Vortragsoberfläche mit manueller Phasensteuerung, Notizansicht, getrenntem Teleprompter und Publikumsfenster. In `GESTALTUNG.md` steht, warum eine Darstellung gewählt wurde und wie du sie sinnvoll anpasst.
 
 Im Thema wählst du `classic`, `editorial`, `technical` oder `stage`. Farben, Schrift und Maßstab bleiben anpassbar. Ein Wechsel verändert verfügbare Textbreiten: Kontrolliere danach jede Folie. Alle zwölf Layouts bleiben erhalten. Du musst weder das Thema des Beispiels noch dessen Gliederung übernehmen.
 
-## DELFI: das Original mit 6:32 Minuten
+## DELFI: das Original mit manuellen Animationsphasen
 
-Die zusätzliche Präsentation **PyTutorAI – Feedback, das den nächsten Schritt erklärt** zeigt eine animierte Projektdemo von Ultrich Edima Edima unter Mitarbeit von André Greubel. Sie hat 16 Szenen und bewahrt das Originalvideo sowie die zugehörigen Sprechtexte und Zeiten. Die gezeigten Softwareabläufe beziehen sich auf den dokumentierten Stand vom 8. September 2026; sie belegen keine späteren Ergebnisse oder Änderungen.
+Die zusätzliche Präsentation **PyTutorAI – Feedback, das den nächsten Schritt erklärt** zeigt eine animierte Projektdemo von Ultrich Edima Edima unter Mitarbeit von André Greubel. Sie hat 16 Szenen und bewahrt das Originalvideo sowie die zugehörigen Sprechtexte und Szenenzeiten. Das Video umfasst 6:32 Minuten; dein Vortrag dauert je nach Erklärungen und Pausen länger oder kürzer. Neu gesetzte Haltepunkte verbinden die sichtbaren Animationsphasen mit den passenden Textabschnitten. Die gezeigten Softwareabläufe beziehen sich auf den dokumentierten Stand vom 8. September 2026; sie belegen keine späteren Ergebnisse oder Änderungen.
 
 Auf der Website öffnet **Vorführen** das Sprechpult. Nach dem Herunterladen `examples/delfi/presentation.html` öffnen. Im einzelnen DELFI-ZIP `presentation.html` öffnen. Video und Sprechtext sind in der Offline-HTML enthalten, eine Installation oder Internetverbindung ist dafür nicht nötig. Nur der freiwillig geöffnete Link zur ursprünglichen Feedback-Demo benötigt Internet.
 
-**Starten** spielt das Video ab und markiert passend dazu die Wörter im Sprechtext. Das Video enthält keine Tonaufnahme. Wähle eine Szene zum Üben oder ändere **Tempo**, um Video und Text gemeinsam langsamer oder schneller ablaufen zu lassen. Manuelles Scrollen hält die automatische Leseführung an; mit **Zur Leseposition** folgt sie wieder der Videozeit. Die Leseführung hört dir nicht zu.
+Wie in den anderen Beispielen zeigt `→` die nächste Phase auf derselben Folie. Der zugehörige Videoabschnitt läuft bis zu seinem Halt und wartet dort. Ein zweiter Druck während der Bewegung beendet genau diesen Abschnitt sofort; er startet keine zusätzliche Phase. `←` kehrt zum vorherigen Zustand zurück. Erst wenn alle Phasen gezeigt wurden, führt der nächste Druck zur nächsten Szene. Es gibt keinen automatischen Szenenwechsel und keine Tonaufnahme.
 
-**Abtrennen** öffnet nur das Video in einem zweiten Fenster. Ziehe dieses auf einen erweiterten Bildschirm und schalte dort mit Doppelklick oder **F** auf Vollbild. Lass das Sprechpult offen. **Leertaste** startet oder pausiert das Video, **Pfeil links/rechts** wechselt die Szene. Im Sprechpult helfen Schriftgröße, Spiegelmodus und **Nur Text** bei der Probe. Diese Bedienelemente gehören zum Video-Beispiel; die Tastaturbelegung des Kollo-Folienplayers steht weiter unten.
+Mit **Sprechtext (N)** erscheint der Sprechtext im Hauptfenster. **Teleprompter öffnen** und **Publikumsfenster öffnen** öffnen die gleichen getrennten Ansichten wie bei den anderen Beispielen. Der ausgewählte Phasenstand bestimmt die Leseposition. Direkt im Text steht **→ Jetzt drücken** bei der nächsten passenden Handlung. Eine laufende Videoanimation bewegt den Text nicht selbstständig weiter. Die zusätzliche Leseführung lässt sich bewusst starten und hält am nächsten Klicksignal. Schriftgröße, Spiegeln, Lesefokus und die unten beschriebene Tastaturbelegung gelten für alle Beispiele.
 
 Die Datei ist ein Vorführbeispiel für abgestimmte Bewegung und Erklärtext. Sie kann nicht als `.kollo.json` importiert oder als native, bearbeitbare PPTX exportiert werden. Für eigene Folien beginne mit einer der drei Kollo-Reihen. Wer eine eigene Videopräsentation programmieren möchte, findet unter `showcases/delfi/` getrennte Dateien für Inhalt, HTML-Vorlage, CSS, JavaScript und Medien. `GESTALTUNG.md` beschreibt die Gestaltung, `provenance.json` die Herkunft. Eine Änderung des Sprechtexts verändert nicht die Bilder im fertigen Video; dafür muss auch das Video überarbeitet und erneut mit den Szenenzeiten geprüft werden.
 
@@ -80,17 +80,17 @@ Im bearbeitbaren PPTX bleiben Texte und Formen einzelne Objekte. Ein anderes Bet
 
 HTML spielt die Browser-Übergänge und Einblendungen ab. PPTX und PDF enthalten den vollständig sichtbaren Endzustand jeder Folie. PowerPoint erhält einfache Übergänge: Fade bleibt Fade, Slide wird Push, Zoom wird Fade. Elementanimationen des Browsers werden nicht vollständig nach PowerPoint übertragen. PDF enthält keine Animationen.
 
-Der Kollo-Folieneditor unterstützt keine frei programmierbaren Videozeitleisten, Tonaufnahmen oder beliebigen Bewegungspfade. Das DELFI-Beispiel verwendet dafür einen eigenen Player mit einem bereits fertig gerenderten Video. Bei Kollo-Folien dienen Einblendungen dazu, den gerade erklärten Schritt sichtbar zu machen. Passe das Gesprochene und die Klicks aufeinander an; eine statische Abgabe muss auch mit allen Elementen gleichzeitig verständlich bleiben.
+Der Kollo-Folieneditor unterstützt keine frei programmierbaren Videozeitleisten, Tonaufnahmen oder beliebigen Bewegungspfade. Das DELFI-Beispiel bindet ein bereits fertig gerendertes Video über einen eigenen Adapter in die gemeinsame Vortragssteuerung ein. Es fügt dem `.kollo.json`-Format keine Video- oder Zeitachsenfelder hinzu. Bei Kollo-Folien dienen Einblendungen dazu, den gerade erklärten Schritt sichtbar zu machen. Passe das Gesprochene und die Klicks aufeinander an; eine statische Abgabe muss auch mit allen Elementen gleichzeitig verständlich bleiben.
 
 ## Teleprompter und Publikumsfenster
 
-Öffne im Präsentationsmodus **Publikumsfenster öffnen** und **Teleprompter öffnen**. Das Publikumsfenster zeigt nur die Folien. Das Sprechpult zeigt deine Notizen, die aktuelle Folie, eine Vorschau der nächsten Folie und gemeinsame Steuerung. Folie, Einblendungsstand, Schwarzbild und Vortragsuhr bleiben zusammen.
+Öffne im Präsentationsmodus **Publikumsfenster öffnen** und **Teleprompter öffnen**. Das Publikumsfenster zeigt nur die Folien. Das Sprechpult zeigt deine Notizen, die aktuelle Folie, eine Vorschau der nächsten Folie und gemeinsame Steuerung. Mit **Sprechtext (N)** kannst du denselben Sprechtext samt Klicksignalen direkt im Hauptfenster lesen. Folie, Animationsphase, Leseposition, Schwarzbild und Vortragsuhr bleiben zusammen.
 
 Für einen Beamer oder zweiten Monitor die Anzeige im Betriebssystem **erweitern** und das Publikumsfenster dorthin ziehen. Teile in einer Videokonferenz nur dieses Fenster. Eine Spiegelung des ganzen Bildschirms könnte deine privaten Notizen zeigen. Vollbild wird jeweils im aktiven Fenster eingeschaltet; Kollo verschiebt Fenster nicht automatisch auf einen bestimmten Bildschirm.
 
-Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück. Ein Folienwechsel zeigt die neuen Notizen von vorn.
+Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt auf Wunsch durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück, ohne sichtbare Einblendungen zu ändern. Beim nächsten Phasenwechsel richtet sich der Text wieder auf den zugehörigen Abschnitt aus.
 
-Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
+Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute und beginnt nur, wenn du sie ausdrücklich startest. Sie hört dir nicht zu. Nach Navigation bleibt sie pausiert. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
 
 ### Signale zum Weiterdrücken
 
@@ -108,18 +108,18 @@ Damit können wir zur Auswertung übergehen.
 
 Dieses Beispiel passt zu zwei einzeln eingeblendeten Gruppen auf einer Folie, auf die eine weitere Folie folgt. Bei eingeschalteten Einblendungen sind diese Gruppen zunächst verborgen: Setze den ersten `[KLICK]` deshalb vor ihre erste Erklärung. Pro Einblendung ein `[KLICK]`, anschließend höchstens ein `[FOLIE]` am Ende der Notizen. Auf der letzten Folie entfällt `[FOLIE]`. Ohne Einblendungen sind keine `[KLICK]`-Zeilen nötig.
 
-Die exakt geschriebenen Marker stehen jeweils auf einer eigenen Zeile. Sie erscheinen als private Regiehinweise und zählen nicht zum gesprochenen Text. Erreicht die laufende Leseführung einen noch offenen Marker, hält sie an. **Weiter**, Pfeil rechts oder eine passende Presenter-Taste führt die tatsächliche nächste Aktion aus; eine vorher laufende Leseführung setzt anschließend fort. Die Präsentation schaltet niemals allein wegen eines Markers weiter. Prüfe im Sprechpult, ob die Hinweise zur Anzahl und Reihenfolge der Einblendungen passen.
+Die exakt geschriebenen Marker stehen jeweils auf einer eigenen Zeile. In der Notizansicht und im getrennten Teleprompter erscheinen sie mitten im Text als **→ Jetzt drücken** mit der passenden Aktion. Sie zählen nicht zum gesprochenen Text. Erreicht die laufende Leseführung einen noch offenen Marker, hält sie an. **Weiter**, Pfeil rechts oder eine passende Presenter-Taste führt genau die nächste Phase aus und wählt deren Textabschnitt. Erst nach der letzten Phase folgt die nächste Folie. Die Leseführung bleibt nach diesem Schritt pausiert. Die Präsentation schaltet niemals allein wegen eines Markers weiter. Prüfe im Sprechpult, ob die Hinweise zur Anzahl und Reihenfolge der tatsächlichen Einblendungen passen.
 
-Ein vorzeitiger Klick überspringt keinen Sprechtext. **Textanfang** setzt die Leseposition zurück, nicht bereits sichtbare Einblendungen. Auch Präsentationen ohne Marker funktionieren weiterhin; dann gibt es den allgemeinen Hinweis zur nächsten Aktion, aber keinen Halt an einer bestimmten Textstelle. Andere Klammertexte wie `[PAUSE: Frage abwarten]` bleiben gewöhnliche Notizen.
+Ein vorzeitiger Klick wählt bewusst die nächste Phase samt ihrer Erklärung, auch wenn du den vorherigen Absatz noch nicht gelesen hast. `←` stellt die vorherige Phase samt Sprechtext wieder her; am Folienanfang geht es zum letzten Zustand der vorherigen Folie. Auch Präsentationen ohne Marker funktionieren weiterhin; dann gibt es den allgemeinen Hinweis zur nächsten Aktion, aber keine genaue Zuordnung zu einer Textstelle. Andere Klammertexte wie `[PAUSE: Frage abwarten]` bleiben gewöhnliche Notizen. Zusätzliche `[KLICK]`-Zeilen erzeugen keine neuen Animationen auf statischen Folien.
 
 Die Signale gehören zur HTML-Präsentation und zum Studio. In PowerPoint-Notizen bleiben sie lesbarer Text; sie steuern PowerPoint nicht. Der KI-Skill erklärt die Konvention und die Prüfung. Bitte ihn ausdrücklich um einen Sprechtext mit einem vollständigen Klickplan.
 
-Beim separat angebotenen DELFI-Originalvideo wechseln die Szenen automatisch mit der Videozeit. Dort bleibt die zeitgebundene Leseführung erhalten; zum normalen Abspielen sind keine Klicksignale zwischen den Szenen erforderlich.
+Beim DELFI-Beispiel gelten dieselben Regeln. Die Phase spielt jeweils ihren Videoabschnitt ab und hält dann. Der Sprechtext enthält passende Signale zwischen den Erklärungen; weder das Video noch der Lesetimer wechselt selbstständig die nächste Phase oder Szene.
 
 | Taste                   | Wirkung                            |
 | ----------------------- | ---------------------------------- |
-| → / Bild ab / Leertaste | Nächste Einblendung oder Folie     |
-| ← / Bild auf            | Zurück                             |
+| → / Bild ab / Leertaste | Genau nächste Phase; erst nach der letzten Phase zur nächsten Folie |
+| ← / Bild auf            | Genau vorherige Phase; am Folienanfang zur letzten Phase der vorherigen Folie |
 | Pos1 / Ende             | Erste / letzte Folie               |
 | T oder P                | Vortragsuhr starten oder pausieren |
 | R                       | Vortragsuhr zurücksetzen           |

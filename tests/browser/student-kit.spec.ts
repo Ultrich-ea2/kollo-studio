@@ -92,6 +92,7 @@ test("all release archives match hashes and the student kit opens examples direc
     "guides/guide.md",
     "examples/delfi/presentation.html",
     "examples/delfi/provenance.json",
+    "examples/delfi/phases.json",
     "studio/downloads/kollo-delfi.zip",
   ])
     expect(kit.file(required), required).not.toBeNull();
@@ -140,6 +141,33 @@ test("all release archives match hashes and the student kit opens examples direc
     await page.keyboard.press("End");
     await expect(page.locator("#count")).toContainText("7 / 7");
   }
+  await page.goto(
+    pathToFileURL(path.join(root, "examples/delfi/presentation.html")).href,
+  );
+  await expect(page.locator("#count")).toContainText("1 / 16");
+  await expect(
+    page.locator('.media-canvas[data-media-slide="0"]'),
+  ).toHaveAttribute("data-media-time", "2.1");
+  await expect(page.locator("#notes .prompt-marker")).toHaveCount(3);
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-phase",
+    "1",
+  );
+  if (
+    (await page
+      .locator(".kollo-presenter")
+      .getAttribute("data-media-playing")) === "true"
+  )
+    await page.keyboard.press("ArrowRight");
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-phase",
+    "1",
+  );
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-media-playing",
+    "false",
+  );
   expect(requests).toEqual([]);
 });
 

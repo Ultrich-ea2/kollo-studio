@@ -166,7 +166,7 @@ export function ExampleGallery(props: Props) {
           <p>
             PyTutorAI: Feedback, das den nächsten Schritt erklärt. Die
             vollständige Originalpräsentation mit animierten Abläufen, Demo und
-            zeitgenauem Sprechtext.
+            Klicksignalen direkt im Sprechtext.
           </p>
           <p className="delfi-credit">Ultrich Edima Edima · André Greubel</p>
           <div className="delfi-actions">
@@ -185,7 +185,7 @@ export function ExampleGallery(props: Props) {
             </a>
           </div>
           <p className="delfi-format">
-            Video ohne Ton · Teleprompter synchron zum Bild · separates
+            Video ohne Ton · Einzelne Animationsphasen mit ← und → · separates
             Publikumsfenster. Im ZIP direkt per Doppelklick öffnen. Dieses
             Original ist ein Anschauungsbeispiel; die drei Vorlagen darunter
             kannst du im Studio bearbeiten.

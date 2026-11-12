@@ -1,6 +1,6 @@
 # DELFI-Originalbeispiel: Prüfstand
 
-Stand: 12. November 2026. Dieser Bericht dokumentiert die Originaldatei und die geprüfte lokale Einbindung in Kollo 1.2.0. Die früheren Berichte zur Version 1.1 beschreiben die damalige Veröffentlichung mit drei fiktiven Beispielen und werden durch diesen zusätzlichen Bericht nicht rückwirkend geändert.
+Stand: 13. November 2026. Die aktuelle Umstellung verbindet das Originalvideo mit dem gemeinsamen Sprechpult und manuell ausgelösten Animationsphasen. Die Prüfung der neuen Phasenmetadaten, Standbilder und lokalen Laufzeit ist abgeschlossen. CI und Veröffentlichung werden für den exakten Release-Commit gesondert geprüft. Die weiter unten genannten früheren Testergebnisse gelten ausdrücklich für Version 1.2.0.
 
 ## Geprüfte Originalfassung
 
@@ -26,7 +26,48 @@ Beide Originalfassungen enthalten identische Video- und JPEG-Bytes sowie identis
 
 Die MP4-Metadaten nennen den Titel „PyTutorAI – DELFI 2026“, Ultrich Edima Edima als Autor und `Lavf60.16.100` als Encoder. Die Quelltextprüfung fand keine eingebetteten Zugangsdaten, API-Schlüssel oder privaten Kontaktdaten. Alle 16 vorhandenen Szenenaufnahmen wurden visuell gesichtet; darin wurden keine fremden privaten Unterlagen oder sichtbaren Geheimnisse erkannt. Das ist eine begrenzte Prüfung der gelieferten Dateien, keine neue fachliche Validierung der gezeigten Forschungs- oder Softwareaussagen.
 
-## Beobachteter Test der Originaldatei
+## Aktuelle Phasensteuerung
+
+DELFI verwendet denselben Player wie die bearbeitbaren Beispiele und HTML-Exporte. Das Video wird über einen Adapter eingebunden; das importierbare Kollo-JSON-Format erhält dadurch keine Videofelder.
+
+- `→` startet die nächste definierte Animationsphase. Ihr Videoabschnitt hält am festgelegten Ende. Ein weiterer Druck während der laufenden Animation beendet zunächst diese Phase; erst der folgende Druck löst die nächste aus.
+- `←` stellt den vorherigen Phasenzustand wieder her. Vom Anfang einer Szene geht es zum letzten Zustand der vorherigen Szene. Nach der letzten Phase ist ein eigener Vorwärtsschritt für den Szenenwechsel erforderlich.
+- Die gewählte Phase richtet den Sprechtext auf ihre zugehörige Textstelle aus und pausiert die Leseführung. Lesetempo und Vortragstimer lösen weder Phasen noch Szenenwechsel aus. Es gibt keine Spracherkennung oder Tonaufnahme.
+- Die privaten Signale stehen innerhalb des Sprechtexts. Teleprompter und Publikumsfenster verwenden die gemeinsame Steuerung; Regiehinweise gehören nicht ins Publikumsbild.
+
+Die Medienlänge bleibt 6:32 Minuten. Die tatsächliche Vortragsdauer hängt von Klicks und Sprechpausen ab. Definierte Animationsanfänge überspringen reine Wartezeiten im Originalvideo; zusammenhängende Bewegung bleibt erhalten. Eine Änderung des Sprechtexts verändert die bereits gerenderten Videobilder nicht.
+
+## Abgeschlossene Prüfung der neuen Metadaten
+
+Die zusätzlich untersuchte Originaldatei `PyTutorAI_DELFI_Animationen.pptx` enthält 16 eingebettete Szenenvideos und zugehörige Vorschaubilder. Ihre PowerPoint-Zeitsteuerung startet die jeweiligen Videos; sie enthält keinen separat steuerbaren Objektanimationsplan. Auch die beiden HTML-Originale liefern Szenenzeiten und Sprechtext, aber keine ursprünglichen Klickmarken für einzelne Animationsphasen. Die neuen Haltepunkte sind deshalb ausdrücklich als nachträglich kuratierte Metadaten gekennzeichnet.
+
+`showcases/delfi/phases.json` beschreibt **81 manuelle Phasen über alle 16 Szenen**. Pro Szene enthält die Datei ein Startbild, absolute Anfangs- und Endzeiten jeder Phase, eine verständliche Aktionsbezeichnung sowie Einfügepositionen im ursprünglichen Sprechtext. Die Herkunft ist über die Original- und Video-Prüfsummen sowie einen eigenen Sprechtext-Hash je Szene gebunden.
+
+- Alle **16 Startbilder und 81 Phasenendbilder** wurden aus dem Originalvideo mit 30 Bildern pro Sekunde erzeugt und visuell geprüft. Kontaktbögen und ergänzende Einzelbilder dienten dazu, tatsächliche Einblendungen, Zahlenwechsel und vollständig gezeichnete Verbindungen zu erkennen.
+- Die Phasen beruhen auf erklärbaren Bildzuständen, nicht auf gleich großen Zeitintervallen. Parallel laufende oder eng verbundene Aufbauten bilden gemeinsam eine Phase. Dekorative Bewegung und wiederholte Umläufe erzeugen keine zusätzlichen Klicks.
+- Die Sichtprüfung korrigierte zunächst zu frühe Haltepunkte an dünnen Verbindungslinien. Der Rückweg im Workbook einschließlich seiner Zusammenfassung und der Übergang zu vergrößerten Testergebnissen einschließlich des bereits sichtbaren Erfolgszählers werden jeweils als zusammenhängender Aufbau behandelt.
+- Alle Zeitfolgen sind geordnet und liegen innerhalb ihrer ursprünglichen Szene. Keine Phase reicht in den Szenenwechsel oder dessen Ausblendung hinein. Die Wiedergabeanfänge lassen zusammengehörige Verbindungen sichtbar entstehen und überspringen nur geeignete Zwischenhalte.
+- Alle 81 Einfügepositionen sind eindeutige, aufsteigende Zeichenpositionen an Wortgrenzen. Die 16 ursprünglichen Sprechtexte lassen sich nach Einfügen und Entfernen der Signale bytegenau wiederherstellen. Die Positionen stimmen auch mit JavaScript-UTF-16-Indizes überein. Für die 15 nicht letzten Szenen kommt jeweils eine abschließende `[FOLIE]`-Marke hinzu.
+- Unter `showcases/delfi/frames/` liegen 16 szenenspezifische JPEG-Startbilder mit jeweils 960 × 540 Pixeln. Zusammen benötigen sie **483.743 Bytes**. Damit zeigt auch die Vorschau der nächsten Szene deren eigenen Ausgangszustand.
+- Die SHA-256-Prüfung bestätigt weiterhin die unveränderten ursprünglichen MP4-Bytes. Weder Video noch ursprünglicher Sprechtext wurden für die Klicksteuerung neu geschrieben.
+
+Diese Ergebnisse bestätigen die kuratierten Daten und ihre visuelle Zuordnung. Sie ersetzen noch keinen Browsernachweis, dass Wiedergabe, Tastatur, Leseposition und mehrere Fenster dieselben Zustände tatsächlich gemeinsam erreichen.
+
+## Prüfstatus der aktuellen Laufzeit und Pakete
+
+Die abschließenden automatisierten Testzahlen und die Release-Ergebnisse werden nach dem vollständigen Lauf ergänzt. Zu prüfen sind insbesondere alle Phasen vorwärts und rückwärts, das Beenden einer laufenden Phase, die getrennten Fenster, pausierte Leseführung, Offline-HTML, mobile Ansichten, CSP und die tatsächlich ausgelieferten Downloadarchive. Frühere grüne Läufe gelten nicht als Nachweis für die neue Phasensteuerung.
+
+## Aktuelle Laufzeitprüfung, Version 1.5.0
+
+- 44 Node-Tests, 30 Python-Tests und 35 Browserfälle bestanden. Der lokale Browserlauf verwendet Microsoft Edge unter Windows; ein veralteter Testselektor für die frühere Notizansicht wurde an das neue private Sprechtextfenster angepasst und erneut erfolgreich geprüft.
+- Alle 81 Phasen und alle 16 Szenen wurden vorwärts durchlaufen, einschließlich der Textzuordnung und Rücksprünge über jede Foliengrenze. Echte Bewegung stoppt am vorgesehenen Phasenende; ein zweiter Druck beendet nur die laufende Phase. Stillstand und Timer lösen keinen Folienwechsel aus.
+- Pixelproben der sichtbaren Canvas-Bilder sind in Steuerung, Publikum und Teleprompter identisch. Ein gemeinsamer Decoder verhindert unabhängig laufende Videozeiten. Das Publikumsfenster enthält weder private Notizen noch Regiemarken.
+- Die Fensterprüfung umfasst abgebrochene Navigation, Neuladen, Schließen, Wiederöffnen, fremde Navigation, unabhängige Sitzungen und blockierte Pop-ups.
+- Die tatsächlich erzeugte Einzeldatei funktioniert unter `file://` ohne Netzwerk. Ein gefundener CRLF/LF-Unterschied beim CSP-Skript-Hash ist behoben und durch eine Regression gesichert. Sowohl DELFI als auch allgemeine HTML-Exporte normalisieren Skriptzeilen vor dem Hashen und Einbetten.
+- Reduzierte Bewegung zeigt pro Klick direkt den stabilen Endzustand. Ungültige oder fehlende Medienpläne, beschädigte Medien und verspätete Metadaten blockieren die Steuerung nicht.
+- Die Hauptansicht wurde bei 1440, 1024, 768 und 390 Pixeln Breite geprüft. Keine horizontale Überbreite; Inline-Signale und Steuerelemente bleiben erreichbar. Lesefokus, Schriftgröße, Spiegelung und manuelles Scrollen wurden ebenfalls geprüft.
+
+## Historischer Test der Originaldatei, Version 1.2.0
 
 Die unveränderte lokale Originaldatei wurde in automatisiertem Microsoft Edge über `file://` geöffnet:
 
@@ -36,9 +77,11 @@ Die unveränderte lokale Originaldatei wurde in automatisiertem Microsoft Edge �
 - Wiedergabe startete in beiden Fenstern. Leertaste im Publikumsfenster pausierte beide Videos.
 - Pfeil rechts im Publikumsfenster wechselte beide Videos zu Szene 10 bei 212 Sekunden.
 
-Der Sprechtext wird anhand der Videozeit geführt. Es gibt weder aufgezeichnete Sprache noch eine Spracherkennung. Die Szene ist bereits in das Video gerendert; eine Änderung der Textdaten verändert die Videobilder nicht.
+Im unveränderten Original wurde der Sprechtext anhand der Videozeit geführt. Diese Steuerung beschreibt den damaligen Stand, nicht die aktuelle manuelle Phasensteuerung. Es gibt weder aufgezeichnete Sprache noch eine Spracherkennung. Die Szene ist bereits in das Video gerendert; eine Änderung der Textdaten verändert die Videobilder nicht.
 
-## Einbindung und Downloadpakete (lokal geprüft)
+## Historische Einbindung und Downloadprüfung, Version 1.2.0
+
+Die folgenden Ergebnisse wurden am 12. November 2026 für die frühere Einbindung festgehalten. Sie sind keine Testbestätigung der aktuellen Umstellung.
 
 - **42 Node-Tests, 24 Python-Tests und 22 Browser-Tests bestanden.** Die Browser-Suite lief vollständig mit Microsoft Edge unter Windows; keine Tests übersprungen. Die vier neuen DELFI-Tests decken die 16 Szenen, Wiedergabe, Pause, Tempo, Wortmarkierung, Fensterisolation, Neuladen, fremde Navigation, blockierte Pop-ups, Countdown und Offline-/Mobilbedienung ab.
 - Video- und JPEG-Hashes entsprechen dem Original. Der kanonische Inhalts-Fingerprint schützt die ursprünglichen Credits, Texte und Zeiten. Der Build verweigert beschädigte Originalmedien und unvollständige Szenenfolgen.
@@ -53,4 +96,4 @@ Der lokale Prüflauf hatte zunächst zwei Umgebungsprobleme: Playwrights weiter 
 
 ## Veröffentlichungsprüfung
 
-CI und Live-Prüfung erfolgen für den exakten veröffentlichten Git-Commit. Dieser Bericht bestätigt die oben beschriebenen lokalen Ergebnisse; die tatsächlichen Deployment- und Downloadprüfungen werden im lokalen Release-Protokoll erfasst. Es werden keine zusätzlichen Forschungs- oder Wirksamkeitsaussagen aus dieser technischen Prüfung abgeleitet.
+CI und Live-Prüfung erfolgen für den exakten veröffentlichten Git-Commit. Dieser Bericht trennt die neue Metadaten- und Laufzeitprüfung von den historischen Ergebnissen. Die aktuellen Deployment- und Downloadprüfungen werden nach Abschluss im lokalen Release-Protokoll erfasst. Es werden keine zusätzlichen Forschungs- oder Wirksamkeitsaussagen aus dieser technischen Prüfung abgeleitet.
