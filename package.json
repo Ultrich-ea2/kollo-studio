@@ -11,12 +11,25 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "react": "19.2.6", "react-dom": "19.2.6", "pptxgenjs": "4.0.1",
-    "jspdf": "4.2.1", "jszip": "3.10.1", "lucide-react": "1.17.0"
+    "jspdf": "4.2.1",
+    "jszip": "3.10.1",
+    "lucide-react": "1.17.0",
+    "pptxgenjs": "4.0.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@types/react": "19.2.3", "@types/react-dom": "19.2.3", "@types/node": "24.12.3",
-    "typescript": "6.0.2", "vite": "6.4.1", "@vitejs/plugin-react": "4.7.0",
-    "tsx": "4.21.0", "@playwright/test": "1.58.2"
+    "@playwright/test": "1.58.2",
+    "@types/node": "24.12.3",
+    "@types/react": "19.2.3",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "4.7.0",
+    "prettier": "3.10.1",
+    "tsx": "4.23.15",
+    "typescript": "6.0.2",
+    "vite": "6.4.6"
+  },
+  "overrides": {
+    "image-size": "2.1.0"
   }
 }

@@ -1,5 +1,11 @@
 # Kollo Studio – Anleitung
 
+## Fertiges Studio ohne Paketinstallation
+
+Unter **Mitnehmen → Fertiges Offline-Studio** findest du die gebaute Anwendung. ZIP entpacken, einmalig Node.js 22 oder neuer installieren (empfohlen: 24 LTS), dann unter Windows `Start-Kollo.cmd` öffnen. Auf macOS/Linux im entpackten Ordner `node server.mjs` ausführen. Die Adresse `http://127.0.0.1:4179` im Browser öffnen. Das Terminal bleibt während der Arbeit offen. Der Server ist ausschließlich über das eigene Gerät erreichbar. Beenden mit Strg+C.
+
+Das Paket enthält Editor, Exporte, Anleitung, Skill und Quellcode-ZIP. Nach der einmaligen Node.js-Installation ist keine Internetverbindung und kein `npm install` nötig. Sichere dein Projekt trotzdem regelmäßig als JSON. Für das reine Präsentieren reicht die einzelne exportierte HTML-Datei ohne Node.js.
+
 Mit Kollo Studio gestaltest du einen Abschlussvortrag, ein Seminar oder ein Kolloquium. Die mitgelieferten Folien sind Beispiele. Ersetze ihre Inhalte durch deine eigenen Aussagen und geprüften Belege.
 
 ## Schnell zum eigenen Vortrag

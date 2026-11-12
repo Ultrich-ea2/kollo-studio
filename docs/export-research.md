@@ -1,6 +1,6 @@
 # Export decisions and verification
 
-The versioned deck and deterministic 1280×720 scene are the only export inputs. Export functions return Blobs; the application chooses filenames and whether to include notes. Overflow warnings stop the export instead of silently clipping text. Raster exports render the shared SVG scene to 2560×1440 PNG sequentially. They need a browser canvas and the platform Arial/Georgia fonts. PDF uses an exact 960×540pt landscape page per slide, containing the entire PNG. Raster PDF text is not searchable; raster PPTX is not a native editable slide.
+The versioned deck and deterministic 1280×720 scene are the only export inputs. Export functions return Blobs; the application chooses filenames and whether to include notes. Overflow warnings stop the export instead of silently clipping text. Raster exports render the shared SVG scene to 2560×1440 PNG sequentially. They need a browser canvas and the platform Arial/Georgia fonts (plus Courier New for code). PDF uses an exact 960×540pt landscape page per slide, containing the entire PNG. Raster PDF text is not searchable; raster PPTX is not a native editable slide.
 
 Editable PowerPoint uses native single-line text, shapes and images. It uses 96px/in, 0.75pt per scene font pixel, zero text margins and disabled text wrapping. PowerPoint and browser typography can still differ, and fonts are not embedded. WebP images are converted locally to PNG for PowerPoint compatibility. Image decoding is capped at 40MP and 16384 pixels per dimension.
 

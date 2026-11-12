@@ -1,5 +1,9 @@
 # Kollo Studio
 
+Das veröffentlichte Studio bietet ein **fertiges Offline-Studio** als ZIP. Dafür genügt Node.js 22 oder neuer (empfohlen: 24 LTS). Nach dem Entpacken unter Windows `Start-Kollo.cmd` starten; unter macOS/Linux `node server.mjs` ausführen. Die angezeigte Adresse `http://127.0.0.1:4179` öffnen. Es ist keine Paketinstallation nötig. Der feste lokale Port erhält den Browserspeicher beim Neustart.
+
+Die Quellcode-Version unten richtet sich an Studierende, die das Studio weiterentwickeln möchten. Eine einzelne exportierte HTML-Präsentation funktioniert auch ohne Node.js direkt per Doppelklick.
+
 Ein lokales Präsentationsstudio für Kolloquien, Seminare und Abschlussvorträge. Inhalte bearbeiten, eine Präsentation abspielen und dieselben Folien als HTML, PDF oder PowerPoint ausgeben. Das Thema stammt aus Ultrichs eigener Präsentationsgestaltung; persönliche Inhalte der Bachelorarbeit sind nicht enthalten. Die mitgelieferten akademischen Inhalte sind Beispiele.
 
 ## Starten
