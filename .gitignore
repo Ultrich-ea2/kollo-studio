@@ -6,3 +6,5 @@ playwright-report/
 *.local
 .env*
 qa/
+__pycache__/
+*.pyc

@@ -19,6 +19,13 @@ SLIDE_KEYS = {"id", "layout", "section", "title", "subtitle", "items", "body", "
 FORBIDDEN = {"__proto__", "prototype", "constructor"}
 DECK_TEXT = {"title": 200, "author": 160, "institution": 200, "date": 80}
 SLIDE_TEXT = {"section": 100, "title": 200, "subtitle": 600, "body": 8000, "imageAlt": 300, "notes": 20000, "source": 2000}
+# ECMAScript String.trim whitespace, deliberately not Python's larger strip set.
+# In particular U+0085 is not removed while U+FEFF is removed by the application.
+JS_WHITESPACE = "\u0009\u000a\u000b\u000c\u000d\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+
+
+def js_trim(value):
+    return value.strip(JS_WHITESPACE)
 
 
 def utf16_length(value):
@@ -44,7 +51,7 @@ def image_dimensions(data, kind):
                 break
             marker = data[offset]
             offset += 1
-            if marker in {0x01, 0xD8} or 0xD0 <= marker <= 0xD7:
+            if marker == 0x01 or 0xD0 <= marker <= 0xD7:
                 continue
             if marker in {0xD9, 0xDA} or offset + 2 > len(data):
                 break
@@ -187,13 +194,13 @@ def validate_deck(deck):
                     continue
                 if layout in ("stats", "chart"):
                     parts = item.split("|")
-                    if len(parts) != 2 or not all(part.strip() for part in parts):
+                    if len(parts) != 2 or not all(js_trim(part) for part in parts):
                         fail(item_path, "Wert | Bezeichnung mit zwei nicht leeren Teilen erwartet")
                     elif layout == "chart":
                         try:
-                            if not re.fullmatch(r"[0-9]+(?:[.,][0-9]+)?", parts[0].strip()):
+                            if not re.fullmatch(r"[0-9]+(?:[.,][0-9]+)?", js_trim(parts[0])):
                                 raise ValueError
-                            value = float(parts[0].strip().replace(",", "."))
+                            value = float(js_trim(parts[0]).replace(",", "."))
                             if not math.isfinite(value) or value < 0:
                                 raise ValueError
                         except ValueError:
@@ -211,6 +218,10 @@ def validate_deck(deck):
                 fail(path + ".image", "eingebettetes PNG/JPEG/WebP als Base64 erwartet")
             else:
                 try:
+                    if len(match.group(2)) % 4:
+                        raise ValueError("Base64-Länge muss ein Vielfaches von vier sein")
+                    if len(image) > ((MAX_IMAGE + 2) // 3) * 4 + 64:
+                        raise ValueError("Bild ist größer als 2 MiB")
                     data = base64.b64decode(match.group(2), validate=True)
                     if len(data) > MAX_IMAGE:
                         raise ValueError("Bild ist größer als 2 MiB")
