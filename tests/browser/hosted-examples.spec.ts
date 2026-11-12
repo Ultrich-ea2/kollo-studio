@@ -33,7 +33,9 @@ test("hosted example gallery starts all three players and their audience windows
       errors.push(message.text());
   });
   await page.goto("/examples/index.html");
-  const links = page.locator('article nav a[href$="/vorfuehren.html"]');
+  const links = page.locator(
+    'article:not([data-kind="original"]) nav a[href$="/vorfuehren.html"]',
+  );
   await expect(links).toHaveCount(3);
   expect(
     await links.evaluateAll((elements) =>

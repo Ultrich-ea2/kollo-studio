@@ -9,6 +9,7 @@ import {
 import { showcaseExamples } from "../examples";
 import { createScene, svgMarkup } from "../scene";
 import type { Deck } from "../model";
+import delfiPreview from "../../showcases/delfi/preview.jpg";
 import "./examples.css";
 
 type Props = {
@@ -97,10 +98,11 @@ function Example({
 }
 
 export function ExampleGallery(props: Props) {
+  const offline = document.documentElement.dataset.offline === "true";
   return (
     <section className="example-gallery" aria-labelledby="examples-title">
       <div className="gallery-intro">
-        <p className="eyebrow">DREI REGIEN. DREI EIGENE STIMMEN.</p>
+        <p className="eyebrow">VORLAGEN & EIN ECHTER AUFTRITT</p>
         <h2 id="examples-title">
           Schau hin.
           <br />
@@ -112,6 +114,70 @@ export function ExampleGallery(props: Props) {
           nicht.
         </p>
       </div>
+      <article className="delfi-showcase">
+        <a
+          className="delfi-preview"
+          href={
+            offline
+              ? "./downloads/kollo-delfi.zip"
+              : "./examples/delfi/vorfuehren.html"
+          }
+          target={offline ? undefined : "_blank"}
+          rel="noopener noreferrer"
+          download={offline || undefined}
+          aria-label={
+            offline
+              ? "DELFI-Originaldemo herunterladen"
+              : "DELFI-Originaldemo in neuem Tab vorführen"
+          }
+        >
+          <img
+            src={delfiPreview}
+            width="1920"
+            height="1080"
+            loading="lazy"
+            alt="PyTutorAI: Feedback, das den nächsten Schritt erklärt — Titelszene der DELFI-Präsentation"
+          />
+          <span className="delfi-duration">
+            <Play size={15} aria-hidden="true" /> 6:32
+          </span>
+        </a>
+        <div className="delfi-caption">
+          <p className="eyebrow">ORIGINALDEMO · DELFI · 16 SZENEN</p>
+          <h3>
+            Ein Gedanke.
+            <br />
+            <em>In Bewegung.</em>
+          </h3>
+          <p>
+            PyTutorAI — Feedback, das den nächsten Schritt erklärt. Die
+            vollständige Originalpräsentation mit animierten Abläufen, Demo und
+            zeitgenauem Sprechtext.
+          </p>
+          <p className="delfi-credit">Ultrich Edima Edima · André Greubel</p>
+          <div className="delfi-actions">
+            {!offline && (
+              <a
+                className="button primary"
+                href="./examples/delfi/vorfuehren.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Play size={17} /> Original vorführen <ArrowUpRight size={16} />
+              </a>
+            )}
+            <a className="button" href="./downloads/kollo-delfi.zip" download>
+              <Download size={17} /> Demo mitnehmen
+            </a>
+          </div>
+          <p className="delfi-format">
+            Video ohne Ton · Teleprompter synchron zum Bild · separates
+            Publikumsfenster. Im ZIP direkt per Doppelklick öffnen. Dieses
+            Original ist ein Anschauungsbeispiel; die drei Vorlagen darunter
+            kannst du im Studio bearbeiten.
+          </p>
+        </div>
+      </article>
       {showcaseExamples.map((example, order) => (
         <Example key={example.id} example={example} order={order} {...props} />
       ))}

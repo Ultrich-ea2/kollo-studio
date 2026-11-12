@@ -78,6 +78,7 @@ test("all release archives match hashes and the student kit opens examples direc
   }
   expect(archives.has("kollo-student-kit.zip")).toBe(true);
   expect(archives.has("kollo-examples.zip")).toBe(true);
+  expect(archives.has("kollo-delfi.zip")).toBe(true);
   const kit = await JSZip.loadAsync(archives.get("kollo-student-kit.zip")!);
   for (const required of [
     "START-HIER.html",
@@ -89,6 +90,9 @@ test("all release archives match hashes and the student kit opens examples direc
     "studio/Start-Kollo.cmd",
     "source/kollo-studio-source.zip",
     "guides/guide.md",
+    "examples/delfi/presentation.html",
+    "examples/delfi/provenance.json",
+    "studio/downloads/kollo-delfi.zip",
   ])
     expect(kit.file(required), required).not.toBeNull();
   const root = path.resolve("qa/student-kit-browser");
@@ -109,7 +113,7 @@ test("all release archives match hashes and the student kit opens examples direc
   await context.setOffline(true);
   await page.goto(pathToFileURL(path.join(root, "START-HIER.html")).href);
   await page.getByRole("link", { name: "Die Beispielsammlung öffnen" }).click();
-  await expect(page.locator("article")).toHaveCount(3);
+  await expect(page.locator("article")).toHaveCount(4);
   expect(
     await page
       .locator("img")

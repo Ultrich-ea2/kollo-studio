@@ -2,13 +2,13 @@
 
 **Ein Thema beginnen, vorhandene Folien überarbeiten oder einen Vortrag proben.** Kollo verbindet einen lokalen Editor mit einem wiederverwendbaren KI-Skill, gestalteten Beispielen und einem Sprechpult mit getrenntem Publikumsfenster. Die KI arbeitet in der vom Nutzer gewählten Umgebung; das Studio selbst enthält keinen KI-Dienst.
 
-Für eine Lerngruppe das **Studenten-Kit** herunterladen, vollständig entpacken und `START-HIER.html` öffnen. Die drei fiktiven Beispielreihen enthalten Offline-HTML, Vorschaubild, Kollo-JSON, bearbeitbare PPTX und Hinweise zur Gestaltung. Skill, fertiges Studio, Quellcode und Anleitung liegen getrennt in `skills/`, `studio/`, `source/` und `guides/`. HTML-Beispiele benötigen keine Installation. Das gesamte Kit enthält keine privaten Forschungsunterlagen.
+Für eine Lerngruppe das **Studenten-Kit** herunterladen, vollständig entpacken und `START-HIER.html` öffnen. Die drei fiktiven, bearbeitbaren Beispielreihen enthalten Offline-HTML, Vorschaubild, Kollo-JSON, PPTX und Hinweise zur Gestaltung. Dazu kommt die ausdrücklich zur Veröffentlichung freigegebene **DELFI-Originalpräsentation**: 6:32 Minuten animiertes Video mit zeitlich abgestimmtem Sprechtext und getrenntem Publikumsfenster. Skill, fertiges Studio, Quellcode und Anleitung liegen getrennt in `skills/`, `studio/`, `source/` und `guides/`. HTML-Beispiele benötigen keine Installation.
 
 Das veröffentlichte Studio bietet ein **fertiges Offline-Studio** als ZIP. Dafür genügt Node.js 22 oder neuer (empfohlen: 24 LTS). Nach dem Entpacken unter Windows `Start-Kollo.cmd` starten; unter macOS/Linux `node server.mjs` ausführen. Die angezeigte Adresse `http://127.0.0.1:4179` öffnen. Es ist keine Paketinstallation nötig. Der feste lokale Port erhält den Browserspeicher beim Neustart.
 
 Die Quellcode-Version unten richtet sich an Studierende, die das Studio weiterentwickeln möchten. Eine einzelne exportierte HTML-Präsentation funktioniert auch ohne Node.js direkt per Doppelklick.
 
-Ein lokales Präsentationsstudio für Kolloquien, Seminare und Abschlussvorträge. Inhalte bearbeiten, eine Präsentation abspielen und dieselben Folien als HTML, PDF oder PowerPoint ausgeben. Die mitgelieferten akademischen Inhalte sind fiktive Beispiele. Persönliche Arbeiten und Feedback gehören zu den eigenen Materialien und werden nicht mit dem Studio verteilt.
+Ein lokales Präsentationsstudio für Kolloquien, Seminare und Abschlussvorträge. Inhalte bearbeiten, eine Präsentation abspielen und dieselben Folien als HTML, PDF oder PowerPoint ausgeben. Die drei Kollo-Vorlagen verwenden fiktive akademische Inhalte. Das separat gekennzeichnete DELFI-Beispiel zeigt eine historische Projektdemo vom 8. September 2026 mit ihren ursprünglichen Credits. Weitere persönliche Arbeiten und Feedback werden nicht mit dem Studio verteilt; der KI-Skill bleibt allgemein.
 
 ## Starten
 
@@ -48,6 +48,12 @@ Automatische Browserspeicherung ist eine Arbeitshilfe, kein Ersatz für eine Dat
 
 PPTX/PDF zeigen den Endzustand aller Einblendungen. PowerPoint verwendet einfache Folienübergänge; Browser-Zoom wird als Fade angenähert. Arial und Georgia werden als Systemschriften verwendet und nicht eingebettet. Notizen sind in JSON und Offline-Kit enthalten, dort auch in der HTML-Datei; für einzeln heruntergeladenes HTML/PPTX ist ihre Mitgabe gesondert wählbar.
 
+## DELFI-Original als Vorführbeispiel
+
+**PyTutorAI – Feedback, das den nächsten Schritt erklärt** von Ultrich Edima Edima, unter Mitarbeit von André Greubel, ist ein zusätzliches Beispiel für eine animierte Demo. Die 16 Szenen dauern zusammen **6:32 Minuten**. Das ursprüngliche Video und die Szenenzeiten bleiben erhalten. Es gibt keine Tonspur: Der Teleprompter markiert den Sprechtext anhand der Videozeit. Mit **Abtrennen** öffnet sich ein synchronisiertes Fenster für das Publikum. Den historischen Stand der darin gezeigten Software nicht mit aktuellen Leistungsnachweisen gleichsetzen.
+
+Im Beispielordner `examples/delfi/` liegt `presentation.html` für den Doppelklick ohne Internet; auf der Website läuft `vorfuehren.html` mit getrennten Dateien. `preview.jpg`, `GESTALTUNG.md` und `provenance.json` erläutern das Beispiel und seine Herkunft. Es ist im Beispiele-ZIP und Studenten-Kit enthalten sowie einzeln als `downloads/kollo-delfi.zip` erhältlich. Das Original ist ein Video mit Sprechpult, keine bearbeitbare `.kollo.json` oder native PowerPoint-Vorlage. Für eigene Kollo-Folien eine der drei bearbeitbaren Reihen verwenden; für eigene Videodemos liegen Code, Inhalt und Medien getrennt unter `showcases/delfi/`.
+
 ## KI-Skill und Anleitung
 
 Der Skill unterstützt neue Vorträge aus einer ersten Themenidee, Demos mit abgestimmtem Sprechtext, gezielte Änderungen bestehender Kollo-Dateien und die nachvollziehbare Übertragung von PPTX/PDF. Er enthält Leitfäden für Argumentation, Quellen, Feedback, unterschiedliche gestalterische Richtungen, Teleprompter und Prüfung sowie einen lokalen Quellenhelfer und zwei Prüfer. Er läuft in deiner KI-Umgebung; Kollo selbst ruft keine KI auf. PPTX/PDF sind Ausgangsmaterial, kein direkter Import und keine verlustfreie Konvertierung. Die nativen Originale bleiben unverändert.
@@ -59,11 +65,12 @@ Python-Helfer testen: `npm run test:skill`. Die optionalen PDF-Tests verwenden e
 - [Dateiformat](skills/kollo-theme/references/schema.md) und [kleines Beispiel](skills/kollo-theme/assets/beispiel.kollo.json).
 - [Entscheidungen und offizielle Quellen](docs/research.md).
 - [Datenschutz und Sicherheitsgrenzen](SECURITY.md).
+- [Prüfstand des DELFI-Originalbeispiels](docs/DELFI-VERIFICATION.md).
 
-Die fertige Anwendung bietet `downloads/kollo-student-kit.zip`, `downloads/kollo-examples.zip`, `downloads/kollo-theme.zip`, `downloads/kollo-studio-offline.zip`, `downloads/kollo-studio-source.zip` und `guide.md` zum Download. Der Skill ist auch ohne Installation als Anweisung samt Referenzdateien verwendbar. Er enthält keinen KI-Account und ruft selbst keine KI-API auf.
+Die fertige Anwendung bietet `downloads/kollo-student-kit.zip`, `downloads/kollo-examples.zip`, `downloads/kollo-delfi.zip`, `downloads/kollo-theme.zip`, `downloads/kollo-studio-offline.zip`, `downloads/kollo-studio-source.zip` und `guide.md` zum Download. Der Skill ist auch ohne Installation als Anweisung samt Referenzdateien verwendbar. Er enthält keinen KI-Account und ruft selbst keine KI-API auf.
 
 ## Aufbau und Lizenz
 
-`src/model.ts` prüft das Datenformat. `src/scene.ts` beschreibt die gemeinsame Folienfläche; Vorschau und Exporte verwenden dieselben Elemente. `src/examples.ts` enthält die allgemeinen Beispielpräsentationen; `src/example-assets/` ihre bearbeitbaren Diagrammquellen. `src/presenter/` trennt den gemeinsamen Fenster- und Teleprompter-Code von Oberfläche und Gestaltung. `src/components/` enthält Galerie und Neuanlage. `src/exports.ts` erzeugt die Dateiformate. Die Build-Skripte erzeugen Beispiele, synchronisieren die portablen Skill-Beispiele und stellen die Downloadpakete zusammen. Dokumentation und Skill liegen getrennt von privaten Präsentationen; erzeugte Pakete gehören nicht zum bearbeitbaren Quelltext.
+`src/model.ts` prüft das Datenformat. `src/scene.ts` beschreibt die gemeinsame Folienfläche; Vorschau und Exporte verwenden dieselben Elemente. `src/examples.ts` enthält die drei allgemeinen Beispielpräsentationen; `src/example-assets/` ihre bearbeitbaren Diagrammquellen. `src/presenter/` trennt den gemeinsamen Fenster- und Teleprompter-Code von Oberfläche und Gestaltung. `showcases/delfi/` enthält das separat freigegebene Video-Beispiel mit eigenem Player, Sprechtext und Herkunftsnachweis. `src/components/` enthält Galerie und Neuanlage. `src/exports.ts` erzeugt die Dateiformate. Die Build-Skripte erzeugen Beispiele, synchronisieren die portablen Skill-Beispiele und stellen die Downloadpakete zusammen. Der Skill enthält weiterhin ausschließlich allgemeine Anweisungen und fiktive Beispiele. Weitere private Präsentationen und QA-Materialien bleiben außerhalb von Quellcode und Paketen.
 
 Projektcode und ursprüngliches Thema: Copyright © 2026 Ultrich, [MIT-Lizenz](LICENSE). Abhängigkeiten behalten ihre eigenen Lizenzen. Studierende behalten die Rechte und Verantwortung für ihre eigenen Inhalte und eingebundenen Materialien.

@@ -1335,8 +1335,9 @@ function App() {
               </h1>
               <p>
                 Beginne mit einem leeren Projekt oder entdecke drei sehr
-                unterschiedliche Gestaltungen. Inhalt, Aufbau und Bewegung
-                bleiben in deiner Hand. Alle Beispielinhalte sind fiktiv.
+                unterschiedliche Gestaltungen mit fiktiven Inhalten. Die
+                DELFI-Originaldemo zeigt zusätzlich, wie ein vollständiger
+                animierter Vortrag wirkt.
               </p>
             </div>
             <NewProject onCreate={replace} />
@@ -1567,10 +1568,20 @@ function App() {
                 <a href="./downloads/kollo-examples.zip" download>
                   <Play />
                   <span>
-                    <strong>Drei gestaltete Beispiele</strong>
+                    <strong>Vorlagen & Originaldemo</strong>
                     <small>
-                      HTML mit Teleprompter · bearbeitbares JSON ·
-                      Gestaltungshinweise
+                      Drei bearbeitbare Beispiele + DELFI · HTML mit
+                      Teleprompter
+                    </small>
+                  </span>
+                  <Download />
+                </a>
+                <a href="./downloads/kollo-delfi.zip" download>
+                  <Play />
+                  <span>
+                    <strong>DELFI-Originaldemo</strong>
+                    <small>
+                      6:32 Minuten · Originalvideo · synchroner Sprechtext
                     </small>
                   </span>
                   <Download />

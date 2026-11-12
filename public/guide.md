@@ -2,19 +2,20 @@
 
 ## Das Studentenpaket weitergeben
 
-Unter **Mitnehmen** kannst du das **Studenten-Kit** als ein ZIP herunterladen. Entpacke es vollständig und öffne `START-HIER.html`; die Textfassung `START-HIER.txt` funktioniert auch ohne Browser. Das Paket enthält allgemeine, ausdrücklich fiktive Beispiele und keine privaten Ausgangsarbeiten.
+Unter **Mitnehmen** kannst du das **Studenten-Kit** als ein ZIP herunterladen. Entpacke es vollständig und öffne `START-HIER.html`; die Textfassung `START-HIER.txt` funktioniert auch ohne Browser. Das Paket enthält drei ausdrücklich fiktive, bearbeitbare Beispielreihen und zusätzlich die vom Autor zur Veröffentlichung freigegebene DELFI-Originalpräsentation. Weitere private Ausgangsarbeiten gehören nicht zum Paket.
 
-| Ordner | Inhalt und Verwendung |
-| --- | --- |
-| `examples/` | `index.html` zeigt die drei Beispielreihen. Jeder Beispielordner enthält `preview.svg`, den Offline-Vortrag `presentation.html`, das bearbeitbare Projekt `deck.kollo.json`, `bearbeitbar.pptx` und `GESTALTUNG.md`. |
-| `skills/kollo-theme/` | Vollständiger KI-Skill mit Referenzen, Beispieldaten und lokalen Python-Helfern. Für eine KI diesen ganzen Ordner verwenden. |
-| `studio/` | Fertiger Editor für den eigenen Rechner. Startanleitung und lokaler Server liegen dabei; keine npm-Paketinstallation nötig. |
-| `source/` | `kollo-studio-source.zip` für eigene Codeänderungen. Das Archiv vor der Entwicklungsarbeit separat entpacken. |
-| `guides/` | Ausführliche Nutzungshinweise. |
+| Ordner                | Inhalt und Verwendung                                                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `examples/`           | `index.html` zeigt alle Beispiele. Die drei fiktiven Reihen enthalten jeweils `preview.svg`, den Offline-Vortrag `presentation.html`, das bearbeitbare Projekt `deck.kollo.json`, `bearbeitbar.pptx` und `GESTALTUNG.md`. |
+| `examples/delfi/`     | Zusätzliches Originalbeispiel: 6:32 Minuten Video mit Teleprompter in `presentation.html`, außerdem `preview.jpg`, `GESTALTUNG.md` und `provenance.json`. Keine Kollo-JSON- oder PowerPoint-Vorlage.                      |
+| `skills/kollo-theme/` | Vollständiger KI-Skill mit Referenzen, Beispieldaten und lokalen Python-Helfern. Für eine KI diesen ganzen Ordner verwenden.                                                                                              |
+| `studio/`             | Fertiger Editor für den eigenen Rechner. Startanleitung und lokaler Server liegen dabei; keine npm-Paketinstallation nötig.                                                                                               |
+| `source/`             | `kollo-studio-source.zip` für eigene Codeänderungen. Das Archiv vor der Entwicklungsarbeit separat entpacken.                                                                                                             |
+| `guides/`             | Ausführliche Nutzungshinweise.                                                                                                                                                                                            |
 
-Die HTML-Beispiele lassen sich direkt im Browser ansehen, ohne Installation und ohne Internet. Für das Bearbeiten im fertigen Offline-Studio brauchst du Node.js wie unten beschrieben. Ein Beispiel in PowerPoint weiterzubearbeiten ist ebenfalls möglich; prüfe danach Schrift und Umbrüche auf deinem Rechner. Die `.kollo.json` bleibt der passende Projektstand für Kollo.
+Die HTML-Beispiele lassen sich direkt im Browser ansehen, ohne Installation und ohne Internet. Für das Bearbeiten im fertigen Offline-Studio brauchst du Node.js wie unten beschrieben. Die drei fiktiven Reihen kannst du auch in PowerPoint weiterbearbeiten; prüfe danach Schrift und Umbrüche auf deinem Rechner. Die `.kollo.json` bleibt der passende Projektstand für Kollo. Das DELFI-Video besitzt keine bearbeitbaren Folienobjekte.
 
-Nur Beispiele gewünscht? Das separate Beispiele-ZIP enthält denselben Einstieg und die Beispielordner. Nur mit einer KI arbeiten? Dafür reicht das vollständige Skill-ZIP. Deine eigenen Vorträge exportierst du separat als Projektdatei oder Arbeitskit.
+Nur Beispiele gewünscht? Das separate Beispiele-ZIP enthält denselben Einstieg und die Beispielordner. Das DELFI-Beispiel gibt es auch einzeln als `kollo-delfi.zip`. Nur mit einer KI arbeiten? Dafür reicht das vollständige Skill-ZIP, das allgemeine Anweisungen und die drei fiktiven Beispiele enthält. Deine eigenen Vorträge exportierst du separat als Projektdatei oder Arbeitskit.
 
 ## Fertiges Studio ohne Paketinstallation
 
@@ -42,6 +43,18 @@ Die gestalteten Beispielreihen zeigen unterschiedliche visuelle Sprachen: offene
 
 Im Thema wählst du `classic`, `editorial`, `technical` oder `stage`. Farben, Schrift und Maßstab bleiben anpassbar. Ein Wechsel verändert verfügbare Textbreiten: Kontrolliere danach jede Folie. Alle zwölf Layouts bleiben erhalten. Du musst weder das Thema des Beispiels noch dessen Gliederung übernehmen.
 
+## DELFI: das Original mit 6:32 Minuten
+
+Die zusätzliche Präsentation **PyTutorAI – Feedback, das den nächsten Schritt erklärt** zeigt eine animierte Projektdemo von Ultrich Edima Edima unter Mitarbeit von André Greubel. Sie hat 16 Szenen und bewahrt das Originalvideo sowie die zugehörigen Sprechtexte und Zeiten. Die gezeigten Softwareabläufe beziehen sich auf den dokumentierten Stand vom 8. September 2026; sie belegen keine späteren Ergebnisse oder Änderungen.
+
+Auf der Website öffnet **Vorführen** das Sprechpult. Nach dem Herunterladen `examples/delfi/presentation.html` öffnen. Im einzelnen DELFI-ZIP `presentation.html` öffnen. Video und Sprechtext sind in der Offline-HTML enthalten, eine Installation oder Internetverbindung ist dafür nicht nötig. Nur der freiwillig geöffnete Link zur ursprünglichen Feedback-Demo benötigt Internet.
+
+**Starten** spielt das Video ab und markiert passend dazu die Wörter im Sprechtext. Das Video enthält keine Tonaufnahme. Wähle eine Szene zum Üben oder ändere **Tempo**, um Video und Text gemeinsam langsamer oder schneller ablaufen zu lassen. Manuelles Scrollen hält die automatische Leseführung an; mit **Zur Leseposition** folgt sie wieder der Videozeit. Die Leseführung hört dir nicht zu.
+
+**Abtrennen** öffnet nur das Video in einem zweiten Fenster. Ziehe dieses auf einen erweiterten Bildschirm und schalte dort mit Doppelklick oder **F** auf Vollbild. Lass das Sprechpult offen. **Leertaste** startet oder pausiert das Video, **Pfeil links/rechts** wechselt die Szene. Im Sprechpult helfen Schriftgröße, Spiegelmodus und **Nur Text** bei der Probe. Diese Bedienelemente gehören zum Video-Beispiel; die Tastaturbelegung des Kollo-Folienplayers steht weiter unten.
+
+Die Datei ist ein Vorführbeispiel für abgestimmte Bewegung und Erklärtext. Sie kann nicht als `.kollo.json` importiert oder als native, bearbeitbare PPTX exportiert werden. Für eigene Folien beginne mit einer der drei Kollo-Reihen. Wer eine eigene Videopräsentation programmieren möchte, findet unter `showcases/delfi/` getrennte Dateien für Inhalt, HTML-Vorlage, CSS, JavaScript und Medien. `GESTALTUNG.md` beschreibt die Gestaltung, `provenance.json` die Herkunft. Eine Änderung des Sprechtexts verändert nicht die Bilder im fertigen Video; dafür muss auch das Video überarbeitet und erneut mit den Szenenzeiten geprüft werden.
+
 ## Layouts und Bilder
 
 Titel und Abschnittsfolien geben Orientierung. Punkte eignen sich für eine Kernaussage, Spalten für einen Vergleich, Prozess für eine Abfolge. Kennzahlen und Diagramme erwarten Einträge nach dem Muster `Wert | Bezeichnung`. Diagrammwerte müssen größer oder gleich null sein. Code, Zitat, Bild, Quellen und Abschluss haben eigene Layouts.
@@ -67,7 +80,7 @@ Im bearbeitbaren PPTX bleiben Texte und Formen einzelne Objekte. Ein anderes Bet
 
 HTML spielt die Browser-Übergänge und Einblendungen ab. PPTX und PDF enthalten den vollständig sichtbaren Endzustand jeder Folie. PowerPoint erhält einfache Übergänge: Fade bleibt Fade, Slide wird Push, Zoom wird Fade. Elementanimationen des Browsers werden nicht vollständig nach PowerPoint übertragen. PDF enthält keine Animationen.
 
-Kollo unterstützt keine frei programmierbaren Videozeitleisten, Tonaufnahmen oder beliebigen Bewegungspfade. Einblendungen dienen dazu, den gerade erklärten Schritt sichtbar zu machen. Passe das Gesprochene und die Klicks aufeinander an; eine statische Abgabe muss auch mit allen Elementen gleichzeitig verständlich bleiben.
+Der Kollo-Folieneditor unterstützt keine frei programmierbaren Videozeitleisten, Tonaufnahmen oder beliebigen Bewegungspfade. Das DELFI-Beispiel verwendet dafür einen eigenen Player mit einem bereits fertig gerenderten Video. Bei Kollo-Folien dienen Einblendungen dazu, den gerade erklärten Schritt sichtbar zu machen. Passe das Gesprochene und die Klicks aufeinander an; eine statische Abgabe muss auch mit allen Elementen gleichzeitig verständlich bleiben.
 
 ## Teleprompter und Publikumsfenster
 
@@ -79,16 +92,16 @@ Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schr
 
 Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter. Kurze Notizzeilen wie `[KLICK: Vergleich zeigen]` oder `[PAUSE: Frage abwarten]` helfen bei der Probe, sind aber keine automatischen Befehle.
 
-| Taste | Wirkung |
-| --- | --- |
-| → / Bild ab / Leertaste | Nächste Einblendung oder Folie |
-| ← / Bild auf | Zurück |
-| Pos1 / Ende | Erste / letzte Folie |
-| T oder P | Vortragsuhr starten oder pausieren |
-| R | Vortragsuhr zurücksetzen |
-| B | Schwarzbild |
-| F | Vollbild |
-| N | Notizen im Ausgangsfenster |
+| Taste                   | Wirkung                            |
+| ----------------------- | ---------------------------------- |
+| → / Bild ab / Leertaste | Nächste Einblendung oder Folie     |
+| ← / Bild auf            | Zurück                             |
+| Pos1 / Ende             | Erste / letzte Folie               |
+| T oder P                | Vortragsuhr starten oder pausieren |
+| R                       | Vortragsuhr zurücksetzen           |
+| B                       | Schwarzbild                        |
+| F                       | Vollbild                           |
+| N                       | Notizen im Ausgangsfenster         |
 
 Lass das Ausgangsfenster offen. Wird ein Zusatzfenster geschlossen oder neu geladen, öffne es erneut über dessen Knopf in der Steuerzentrale. Das übernimmt den aktuellen Stand. Beim Schließen oder Neuladen der Steuerzentrale endet die Sitzung. Der Ablauf ist keine Synchronisierung mit einem zweiten Gerät.
 
