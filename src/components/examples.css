@@ -34,7 +34,7 @@
   font:
     italic 52px/1 Georgia,
     serif;
-  color: var(--green, #24483b);
+  color: var(--ink, #24483b);
 }
 .showcase-caption h3 {
   font-size: 32px;
