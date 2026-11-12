@@ -5,6 +5,12 @@ export type PresenterSlide = {
   transition: string;
   reveal: boolean;
   seconds: number;
+  media?: {
+    start: number;
+    starts?: number[];
+    stops: number[];
+    labels: string[];
+  };
 };
 export type PresenterOptions = {
   slides: PresenterSlide[];
@@ -12,6 +18,8 @@ export type PresenterOptions = {
   duration: number;
   css: string;
   start?: number;
+  showNotes?: boolean;
+  media?: { src: string; poster?: string };
   onClose?: () => void;
 };
 export function mountPresenter(

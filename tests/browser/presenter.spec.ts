@@ -86,6 +86,13 @@ test("live presenter synchronizes clean audience, private reader, reveals, clock
   });
   await expect(page.locator("#count")).toHaveText("1 / 3");
   expect(prompt.isClosed() || audience.isClosed()).toBe(false);
+  await prompt.evaluate(() => {
+    const cancelled = new Event("beforeunload", { cancelable: true });
+    cancelled.preventDefault();
+    window.dispatchEvent(cancelled);
+  });
+  await page.locator("#notes-toggle").click();
+  await expect(page.locator("#notes .prompt-script")).toContainText(secret);
   await prompt.locator("#next").click();
   await expect(page.locator(".presenter-bar")).toContainText("2 / 3");
   await expect(audience.locator('.slide[aria-current="true"]')).toContainText(
@@ -103,7 +110,7 @@ test("live presenter synchronizes clean audience, private reader, reveals, clock
       audience.locator('.slide[aria-current="true"] .unrevealed').count(),
     )
     .toBeLessThan(hiddenBefore);
-  await expect(prompt.locator("#cue-status")).toContainText("Einblendung 1");
+  await expect(prompt.locator("#cue-status")).toContainText("Phase 1");
   await prompt.locator("#timer-toggle").click();
   await expect(page.locator("#clock")).not.toHaveText("00:00");
   await page.locator("#timer-toggle").click();

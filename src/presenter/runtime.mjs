@@ -6,7 +6,41 @@
 export function mountPresenter(root, options) {
   "use strict";
   const host = root.ownerDocument.defaultView;
-  const slides = options.slides;
+  const hasMediaSource =
+    typeof options.media?.src === "string" && Boolean(options.media.src.trim());
+  let invalidMediaPlan = false;
+  function validMediaPlan(media) {
+    if (
+      !media ||
+      !Number.isFinite(media.start) ||
+      media.start < 0 ||
+      !Array.isArray(media.stops) ||
+      !media.stops.length
+    )
+      return false;
+    if (
+      media.starts !== undefined &&
+      (!Array.isArray(media.starts) ||
+        media.starts.length !== media.stops.length)
+    )
+      return false;
+    let previous = media.start;
+    return media.stops.every((stop, index) => {
+      const start = media.starts?.[index] ?? previous;
+      const valid =
+        Number.isFinite(start) &&
+        Number.isFinite(stop) &&
+        start >= previous &&
+        stop > start;
+      previous = stop;
+      return valid;
+    });
+  }
+  const slides = options.slides.map((slide) => {
+    if (!slide.media || validMediaPlan(slide.media)) return slide;
+    invalidMediaPlan = true;
+    return { ...slide, media: undefined };
+  });
   const session =
     host.crypto?.randomUUID?.() ||
     `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -18,7 +52,7 @@ export function mountPresenter(root, options) {
     elapsed: 0,
     started: 0,
     running: false,
-    notes: false,
+    notes: Boolean(options.showNotes),
     font: 36,
     speed: 130,
     mirror: false,
@@ -27,7 +61,7 @@ export function mountPresenter(root, options) {
     readerPosition: 0,
     readerStarted: 0,
     waitingCue: null,
-    resumeAfterCue: false,
+    readerRevision: 0,
   };
   // Cues are a private notes convention, not new fields in the deck format.
   // They consume no speaking time and never advance a slide automatically.
@@ -72,8 +106,25 @@ export function mountPresenter(root, options) {
   );
   let disposed = false;
   let popupOrdinal = 0;
-  let status = "Bereit. Fenster auf die gewünschten Bildschirme ziehen.";
+  let mediaState = null;
+  let status = invalidMediaPlan
+    ? "Ein Video-Phasenplan ist ungültig. Die Vorschaubilder und der Sprechtext bleiben verfügbar."
+    : slides.some((slide) => slide.media) && !hasMediaSource
+      ? "Die Videodatei fehlt. Die Vorschaubilder und der Sprechtext bleiben verfügbar."
+      : "Bereit. Fenster auf die gewünschten Bildschirme ziehen.";
   const reducedMotion = host.matchMedia?.("(prefers-reduced-motion: reduce)");
+  function ownsView(view) {
+    try {
+      return (
+        !view.win.closed &&
+        view.win.document === view.doc &&
+        view.root.ownerDocument === view.doc &&
+        view.root.isConnected
+      );
+    } catch {
+      return false;
+    }
+  }
   const node = (view, selector) => view.root.querySelector(selector);
   const text = (view, selector, value) => {
     const element = node(view, selector);
@@ -119,7 +170,6 @@ export function mountPresenter(root, options) {
   }
   function manualScroll() {
     if (state.reading) setReading(false);
-    state.resumeAfterCue = false;
     if (state.waitingCue !== null) {
       announce(
         "Regiehinweis wartet. Mit Weiter die angezeigte Aktion ausführen; die Leseführung bleibt danach pausiert.",
@@ -130,21 +180,41 @@ export function mountPresenter(root, options) {
       "Leseführung pausiert. Mit »Leseführung starten« an der markierten Stelle fortsetzen.",
     );
   }
-  function transitionTo(index, step = 0) {
-    state.readerPosition = 0;
-    state.readerStarted = Date.now();
-    state.index = Math.max(0, Math.min(slides.length - 1, index));
-    state.steps[state.index] = Math.max(
-      0,
-      Math.min(views[0]?.groups[state.index].length || 0, step),
+  function groupCount(index = state.index) {
+    return (
+      slides[index].media?.stops.length ?? views[0]?.groups[index]?.length ?? 0
     );
+  }
+  function phaseLabel(index, step) {
+    return (
+      slides[index].media?.labels?.[step - 1] ||
+      `Einblendung ${step} von ${groupCount(index)}`
+    );
+  }
+  function phaseTime(index, step) {
+    const media = slides[index].media;
+    return step > 0 ? media.stops[step - 1] : media.start;
+  }
+  function alignReader() {
+    const step = state.steps[state.index];
+    const cue = scripts[state.index].cues.find(
+      (item) => item.kind === "KLICK" && item.order === step,
+    );
+    state.readerPosition = cue?.at ?? 0;
+    state.readerStarted = Date.now();
+    state.reading = false;
     state.waitingCue = null;
-    state.resumeAfterCue = false;
+    state.readerRevision++;
+  }
+  function transitionTo(index, step = 0) {
+    state.index = Math.max(0, Math.min(slides.length - 1, index));
+    state.steps[state.index] = Math.max(0, Math.min(groupCount(), step));
+    alignReader();
+    if (slides[state.index].media)
+      seekMedia(phaseTime(state.index, state.steps[state.index]));
+    else stopMedia();
     announce(`Folie ${state.index + 1}: ${slides[state.index].title}.`);
     draw();
-  }
-  function groupCount() {
-    return views[0]?.groups[state.index].length || 0;
   }
   function cueValid(cue) {
     if (cue.kind === "KLICK")
@@ -160,8 +230,10 @@ export function mountPresenter(root, options) {
     return cue.kind === "KLICK" && state.steps[state.index] >= cue.order;
   }
   function nextAction() {
+    if (mediaState?.busy)
+      return `Animation beenden: ${phaseLabel(state.index, state.steps[state.index])}`;
     if (slides[state.index].reveal && state.steps[state.index] < groupCount())
-      return `Einblendung ${state.steps[state.index] + 1} von ${groupCount()}`;
+      return phaseLabel(state.index, state.steps[state.index] + 1);
     if (state.index < slides.length - 1)
       return `Folie ${state.index + 2}: ${slides[state.index + 1].title}`;
     return "Keine weitere Folie";
@@ -177,48 +249,45 @@ export function mountPresenter(root, options) {
     return "";
   }
   function next() {
-    const resume = state.resumeAfterCue;
-    if (slides[state.index].reveal && state.steps[state.index] < groupCount()) {
-      state.steps[state.index]++;
+    if (mediaState?.busy) {
+      seekMedia(mediaState.stop);
       announce(
-        `Einblendung ${state.steps[state.index]} von ${groupCount()} gezeigt.`,
+        "Animation abgeschlossen. Der nächste Tastendruck zeigt die nächste Phase.",
       );
-    } else if (state.index < slides.length - 1) {
-      // Carry the reading intent into draw: the new slide may begin with a
-      // cue at position zero, which must remember that it should resume later.
-      if (resume) state.reading = true;
-      transitionTo(state.index + 1);
+      draw();
       return;
     }
-    const waiting = scripts[state.index].cues[state.waitingCue];
-    if (waiting && cueDone(waiting)) {
-      state.waitingCue = null;
-      state.resumeAfterCue = false;
-      if (resume) {
-        state.reading = true;
-        state.readerStarted = Date.now();
-      }
+    if (slides[state.index].reveal && state.steps[state.index] < groupCount()) {
+      const step = ++state.steps[state.index];
+      alignReader();
+      const media = slides[state.index].media;
+      if (media)
+        seekMedia(
+          reducedMotion?.matches
+            ? media.stops[step - 1]
+            : (media.starts?.[step - 1] ?? phaseTime(state.index, step - 1)),
+          reducedMotion?.matches ? null : media.stops[step - 1],
+        );
+      announce(
+        `${phaseLabel(state.index, step)}. Sprechtext ist ausgerichtet; Leseführung pausiert.`,
+      );
+    } else if (state.index < slides.length - 1) {
+      transitionTo(state.index + 1);
+      return;
     }
     draw();
   }
   function previous() {
     if (slides[state.index].reveal && state.steps[state.index] > 0) {
       state.steps[state.index]--;
-      const cue = scripts[state.index].cues.find(
-        (item) =>
-          item.kind === "KLICK" && item.order === state.steps[state.index] + 1,
-      );
-      if (cue) state.readerPosition = cue.at;
-      else state.readerPosition = readerPosition();
-      state.reading = false;
-      state.waitingCue = null;
-      state.resumeAfterCue = false;
+      alignReader();
+      if (slides[state.index].media)
+        seekMedia(phaseTime(state.index, state.steps[state.index]));
       announce(
-        `Zurück: ${state.steps[state.index]} von ${groupCount()} Einblendungen sichtbar. Leseführung pausiert.`,
+        `Zurück: ${state.steps[state.index]} von ${groupCount()} Phasen sichtbar. Sprechtext ist ausgerichtet; Leseführung pausiert.`,
       );
     } else if (state.index > 0) {
-      state.reading = false;
-      transitionTo(state.index - 1);
+      transitionTo(state.index - 1, Number.MAX_SAFE_INTEGER);
       return;
     }
     draw();
@@ -240,6 +309,7 @@ export function mountPresenter(root, options) {
   }
   function toggleNotes() {
     state.notes = !state.notes;
+    if (state.notes) main.readerRevision = -1;
     draw();
   }
   async function fullscreen(view) {
@@ -267,6 +337,13 @@ export function mountPresenter(root, options) {
     )
       return;
     if (event.key === " " && event.target.closest?.("button,a")) return;
+    if (
+      event.repeat &&
+      ["ArrowRight", "PageDown", " ", "ArrowLeft", "PageUp"].includes(event.key)
+    ) {
+      event.preventDefault();
+      return;
+    }
     if (["ArrowRight", "PageDown", " "].includes(event.key)) {
       event.preventDefault();
       next();
@@ -293,6 +370,268 @@ export function mountPresenter(root, options) {
     )
       close();
   }
+  // One decoder owns the clock. Every screen receives the same captured frame.
+  // A decoded frame beyond a phase boundary is never copied to a visible canvas.
+  function addMediaCanvas(view, parent, index) {
+    const canvas = view.doc.createElement("canvas");
+    canvas.className = "media-canvas";
+    canvas.dataset.mediaSlide = String(index);
+    canvas.width = 1280;
+    canvas.height = 720;
+    canvas.hidden = true;
+    canvas.setAttribute("aria-label", slides[index].title);
+    canvas.style.cssText =
+      "position:absolute;inset:0;width:100%;height:100%;object-fit:contain";
+    parent.append(canvas);
+    return canvas;
+  }
+  function paintMedia() {
+    if (!mediaState?.frameReady) return;
+    for (const view of views) {
+      if (!ownsView(view)) continue;
+      view.root.querySelectorAll(".media-canvas").forEach((canvas) => {
+        if (Number(canvas.dataset.mediaSlide) !== state.index) return;
+        const context = canvas.getContext("2d");
+        if (context) {
+          context.drawImage(
+            mediaState.buffer,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+          );
+          canvas.hidden = false;
+          canvas.dataset.mediaTime = String(mediaState.frameTime);
+        }
+      });
+      view.root.dataset.mediaTime = String(mediaState.frameTime);
+      view.root.dataset.mediaPlaying = String(mediaState.busy);
+    }
+  }
+  function captureMedia(time) {
+    if (
+      !mediaState ||
+      mediaState.failed ||
+      mediaState.index !== state.index ||
+      mediaState.video.readyState < 2 ||
+      mediaState.video.seeking
+    )
+      return;
+    const context = mediaState.buffer.getContext("2d");
+    if (!context) return;
+    context.drawImage(
+      mediaState.video,
+      0,
+      0,
+      mediaState.buffer.width,
+      mediaState.buffer.height,
+    );
+    mediaState.frameTime = time;
+    mediaState.frameReady = true;
+    paintMedia();
+  }
+  function cancelMediaFrame() {
+    if (!mediaState?.frameRequest) return;
+    if (mediaState.video.cancelVideoFrameCallback)
+      mediaState.video.cancelVideoFrameCallback(mediaState.frameRequest);
+    else host.cancelAnimationFrame(mediaState.frameRequest);
+    mediaState.frameRequest = 0;
+  }
+  function watchMediaFrame() {
+    if (
+      !mediaState ||
+      disposed ||
+      !mediaState.busy ||
+      mediaState.video.seeking ||
+      mediaState.frameRequest
+    )
+      return;
+    const video = mediaState.video;
+    const generation = mediaState.generation;
+    const frame = (_now, metadata) => {
+      if (disposed || generation !== mediaState.generation || !mediaState.busy)
+        return;
+      mediaState.frameRequest = 0;
+      const time = metadata?.mediaTime ?? video.currentTime;
+      if (time >= mediaState.stop || video.currentTime >= mediaState.stop) {
+        seekMedia(mediaState.stop);
+        draw();
+        return;
+      }
+      captureMedia(time);
+      watchMediaFrame();
+    };
+    mediaState.frameRequest = video.requestVideoFrameCallback
+      ? video.requestVideoFrameCallback(frame)
+      : host.requestAnimationFrame(frame);
+  }
+  function finishMediaSeek() {
+    if (
+      !mediaState ||
+      mediaState.failed ||
+      mediaState.index !== state.index ||
+      disposed ||
+      mediaState.video.seeking ||
+      mediaState.video.readyState < 2
+    )
+      return;
+    const video = mediaState.video;
+    if (Math.abs(video.currentTime - mediaState.seekTarget) > 0.04) return;
+    captureMedia(mediaState.seekTarget);
+    if (mediaState.busy) {
+      const generation = mediaState.generation;
+      watchMediaFrame();
+      video.play().catch(() => {
+        if (disposed || generation !== mediaState.generation) return;
+        seekMedia(mediaState.stop);
+        announce(
+          "Die Animation konnte nicht starten. Ihr Endzustand wird angezeigt; Weiter bleibt manuell.",
+        );
+        draw();
+      });
+    }
+  }
+  function applyMediaSeek() {
+    if (
+      !mediaState ||
+      mediaState.failed ||
+      mediaState.index !== state.index ||
+      mediaState.video.readyState < 1
+    )
+      return;
+    const video = mediaState.video;
+    const maximum = Number.isFinite(video.duration)
+      ? Math.max(0, video.duration - 0.001)
+      : mediaState.seekTarget;
+    mediaState.seekTarget = Math.min(mediaState.seekTarget, maximum);
+    if (
+      Math.abs(video.currentTime - mediaState.seekTarget) < 0.001 &&
+      !video.seeking
+    )
+      finishMediaSeek();
+    else video.currentTime = mediaState.seekTarget;
+  }
+  function stopMedia() {
+    if (!mediaState) return;
+    mediaState.video.pause();
+    cancelMediaFrame();
+    mediaState.generation++;
+    mediaState.busy = false;
+    mediaState.frameReady = false;
+    mediaState.index = -1;
+  }
+  function seekMedia(time, stop = null) {
+    if (!mediaState || mediaState.failed) return;
+    const video = mediaState.video;
+    video.pause();
+    cancelMediaFrame();
+    mediaState.generation++;
+    mediaState.seekTarget = time;
+    mediaState.stop = stop ?? time;
+    mediaState.busy = stop !== null && stop > time;
+    mediaState.frameReady = false;
+    // Keep the last captured frame while seeking within a slide, but never a
+    // stale canvas from a previously visited slide.
+    if (mediaState.index !== state.index) {
+      views.forEach((view) =>
+        view.root.querySelectorAll(".media-canvas").forEach((canvas) => {
+          canvas.hidden = true;
+        }),
+      );
+      mediaState.index = state.index;
+    }
+    views.forEach((view) => {
+      view.root.dataset.mediaPlaying = String(mediaState.busy);
+    });
+    applyMediaSeek();
+  }
+  function failMedia(message) {
+    if (disposed || !mediaState) return;
+    stopMedia();
+    mediaState.failed = true;
+    views.forEach((view) =>
+      view.root.querySelectorAll(".media-canvas").forEach((canvas) => {
+        canvas.hidden = true;
+      }),
+    );
+    announce(message);
+    draw();
+  }
+  function initMedia() {
+    if (!hasMediaSource || !slides.some((slide) => slide.media)) return;
+    const video = root.ownerDocument.createElement("video");
+    video.id = "phase-media";
+    video.className = "media-decoder";
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    video.tabIndex = -1;
+    video.setAttribute("aria-hidden", "true");
+    video.style.cssText =
+      "position:fixed;left:-10px;top:-10px;width:1px;height:1px;opacity:0;pointer-events:none";
+    if (options.media.poster) video.poster = options.media.poster;
+    const buffer = root.ownerDocument.createElement("canvas");
+    buffer.width = 1280;
+    buffer.height = 720;
+    mediaState = {
+      video,
+      buffer,
+      busy: false,
+      failed: false,
+      stop: 0,
+      seekTarget: 0,
+      frameReady: false,
+      frameTime: 0,
+      frameRequest: 0,
+      generation: 0,
+      index: -1,
+    };
+    listen(main, video, "loadedmetadata", () => {
+      if (
+        !Number.isFinite(video.duration) ||
+        video.duration <= 0 ||
+        slides.some(
+          (slide) => slide.media && slide.media.stops.at(-1) > video.duration,
+        )
+      ) {
+        failMedia(
+          "Der Video-Phasenplan passt nicht zur Videolänge. Die Vorschaubilder und der Sprechtext bleiben verfügbar.",
+        );
+        return;
+      }
+      applyMediaSeek();
+    });
+    if (reducedMotion)
+      listen(main, reducedMotion, "change", () => {
+        if (reducedMotion.matches && mediaState.busy) {
+          seekMedia(mediaState.stop);
+          draw();
+        }
+      });
+    listen(main, video, "loadeddata", finishMediaSeek);
+    listen(main, video, "seeked", finishMediaSeek);
+    listen(main, video, "timeupdate", () => {
+      if (mediaState.busy && video.currentTime >= mediaState.stop) {
+        seekMedia(mediaState.stop);
+        draw();
+      }
+    });
+    listen(main, video, "error", () =>
+      failMedia(
+        "Das Video konnte nicht geladen werden. Die Vorschaubilder und der Sprechtext bleiben verfügbar.",
+      ),
+    );
+    root.append(video);
+    video.src = options.media.src;
+    if (slides[state.index].media)
+      seekMedia(phaseTime(state.index, state.steps[state.index]));
+  }
+  function readerSettings() {
+    return `<div class="prompt-settings"><label>Schrift <input id="prompt-font" type="range" min="22" max="68" step="2" value="36" aria-label="Teleprompter-Schriftgröße"><output id="font-value">36 px</output></label><label>Tempo <input id="prompt-speed" type="range" min="60" max="240" step="10" value="130" aria-label="Lesetempo in Wörtern pro Minute"><output id="speed-value">130 W/min</output></label>${button("reader-toggle", "Leseführung starten", 'aria-pressed="false"')}${button("reader-reset", "Textanfang")}${button("mirror-toggle", "Spiegeln", 'aria-pressed="false"')}${button("focus-toggle", "Lesefokus", 'aria-pressed="false"')}</div>`;
+  }
+  function readerColumn() {
+    return `<section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><div class="prompt-script"></div></div><div class="prompt-action"><div><p id="cue-heading" class="presenter-label"></p><p id="next-action" role="status" aria-live="polite"></p></div>${button("cue-next", "Weiter →", 'aria-label="Angezeigte nächste Aktion ausführen"')}<p id="cue-warning" class="cue-warning" hidden></p></div><div class="prompt-footer">Jede Phase und jeder Folienwechsel per →. ← geht eine Phase zurück. Leseführung nur auf Wunsch, ohne Spracherkennung.</div></section>`;
+  }
   function addSlides(view) {
     const stage = node(view, ".stage");
     view.slideElements = [];
@@ -307,6 +646,7 @@ export function mountPresenter(root, options) {
       section.dataset.reveal = String(slide.reveal);
       // svg comes exclusively from Kollo's escaped, validated scene renderer.
       section.innerHTML = slide.svg;
+      if (slide.media) addMediaCanvas(view, section, index);
       stage.append(section);
       view.slideElements.push(section);
       view.groups.push(
@@ -336,8 +676,8 @@ export function mountPresenter(root, options) {
         marker.className = "prompt-marker";
         marker.textContent =
           part.cue.kind === "KLICK"
-            ? `→ Weiter: Einblendung ${part.cue.order}`
-            : "→ Weiter: nächste Folie";
+            ? `→ Jetzt drücken: ${phaseLabel(state.index, part.cue.order)}`
+            : `→ Jetzt drücken: [FOLIE] ${slides[state.index + 1]?.title || "Ende"}`;
         marker.dataset.cue = String(part.cue.id);
         view.cues.push({ cue: part.cue, element: marker });
         script.append(marker);
@@ -358,7 +698,7 @@ export function mountPresenter(root, options) {
         state.readerStarted = Date.now();
         state.reading = false;
         state.waitingCue = null;
-        state.resumeAfterCue = false;
+        state.readerRevision++;
         announce("Leseposition gesetzt. Die Leseführung ist pausiert.");
         tick();
       });
@@ -368,6 +708,7 @@ export function mountPresenter(root, options) {
     view.highlight = -1;
     view.highlightCue = null;
     view.scrolledCue = null;
+    view.readerRevision = -1;
     node(view, ".prompt-reader").scrollTop = 0;
   }
   function buildView(view) {
@@ -383,7 +724,7 @@ export function mountPresenter(root, options) {
       content.innerHTML = `<main class="stage" aria-label="Präsentation"></main>${button("fullscreen", "Vollbild (F)", 'class="audience-fullscreen"')}`;
       addSlides(view);
     } else if (view.role === "teleprompter") {
-      content.innerHTML = `${header(view.role)}<div class="prompt-settings"><label>Schrift <input id="prompt-font" type="range" min="22" max="68" step="2" value="36" aria-label="Teleprompter-Schriftgröße"><output id="font-value">36 px</output></label><label>Tempo <input id="prompt-speed" type="range" min="60" max="240" step="10" value="130" aria-label="Lesetempo in Wörtern pro Minute"><output id="speed-value">130 W/min</output></label>${button("reader-toggle", "Leseführung starten", 'aria-pressed="false"')}${button("reader-reset", "Textanfang")}${button("mirror-toggle", "Spiegeln", 'aria-pressed="false"')}${button("focus-toggle", "Lesefokus", 'aria-pressed="false"')}</div><div class="prompt-workspace"><section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><div class="prompt-script"></div></div><div class="prompt-action"><div><p id="cue-heading" class="presenter-label"></p><p id="next-action" role="status" aria-live="polite"></p></div>${button("cue-next", "Weiter →", 'aria-label="Angezeigte nächste Aktion ausführen"')}<p id="cue-warning" class="cue-warning" hidden></p></div><div class="prompt-footer">Leseführung nach Tempo, keine Spracherkennung. Folienwechsel erfolgt manuell.</div></section><aside class="prompt-preview"><p class="preview-label">Jetzt im Publikum</p><div id="current-preview"></div><p class="prompt-cue" id="cue-status"></p><p class="preview-label">Als Nächstes</p><div id="next-preview"></div><p class="preview-title" id="next-title"></p><label class="preview-label" for="jump">Direkt zu Folie</label><select id="jump" aria-label="Zu Folie springen"></select></aside></div>${controlBar()}<p class="presenter-status" role="status" aria-live="polite"></p>`;
+      content.innerHTML = `${header(view.role)}${readerSettings()}<div class="prompt-workspace">${readerColumn()}<aside class="prompt-preview"><p class="preview-label">Jetzt im Publikum</p><div id="current-preview"></div><p class="prompt-cue" id="cue-status"></p><p class="preview-label">Als Nächstes</p><div id="next-preview"></div><p class="preview-title" id="next-title"></p><label class="preview-label" for="jump">Direkt zu Folie</label><select id="jump" aria-label="Zu Folie springen"></select></aside></div>${controlBar()}<p class="presenter-status" role="status" aria-live="polite"></p>`;
       const select = node(view, "#jump");
       slides.forEach((slide, index) => {
         const option = view.doc.createElement("option");
@@ -392,6 +733,11 @@ export function mountPresenter(root, options) {
         select.append(option);
       });
       listen(view, select, "change", () => transitionTo(Number(select.value)));
+    } else {
+      content.innerHTML = `${header(view.role)}<main class="stage" aria-label="Präsentation"></main>${controlBar()}<nav class="presenter-controls" aria-label="Fenster und Notizen">${button("audience-open", "Publikumsfenster öffnen")}${button("teleprompter-open", "Teleprompter öffnen")}${button("notes-toggle", "Sprechtext (N)", 'aria-controls="notes" aria-expanded="false"')}${button("print", "Drucken / PDF")}</nav><p class="help">← → / Leertaste: Einblendung oder Folie · T/P: Timer · R: Timer zurücksetzen · B: Schwarzbild · F: Vollbild. Fenster auf getrennte Bildschirme ziehen; nur das Publikumsfenster teilen.<br>${slides.some((slide) => slide.notes) ? "Diese Steuerung enthält Sprechernotizen. Enthaltene Notizen sind auch im Quelltext einer exportierten HTML-Datei lesbar." : "Für diesen Vortrag sind keine Sprechernotizen enthalten."}</p><aside id="notes" class="controller-script" hidden aria-label="Privater Sprechtext">${readerSettings()}${readerColumn()}</aside><p class="presenter-status" role="status" aria-live="polite"></p><p id="announced" class="sr-only" role="status" aria-live="polite"></p>`;
+      addSlides(view);
+    }
+    if (view.role !== "audience") {
       listen(view, node(view, "#prompt-font"), "input", (e) => {
         state.font = Number(e.target.value);
         draw();
@@ -411,9 +757,6 @@ export function mountPresenter(root, options) {
       listen(view, reader, "keydown", (e) => {
         if (["ArrowUp", "ArrowDown"].includes(e.key)) manualScroll();
       });
-    } else {
-      content.innerHTML = `${header(view.role)}<main class="stage" aria-label="Präsentation"></main>${controlBar()}<nav class="presenter-controls" aria-label="Fenster und Notizen">${button("audience-open", "Publikumsfenster öffnen")}${button("teleprompter-open", "Teleprompter öffnen")}${button("notes-toggle", "Notizen (N)", 'aria-controls="notes" aria-expanded="false"')}${button("print", "Drucken / PDF")}</nav><p class="help">← → / Leertaste: Einblendung oder Folie · T/P: Timer · R: Timer zurücksetzen · B: Schwarzbild · F: Vollbild. Fenster auf getrennte Bildschirme ziehen; nur das Publikumsfenster teilen.<br>${slides.some((slide) => slide.notes) ? "Diese Steuerung enthält Sprechernotizen. Enthaltene Notizen sind auch im Quelltext einer exportierten HTML-Datei lesbar." : "Für diesen Vortrag sind keine Sprechernotizen enthalten."}</p><aside id="notes" hidden aria-label="Private Vortragsnotizen"><strong>Private Notizen sind auf diesem Bildschirm sichtbar.</strong><pre id="note-content"></pre><span id="next-note"></span></aside><p class="presenter-status" role="status" aria-live="polite"></p><p id="announced" class="sr-only" role="status" aria-live="polite"></p>`;
-      addSlides(view);
     }
     const actions = {
       previous,
@@ -439,8 +782,9 @@ export function mountPresenter(root, options) {
       "reader-reset": () => {
         state.readerPosition = 0;
         state.readerStarted = Date.now();
+        state.reading = false;
+        state.readerRevision++;
         state.waitingCue = null;
-        state.resumeAfterCue = false;
         announce(
           "Textanfang. Bereits gezeigte Einblendungen bleiben sichtbar.",
         );
@@ -464,12 +808,21 @@ export function mountPresenter(root, options) {
     listen(view, view.doc, "keydown", (event) => keyboard(view, event));
   }
   function dropView(view) {
-    view.cleanups.forEach((fn) => fn());
+    view.cleanups.forEach((fn) => {
+      try {
+        fn();
+      } catch {
+        /* A navigated window is no longer owned. */
+      }
+    });
+    view.cleanups = [];
     const index = views.indexOf(view);
     if (index >= 0) views.splice(index, 1);
   }
   function openWindow(role) {
-    const existing = views.find((v) => v.role === role && !v.win.closed);
+    for (const view of [...views])
+      if (view.role !== "controller" && !ownsView(view)) dropView(view);
+    const existing = views.find((v) => v.role === role && ownsView(v));
     if (existing) {
       existing.win.focus();
       announce(
@@ -510,7 +863,7 @@ export function mountPresenter(root, options) {
       // A browser/process can close the controller without beforeunload. The
       // child owns this timer, so it can retire an orphaned private window.
       const watchdog = child.setInterval(() => {
-        if (host.closed) {
+        if (host.closed && ownsView(view)) {
           try {
             child.close();
           } catch {
@@ -519,7 +872,7 @@ export function mountPresenter(root, options) {
         }
       }, 250);
       view.cleanups.push(() => child.clearInterval(watchdog));
-      listen(view, child, "beforeunload", () => {
+      listen(view, child, "pagehide", () => {
         dropView(view);
         if (!disposed)
           announce(
@@ -546,7 +899,12 @@ export function mountPresenter(root, options) {
     if (disposed) return;
     const slide = slides[state.index];
     const count = `${state.index + 1} / ${slides.length}`;
+    for (const view of [...views])
+      if (view.role !== "controller" && !ownsView(view)) dropView(view);
     views.forEach((view) => {
+      view.root.dataset.slideIndex = String(state.index);
+      view.root.dataset.phase = String(state.steps[state.index]);
+      view.root.dataset.mediaPlaying = String(Boolean(mediaState?.busy));
       view.root.querySelectorAll("#count,[data-count]").forEach((el) => {
         el.textContent = count;
       });
@@ -580,45 +938,68 @@ export function mountPresenter(root, options) {
       const nextButton = node(view, "#next");
       if (nextButton)
         nextButton.disabled =
+          !mediaState?.busy &&
           state.index === slides.length - 1 &&
           (!slide.reveal || state.steps[state.index] >= groupCount());
       if (view.role === "controller") {
         const notes = node(view, "#notes");
         notes.hidden = !state.notes;
-        notes.className = state.notes ? "presenter-notes" : "";
+        notes.className = "controller-script";
+        view.root.classList.toggle("has-script", state.notes);
         node(view, "#notes-toggle").setAttribute(
           "aria-expanded",
           String(state.notes),
         );
-        node(view, "#note-content").textContent =
-          slide.notes || "Für diese Folie sind keine Notizen enthalten.";
-        node(view, "#next-note").textContent =
-          `Nächste Folie: ${slides[state.index + 1]?.title || "Ende"}`;
         node(view, "#announced").textContent = `Folie ${count}: ${slide.title}`;
       }
-      if (view.role === "teleprompter") {
+      if (view.role !== "audience") {
         view.root.classList.toggle("is-focus", state.focus);
-        node(view, "#prompt-section").textContent =
-          `Folie ${count} · ${slide.seconds > 0 ? `${slide.seconds} s geplant` : "ohne Zeitvorgabe"}`;
-        node(view, "#prompt-title").textContent = slide.title;
-        node(view, "#current-preview").innerHTML = state.black
-          ? '<div style="aspect-ratio:16/9;background:#000" aria-label="Schwarzbild aktiv"></div>'
-          : viewCloneSvg();
-        node(view, "#cue-status").textContent =
-          `${state.black ? "Schwarzbild aktiv · " : ""}${slide.reveal ? `Einblendung ${Math.min(state.steps[state.index], groupCount())} / ${groupCount()}` : "Folie vollständig sichtbar"}`;
+        text(
+          view,
+          "#prompt-section",
+          `Folie ${count} · Phase ${state.steps[state.index]} / ${groupCount()} · ${slide.seconds > 0 ? `${slide.seconds} s geplant` : "ohne Zeitvorgabe"}`,
+        );
+        text(view, "#prompt-title", slide.title);
+        if (view.role === "teleprompter") {
+          const preview = node(view, "#current-preview");
+          if (state.black)
+            preview.innerHTML =
+              '<div style="aspect-ratio:16/9;background:#000" aria-label="Schwarzbild aktiv"></div>';
+          else if (slide.media) {
+            if (
+              !preview.querySelector(
+                `canvas[data-media-slide="${state.index}"]`,
+              )
+            ) {
+              preview.innerHTML = slide.svg;
+              preview.style.position = "relative";
+              addMediaCanvas(view, preview, state.index);
+            }
+          } else preview.innerHTML = viewCloneSvg();
+          text(
+            view,
+            "#cue-status",
+            `${state.black ? "Schwarzbild aktiv · " : ""}${slide.reveal ? `Phase ${Math.min(state.steps[state.index], groupCount())} / ${groupCount()}` : "Folie vollständig sichtbar"}`,
+          );
+          if (view.renderedIndex !== state.index) {
+            node(view, "#next-preview").innerHTML =
+              slides[state.index + 1]?.svg || "";
+            text(
+              view,
+              "#next-title",
+              slides[state.index + 1]?.title || "Ende der Präsentation",
+            );
+            node(view, "#jump").value = String(state.index);
+          }
+        }
         if (view.renderedIndex !== state.index) {
-          node(view, "#next-preview").innerHTML =
-            slides[state.index + 1]?.svg || "";
-          node(view, "#next-title").textContent =
-            slides[state.index + 1]?.title || "Ende der Präsentation";
-          node(view, "#jump").value = String(state.index);
           buildReader(view);
           view.renderedIndex = state.index;
         }
         node(view, "#prompt-font").value = String(state.font);
-        node(view, "#font-value").textContent = `${state.font} px`;
+        text(view, "#font-value", `${state.font} px`);
         node(view, "#prompt-speed").value = String(state.speed);
-        node(view, "#speed-value").textContent = `${state.speed} W/min`;
+        text(view, "#speed-value", `${state.speed} W/min`);
         node(view, ".prompt-script").style.setProperty(
           "--prompt-font",
           `${state.font}px`,
@@ -639,6 +1020,7 @@ export function mountPresenter(root, options) {
       const statusElement = node(view, ".presenter-status");
       if (statusElement) statusElement.textContent = status;
     });
+    paintMedia();
     tick();
   }
   function viewCloneSvg() {
@@ -654,7 +1036,6 @@ export function mountPresenter(root, options) {
       (cue) => cueValid(cue) && !cueDone(cue) && cue.at <= position,
     );
     if (reachedCue && state.waitingCue !== reachedCue.id) {
-      state.resumeAfterCue = state.reading;
       state.waitingCue = reachedCue.id;
       state.readerPosition = reachedCue.at;
       state.readerStarted = now;
@@ -665,7 +1046,7 @@ export function mountPresenter(root, options) {
     const seconds = Math.floor(elapsed(now) / 1000);
     const time = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
     for (const view of [...views]) {
-      if (view.role !== "controller" && view.win.closed) {
+      if (view.role !== "controller" && !ownsView(view)) {
         dropView(view);
         announce(
           "Ein Fenster wurde geschlossen. Es lässt sich mit dem aktuellen Stand erneut öffnen.",
@@ -686,8 +1067,9 @@ export function mountPresenter(root, options) {
             : "Timer starten (T)";
         timer.setAttribute("aria-pressed", String(state.running));
       }
-      if (view.role !== "teleprompter") continue;
+      if (view.role === "audience") continue;
       const waiting = script.cues[state.waitingCue];
+      const pending = script.cues.find((cue) => cueValid(cue) && !cueDone(cue));
       const action = node(view, ".prompt-action");
       action.classList.toggle("is-waiting", Boolean(waiting));
       text(
@@ -707,6 +1089,7 @@ export function mountPresenter(root, options) {
       const cueButton = node(view, "#cue-next");
       cueButton.setAttribute("aria-label", `Weiter: ${nextAction()}`);
       node(view, "#cue-next").disabled =
+        !mediaState?.busy &&
         state.index === slides.length - 1 &&
         (!slides[state.index].reveal ||
           state.steps[state.index] >= groupCount());
@@ -714,7 +1097,8 @@ export function mountPresenter(root, options) {
       node(view, "#cue-warning").hidden = !warning;
       text(view, "#cue-warning", warning);
       view.cues.forEach(({ cue, element }) => {
-        element.classList.toggle("is-current", cue.id === state.waitingCue);
+        element.classList.toggle("is-current", cue === pending);
+        element.classList.toggle("is-waiting", cue === waiting);
         element.classList.toggle("is-done", cueDone(cue));
         element.classList.toggle("is-invalid", !cueValid(cue));
       });
@@ -737,14 +1121,25 @@ export function mountPresenter(root, options) {
       }
       if (
         view.highlight !== current ||
-        view.highlightCue !== state.waitingCue
+        view.highlightCue !== state.waitingCue ||
+        view.readerRevision !== state.readerRevision
       ) {
+        const phaseStart =
+          script.cues.find(
+            (cue) =>
+              cue.kind === "KLICK" && cue.order === state.steps[state.index],
+          )?.at ?? 0;
+        const phaseEnd = pending?.at ?? script.total;
         view.words.forEach((word, index) => {
           word.element.classList.toggle(
             "is-current",
             !waiting && index === current,
           );
           word.element.classList.toggle("is-read", index < current);
+          word.element.classList.toggle(
+            "is-active-phase",
+            word.from >= phaseStart && word.from < phaseEnd,
+          );
         });
         view.highlight = current;
         view.highlightCue = state.waitingCue;
@@ -753,7 +1148,9 @@ export function mountPresenter(root, options) {
         waiting && view.cues.find((item) => item.cue === waiting)?.element;
       const focusElement = cueElement || view.words[current]?.element;
       if (
-        (state.reading || (waiting && view.scrolledCue !== state.waitingCue)) &&
+        (state.reading ||
+          view.readerRevision !== state.readerRevision ||
+          (waiting && view.scrolledCue !== state.waitingCue)) &&
         focusElement
       ) {
         const reader = node(view, ".prompt-reader");
@@ -769,9 +1166,14 @@ export function mountPresenter(root, options) {
         const delta = target - reader.scrollTop;
         if (Math.abs(delta) > 1)
           reader.scrollTop +=
-            waiting || reducedMotion?.matches ? delta : delta * 0.32;
+            waiting ||
+            view.readerRevision !== state.readerRevision ||
+            reducedMotion?.matches
+              ? delta
+              : delta * 0.32;
         view.scrolledCue = state.waitingCue;
       }
+      view.readerRevision = state.readerRevision;
     }
   }
   function pageHide() {
@@ -780,13 +1182,14 @@ export function mountPresenter(root, options) {
     // Keep the controller intact for a possible back/forward-cache restoration.
     state.elapsed = elapsed();
     state.running = false;
-    state.resumeAfterCue = false;
+    if (mediaState?.busy) seekMedia(mediaState.stop);
     setReading(false);
     for (const view of [...views]) {
       if (view.role === "controller") continue;
+      const owned = ownsView(view);
       dropView(view);
       try {
-        view.win.close();
+        if (owned) view.win.close();
       } catch {
         /* Already closed. */
       }
@@ -797,10 +1200,16 @@ export function mountPresenter(root, options) {
     if (disposed) return;
     disposed = true;
     host.clearInterval(interval);
+    if (mediaState) {
+      mediaState.video.pause();
+      cancelMediaFrame();
+      mediaState.generation++;
+    }
     host.removeEventListener("pagehide", pageHide);
     for (const view of [...views]) {
+      const owned = ownsView(view);
       dropView(view);
-      if (view.role !== "controller") {
+      if (view.role !== "controller" && owned) {
         try {
           view.win.close();
         } catch {
@@ -822,6 +1231,7 @@ export function mountPresenter(root, options) {
   };
   views.push(main);
   buildView(main);
+  initMedia();
   draw();
   const interval = host.setInterval(tick, 100);
   host.addEventListener("pagehide", pageHide);

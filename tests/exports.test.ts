@@ -133,7 +133,7 @@ test("Standalone HTML escapes hostile text and allows only its exact fixed scrip
   const html = await (await exportHtml(deck)).text();
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   assert.equal(scripts.length, 1);
-  const hash = createHash("sha256").update(scripts[0][1]).digest("base64");
+  const hash = createHash("sha256").update(scripts[0][1].replace(/\r\n?/g, "\n")).digest("base64");
   assert.ok(html.includes(`script-src 'sha256-${hash}'`));
   assert.ok(html.includes("connect-src 'none'"));
   assert.doesNotMatch(html, /<script>alert\(/);
@@ -142,7 +142,7 @@ test("Standalone HTML escapes hostile text and allows only its exact fixed scrip
       "&lt;/template&gt;&lt;script&gt;alert(2)&lt;/script&gt;&amp;私",
     ),
   );
-  assert.match(html, /<aside id="notes" hidden/);
+  assert.match(html, /<aside id="notes"[^>]*\bhidden\b/);
   assert.match(html, /aria-expanded="false"/);
   assert.match(html, /prefers-reduced-motion:reduce/);
   assert.match(html, /@media print/);

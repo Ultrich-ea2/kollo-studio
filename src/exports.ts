@@ -427,10 +427,10 @@ export async function exportHtml(input: Deck): Promise<Blob> {
         `<section class="slide" role="group" aria-roledescription="Folie" aria-label="${i + 1}: ${escapeHtml(deck.slides[i].title)}" aria-current="${i === 0}" aria-hidden="${i !== 0}" data-title="${escapeHtml(deck.slides[i].title)}" data-transition="${deck.slides[i].transition}" data-reveal="${deck.slides[i].reveal}" data-seconds="${deck.slides[i].seconds}">${svgMarkup(scene)}<template>${escapeHtml(deck.slides[i].notes)}</template></section>`,
     )
     .join("\n");
-  const script = await playerScript();
+  const script = (await playerScript()).replace(/\r\n?/g, "\n");
   const hash = await scriptHash(script);
   const html = `<!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; script-src 'sha256-${hash}'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>${escapeHtml(deck.title)} – Kollo</title><style id="kollo-player-style">${presenterCss}</style><style>html,body{margin:0;background:#101b16}</style></head>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; script-src 'sha256-${hash}'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>${escapeHtml(deck.title)} – Kollo</title><style id="kollo-player-style">${presenterCss}</style><style>html,body{margin:0;background:#13161e}</style></head>
 <body><div id="kollo-player" class="kollo-presenter" data-title="${escapeHtml(deck.title)}" data-duration="${deck.duration}"><main class="stage" aria-label="Präsentation">${slides}</main></div><noscript>Für Einblendungen und synchronisierte Fenster ist JavaScript nötig. Die Folien lassen sich weiterhin drucken.</noscript><script>${script}</script></body></html>`;
   return new Blob([html], { type: "text/html;charset=utf-8" });
 }

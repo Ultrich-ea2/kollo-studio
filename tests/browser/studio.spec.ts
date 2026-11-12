@@ -101,12 +101,15 @@ test("presentation reveals, keyboard navigation and notes are explicit", async (
   await page.getByRole("button", { name: "Werkstatt öffnen" }).click();
   await page.getByRole("button", { name: "Präsentieren", exact: true }).click();
   await expect(page.locator(".presenter")).toBeVisible();
-  await expect(page.locator(".presenter-notes")).toHaveCount(0);
+  await expect(page.locator("#notes")).toBeHidden();
   await page.keyboard.press("n");
-  await expect(page.locator(".presenter-notes")).toContainText(
-    "auf diesem Bildschirm sichtbar",
+  await expect(page.locator("#notes.controller-script")).toBeVisible();
+  await expect(page.locator("#notes .prompt-script")).not.toBeEmpty();
+  await expect(page.locator(".help")).toContainText(
+    "Diese Steuerung enthält Sprechernotizen",
   );
   await page.keyboard.press("n");
+  await expect(page.locator("#notes")).toBeHidden();
   await page.keyboard.press("End");
   await expect(page.locator(".presenter-bar")).toContainText("11 / 11");
   await page.keyboard.press("Escape");
