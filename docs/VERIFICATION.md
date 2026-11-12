@@ -2,8 +2,9 @@
 
 Stand: 12. November 2026. Geprüft mit Node.js 24, Microsoft Edge und der lokal installierten Microsoft-PowerPoint-Version unter Windows.
 
-- 30 automatisierte Modell-, Layout-, Sicherheits- und Exporttests erfolgreich.
-- 8 Browser-End-to-End-Tests erfolgreich: Bearbeitung, lokale Speicherung, Undo, ungültige Codeeingaben, XSS-Text, echte Downloads, Notizen, Mobilansicht, konkurrierende Fenster, unvollständige Diagrammwerte und mehrzeilige Spalten.
+- 35 automatisierte Modell-, Layout-, Sicherheits-, Export- und Skill-Paritätstests erfolgreich.
+- 10 Browser-End-to-End-Tests erfolgreich: Bearbeitung, lokale Speicherung, Undo, ungültige Codeeingaben, XSS-Text, echte Downloads, Notizen, Mobilansicht, konkurrierende Fenster, unvollständige Diagrammwerte, mehrzeilige Spalten, BOM-Dateiimport und heruntergeladene Skill-Ressourcen.
+- Die zusätzliche [Skill-Prüfung](SKILL-VERIFICATION.md) dokumentiert 24 Python-Tests, 68 gemeinsame Formatfälle und drei unabhängige Arbeitsabläufe mit 17 Folien einschließlich echter PowerPoint-Prüfung.
 - Alle 31 Folien der drei Vorlagen sind gültig und ohne erkannte Layoutüberläufe. Das zusätzliche Skill-Beispiel und ein unabhängig erstelltes Beispieldeck wurden validiert.
 - Beide PowerPoint-Ausgaben des Standarddecks in Microsoft PowerPoint geöffnet und alle 22 Folien als Bilder gerendert. Bearbeitbare Ausgabe visuell geprüft. Sämtlicher nativer Folientext erscheint auch im von PowerPoint erzeugten PDF.
 - Heruntergeladenes PDF: 11 vollständige Seiten im Format 960 × 540 pt. Bild-Export mit eigenem Testbild geprüft: natives PNG im editierbaren PPTX, korrektes Bild im visuellen PPTX und im PDF.

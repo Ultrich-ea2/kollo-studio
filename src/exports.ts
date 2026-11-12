@@ -22,11 +22,17 @@ type ResourceMap = Record<string, string>;
 const bundledResources: ResourceMap = (() => {
   try {
     return {
-      ...import.meta.glob("/skills/kollo-theme/**/*", {
-        query: "?raw",
-        import: "default",
-        eager: true,
-      }),
+      ...import.meta.glob(
+        [
+          "/skills/kollo-theme/**/*.{md,py,json,yaml}",
+          "/skills/kollo-theme/LICENSE",
+        ],
+        {
+          query: "?raw",
+          import: "default",
+          eager: true,
+        },
+      ),
       ...import.meta.glob("/public/guide.md", {
         query: "?raw",
         import: "default",

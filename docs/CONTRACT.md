@@ -1,6 +1,6 @@
 # Kollo implementation contract
 
-New student presentation studio based on the author's bachelor_defense palette and structure. Original personal thesis content is not published. German interface; example academic content explicitly marked as example. Repository source and offline kit in scope; Vercel hosting. All student data remains on device.
+Student presentation studio with a reusable theme and flexible slide structure. Personal research and feedback are not published. German interface; academic example content explicitly marked as fictitious. Repository source, offline kit and a general AI authoring/adaptation skill are in scope; Vercel hosting. The studio processes presentation content on device; users control any separate sharing with an AI service.
 
 Shared model (src/model.ts): Deck {version:1,title:string,author:string,institution:string,date:string,duration:number,theme:{background:string,foreground:string,muted:string,primary:string,secondary:string,font:'Arial'|'Georgia',scale:number,showProgress:boolean},slides:Slide[]}. Slide {id:string,layout:'title'|'section'|'bullets'|'columns'|'process'|'stats'|'quote'|'code'|'image'|'chart'|'references'|'closing',section:string,title:string,subtitle:string,items:string[],body:string,image:string,imageAlt:string,notes:string,source:string,transition:'none'|'fade'|'slide'|'zoom',reveal:boolean,seconds:number}. All fields required. Images only embedded PNG/JPEG/WebP, no remote URLs or SVG. Items format: columns uses two strings; stats/chart use "value | label"; chart numeric nonnegative values.
 

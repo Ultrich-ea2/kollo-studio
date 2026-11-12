@@ -4,7 +4,7 @@ Das veröffentlichte Studio bietet ein **fertiges Offline-Studio** als ZIP. Daf�
 
 Die Quellcode-Version unten richtet sich an Studierende, die das Studio weiterentwickeln möchten. Eine einzelne exportierte HTML-Präsentation funktioniert auch ohne Node.js direkt per Doppelklick.
 
-Ein lokales Präsentationsstudio für Kolloquien, Seminare und Abschlussvorträge. Inhalte bearbeiten, eine Präsentation abspielen und dieselben Folien als HTML, PDF oder PowerPoint ausgeben. Das Thema stammt aus Ultrichs eigener Präsentationsgestaltung; persönliche Inhalte der Bachelorarbeit sind nicht enthalten. Die mitgelieferten akademischen Inhalte sind Beispiele.
+Ein lokales Präsentationsstudio für Kolloquien, Seminare und Abschlussvorträge. Inhalte bearbeiten, eine Präsentation abspielen und dieselben Folien als HTML, PDF oder PowerPoint ausgeben. Die mitgelieferten akademischen Inhalte sind fiktive Beispiele. Persönliche Arbeiten und Feedback gehören zu den eigenen Materialien und werden nicht mit dem Studio verteilt.
 
 ## Starten
 
@@ -34,17 +34,21 @@ npm run preview
 
 Automatische Browserspeicherung ist eine Arbeitshilfe, kein Ersatz für eine Datei. Das Offline-Kit enthält die aktuelle Präsentation als eigenständiges HTML, das Projekt-JSON, die Anleitung und den KI-Skill. Die HTML-Datei ist ein Leser für diese Präsentation; der vollständige Editor liegt im Quellcodepaket.
 
-| Export | Zweck und Grenze |
-|---|---|
-| `.kollo.json` | vollständig bearbeitbarer Projektstand; unabhängig von einem PowerPoint-Layout |
-| HTML | eigenständiger Offline-Vortrag mit Übergängen und Einblendungen |
-| PowerPoint, bearbeitbar | native Texte, Formen und Bilder; Schriftmetriken können abweichen |
-| PowerPoint, visuell | Folien als Bilder mit fester Darstellung; einzelne Texte nicht bearbeitbar |
-| PDF | feste Bilddarstellung der Folien, ohne Animationen |
+| Export                  | Zweck und Grenze                                                               |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| `.kollo.json`           | vollständig bearbeitbarer Projektstand; unabhängig von einem PowerPoint-Layout |
+| HTML                    | eigenständiger Offline-Vortrag mit Übergängen und Einblendungen                |
+| PowerPoint, bearbeitbar | native Texte, Formen und Bilder; Schriftmetriken können abweichen              |
+| PowerPoint, visuell     | Folien als Bilder mit fester Darstellung; einzelne Texte nicht bearbeitbar     |
+| PDF                     | feste Bilddarstellung der Folien, ohne Animationen                             |
 
 PPTX/PDF zeigen den Endzustand aller Einblendungen. PowerPoint verwendet einfache Folienübergänge; Browser-Zoom wird als Fade angenähert. Arial und Georgia werden als Systemschriften verwendet und nicht eingebettet. Notizen sind in JSON und Offline-Kit enthalten, dort auch in der HTML-Datei; für einzeln heruntergeladenes HTML/PPTX ist ihre Mitgabe gesondert wählbar.
 
 ## KI-Skill und Anleitung
+
+Der Skill unterstützt neue Vorträge, gezielte Änderungen bestehender Kollo-Dateien und die nachvollziehbare Übertragung von PPTX/PDF. Er enthält Leitfäden für Argumentation, Quellen, Feedback, Gestaltung und Prüfung sowie einen lokalen Quellenhelfer und zwei Prüfer. Er läuft in deiner KI-Umgebung; Kollo selbst ruft keine KI auf. PPTX/PDF sind Ausgangsmaterial, kein direkter Import und keine verlustfreie Konvertierung. Die nativen Originale bleiben unverändert.
+
+Python-Helfer testen: `npm run test:skill`. Die optionalen PDF-Tests verwenden ein vorhandenes `pypdf` oder PyMuPDF; die GitHub-Prüfung installiert dafür isoliert die festgelegte pypdf-Version. Die Anwendung selbst benötigt diese Pakete nicht.
 
 - [Deutsche Anleitung](public/guide.md): Nutzung, Offline-Betrieb, Exporte und Installation des Skills.
 - [Kollo-Skill](skills/kollo-theme/SKILL.md): erzeugt aus geprüften Materialien importierbare `.kollo.json`-Dateien.

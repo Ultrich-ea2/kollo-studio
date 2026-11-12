@@ -372,7 +372,7 @@ function App() {
     try {
       if (file.size > 10 * 1024 * 1024)
         throw new Error("Maximal 10 MB pro Projektdatei.");
-      const next = parseDeck(JSON.parse(await file.text()));
+      const next = parseDeck(await file.text());
       replace(next);
     } catch (e) {
       notify(
@@ -472,7 +472,7 @@ function App() {
   }
   function codeApply() {
     try {
-      const next = parseDeck(JSON.parse(code));
+      const next = parseDeck(code);
       change(next);
       setActive(Math.min(index, next.slides.length - 1));
       setCodeDirty(false);
@@ -615,7 +615,7 @@ function App() {
                 </div>
                 <div className="object-bottom">
                   <span className="swatch" />
-                  <span>Midnight / aus einer echten Bachelorverteidigung</span>
+                  <span>Midnight / ein Thema für deine Forschung</span>
                   <button
                     onClick={() => {
                       setActive(0);
@@ -1501,7 +1501,9 @@ function App() {
                   <BookOpen />
                   <span>
                     <strong>Theme-Skill für deine KI</strong>
-                    <small>SKILL.md · Schema · Beispiel · Prüfer</small>
+                    <small>
+                      Leitfäden · bestehende Folien · Quellenhelfer · Prüfer
+                    </small>
                   </span>
                   <Download />
                 </a>
@@ -1592,10 +1594,12 @@ function App() {
                   <span className="eyebrow">03 / MIT KI ARBEITEN</span>
                   <h2>Gib deiner KI das Handwerkszeug.</h2>
                   <p>
-                    Entpacke den Theme-Skill. In Codex gehört der Ordner{" "}
+                    Der Skill gibt deiner KI Anleitungen, Beispiele und lokale
+                    Helfer. Entpacke ihn und verwende den inneren Ordner{" "}
+                    <code>skills/kollo-theme</code>. In Codex gehört der Ordner{" "}
                     <code>kollo-theme</code> nach <code>~/.agents/skills/</code>
-                    . In anderen KI-Tools gibst du SKILL.md, Schema und Beispiel
-                    als Kontext.
+                    . Anderen KI-Tools gibst du den vollständigen Skill und
+                    deine freigegebenen Materialien als Kontext.
                   </p>
                   <blockquote>
                     „Nutze den Kollo-Theme-Skill. Erstelle aus meinen Notizen
@@ -1608,6 +1612,33 @@ function App() {
                     Folie. Der Skill gibt deiner KI eine Gestaltungssprache; er
                     schickt deine Inhalte nicht automatisch an einen Dienst.
                   </p>
+                  <h3>Deine bestehende Präsentation weiterentwickeln.</h3>
+                  <p>
+                    Eine Kollo-Datei kann deine KI direkt überarbeiten: Inhalte
+                    kürzen, Layouts ändern oder Feedback einarbeiten. PPTX und
+                    PDF dienen als Ausgangsmaterial für eine Übertragung in das
+                    Kollo-Thema. Der Browsereditor importiert ausschließlich
+                    Kollo-JSON; PowerPoint-Master und komplexe Animationen
+                    werden nicht automatisch übernommen.
+                  </p>
+                  <blockquote>
+                    „Nutze kollo-theme. Übertrage meine PPTX in eine
+                    Präsentation für zwölf Minuten. Bewahre Zahlen, Quellen und
+                    Einschränkungen. Liefere .kollo.json und eine Zuordnung der
+                    alten zu den neuen Folien. Verändere das Original nicht.“
+                  </blockquote>
+                  <p>
+                    Im Paket findest du Leitfäden für wissenschaftliche
+                    Argumentation, Quellen, Feedback, Gestaltung und
+                    Exportprüfung. Der Quellenhelfer liest Office-Dateien und
+                    Texte lokal; PDF benötigt ein optionales Python-Paket. Ein
+                    weiterer Prüfer gibt Hinweise zu Zeitplanung, Kontrast und
+                    unsichtbaren Inhalten. Quellenpakete können private Notizen
+                    enthalten.
+                  </p>
+                  <a href="./guide.md" download>
+                    Ausführliche Anleitung mit Beispielen herunterladen
+                  </a>
                 </section>
                 <section id="export">
                   <span className="eyebrow">04 / RICHTIG EXPORTIEREN</span>
@@ -1672,7 +1703,7 @@ function App() {
         <button className="wordmark" onClick={() => navigate("home")}>
           kollo<span>↗</span>
         </button>
-        <span>Aus einer Bachelorverteidigung. Für deinen eigenen Weg.</span>
+        <span>Für deine Forschung. Für deinen eigenen Weg.</span>
         <div>
           <button onClick={() => navigate("guide")}>
             Anleitung & Datenschutz

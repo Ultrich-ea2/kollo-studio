@@ -32,4 +32,4 @@ Claude Code dokumentiert `.claude/skills` für Projekt- und persönliche Skills 
 
 ## Grenzen des Themas
 
-Die veröffentlichte Gestaltung basiert auf Ultrichs eigenem Thema. Persönliche Inhalte, unveröffentlichte Forschung und fremde Materialien aus der ursprünglichen Abschlussarbeit gehören nicht zum Beispielprojekt. Arial und Georgia werden nur als Systemschriften benannt; dieses Repository verteilt keine Fontdateien und sagt keine Einbettung in PowerPoint zu. Abhängigkeiten und eigene Nutzermaterialien behalten ihre jeweiligen Rechte.
+Die veröffentlichte Gestaltung und fiktiven Beispiele sind allgemein verwendbar. Persönliche Inhalte, unveröffentlichte Forschung, private Rückmeldungen und fremde Materialien gehören nicht zum Beispielprojekt. Arial und Georgia werden nur als Systemschriften benannt; dieses Repository verteilt keine Fontdateien und sagt keine Einbettung in PowerPoint zu. Abhängigkeiten und eigene Nutzermaterialien behalten ihre jeweiligen Rechte.

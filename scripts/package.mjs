@@ -6,14 +6,19 @@ const root = process.cwd();
 const downloads = path.join(root, "dist", "downloads");
 await fs.mkdir(downloads, { recursive: true });
 const stamp = new Date("2026-01-01T00:00:00Z");
+const zipOptions = { date: stamp, createFolders: false };
 async function addTree(zip, relative, prefix = "") {
+  if (
+    relative.split(/[\\/]/).includes("__pycache__") ||
+    /\.py[co]$/i.test(relative)
+  )
+    return;
   const absolute = path.join(root, relative);
   const info = await fs.stat(absolute);
   if (info.isDirectory()) {
     for (const file of (await fs.readdir(absolute)).sort())
       await addTree(zip, path.posix.join(relative, file), prefix);
-  } else
-    zip.file(prefix + relative, await fs.readFile(absolute), { date: stamp });
+  } else zip.file(prefix + relative, await fs.readFile(absolute), zipOptions);
 }
 const skill = new JSZip();
 await addTree(skill, "skills/kollo-theme/");
@@ -65,7 +70,7 @@ for (const name of ["index.html", "favicon.svg", "guide.md", "assets"]) {
               '<html data-offline="true" ',
             )
           : await fs.readFile(abs),
-        { date: stamp },
+        zipOptions,
       );
   }
   await copy(name);
@@ -73,17 +78,17 @@ for (const name of ["index.html", "favicon.svg", "guide.md", "assets"]) {
 offline.file(
   "server.mjs",
   await fs.readFile(path.join(root, "scripts", "offline-server.mjs")),
-  { date: stamp },
+  zipOptions,
 );
 offline.file(
   "Start-Kollo.cmd",
   '@echo off\r\ncd /d "%~dp0"\r\nwhere node >nul 2>&1\r\nif errorlevel 1 (\r\n echo Bitte zuerst Node.js 24 installieren: https://nodejs.org\r\n pause\r\n exit /b 1\r\n)\r\nnode server.mjs\r\npause\r\n',
-  { date: stamp },
+  zipOptions,
 );
 offline.file(
   "START-HIER.txt",
   "Kollo offline\n\nEinmalig Node.js 22 oder neuer installieren (empfohlen: Node.js 24 LTS).\nWindows: ZIP entpacken und Start-Kollo.cmd doppelklicken.\nmacOS/Linux: im entpackten Ordner node server.mjs ausführen.\nLokale Adresse aus dem Terminal im Browser öffnen. Kein npm install nötig.\nDer Server bindet nur an 127.0.0.1 und sendet keine Präsentationen ins Netz.\nProjekt regelmäßig als JSON sichern. Port 4179 bleibt gleich, damit die lokale Sicherung erhalten bleibt.\nDie HTML-Datei deines Vortrags funktioniert direkt per Doppelklick ohne Node.js.\n",
-  { date: stamp },
+  zipOptions,
 );
 const manifest = { version: "1.0.0", files: [] };
 for (const [name, zip] of files) {
@@ -93,7 +98,7 @@ for (const [name, zip] of files) {
     compressionOptions: { level: 9 },
   });
   await fs.writeFile(path.join(downloads, name), bytes);
-  offline.file("downloads/" + name, bytes, { date: stamp });
+  offline.file("downloads/" + name, bytes, zipOptions);
   manifest.files.push({
     file: name,
     size: bytes.length,
