@@ -7,12 +7,24 @@ const downloads = path.join(root, "dist", "downloads");
 await fs.mkdir(downloads, { recursive: true });
 const stamp = new Date("2026-01-01T00:00:00Z");
 const zipOptions = { date: stamp, createFolders: false };
-async function copyTree(zip, base, prefix = "") {
+async function copyTree(zip, base, prefix = "", offlineExamples = false) {
   for (const name of (await fs.readdir(base)).sort()) {
+    if (offlineExamples && ["player.js", "vorfuehren.html"].includes(name))
+      continue;
     const file = path.join(base, name);
     if ((await fs.stat(file)).isDirectory())
-      await copyTree(zip, file, prefix + name + "/");
-    else zip.file(prefix + name, await fs.readFile(file), zipOptions);
+      await copyTree(zip, file, prefix + name + "/", offlineExamples);
+    else
+      zip.file(
+        prefix + name,
+        offlineExamples && name === "index.html"
+          ? (await fs.readFile(file, "utf8")).replaceAll(
+              "/vorfuehren.html",
+              "/presentation.html",
+            )
+          : await fs.readFile(file),
+        zipOptions,
+      );
   }
 }
 async function addTree(zip, relative, prefix = "") {
@@ -62,7 +74,7 @@ const files = [
   ["kollo-studio-source.zip", source],
 ];
 const examples = new JSZip();
-await copyTree(examples, path.join(root, "dist", "examples"));
+await copyTree(examples, path.join(root, "dist", "examples"), "", true);
 examples.file(
   "LICENSE",
   await fs.readFile(path.join(root, "LICENSE")),
@@ -142,7 +154,7 @@ manifest.files.push({
 });
 const student = new JSZip();
 await addTree(student, "skills/kollo-theme/");
-await copyTree(student, path.join(root, "dist", "examples"), "examples/");
+await copyTree(student, path.join(root, "dist", "examples"), "examples/", true);
 student.file(
   "guides/guide.md",
   await fs.readFile(path.join(root, "public", "guide.md")),

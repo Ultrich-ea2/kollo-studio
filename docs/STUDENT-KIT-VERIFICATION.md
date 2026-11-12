@@ -7,7 +7,7 @@ Stand: 12. November 2026. Windows, Node.js 24, automatisierter Microsoft Edge un
 - 40 Node-Tests: Modell, Szenen, Exporte, Rückwärtskompatibilität, neue Kompositionen, neue leere Projekte sowie Python-/TypeScript-Parität.
 - 24 Python-Tests mit vorhandenem PDF-Backend; kein übersprungener PDF-Integrationstest.
 - 68 gemeinsame Grenz- und Sicherheitsfälle plus 13 zusätzliche Werte für das optionale Kompositionsfeld in beiden Validatoren.
-- 17 Browser-End-to-End-Tests, einschließlich echter heruntergeladener Dateien und als `file://` geöffneter Beispiele.
+- 18 Browser-End-to-End-Tests, einschließlich echter heruntergeladener Dateien, gehosteter Beispiele unter der Produktions-CSP und als `file://` geöffneter Beispiele.
 - Alle fünf Archive stimmen mit Größe und SHA-256 im Manifest überein; ZIP-CRC geprüft. Das Studenten-Kit enthält Einstieg, drei Beispiele, Skill, Offline-Studio, getrennten Quellcode und Anleitung. Keine Python-Caches, Umgebungsdateien oder privaten QA-Ordner in den Archiven.
 - `npm audit --audit-level=high`: keine bekannten Schwachstellen zum Prüfzeitpunkt.
 
@@ -45,6 +45,8 @@ Microsoft PowerPoint öffnete alle neun Dateien ohne Reparaturdialog; insgesamt 
 Eine unklare Diagrammbeschriftung wurde präzisiert: Die mögliche Punkteskala und die relative Balkenlänge sind jetzt ausdrücklich getrennt benannt. Die geänderte Folie wurde nochmals im Browser, in beiden bearbeitbaren PowerPoint-Fassungen und im nativen PDF geprüft; die Fassungen stimmen überein.
 
 ## Entpacktes Offline-Studio
+
+Bei der zusätzlichen Prüfung der öffentlich verlinkten Beispielsammlung wurde ein Unterschied zur Dateinutzung gefunden: Die Server-CSP blockiert Inline-Skripte auch dann, wenn eine heruntergeladene HTML-Datei selbst einen gültigen Skript-Hash enthält. Die Webvorschau lädt daher dieselbe Laufzeit aus einer getrennten lokalen JavaScript-Datei. Die Archive behalten die vollständige Einzeldatei und passende Offline-Links. Die Sicherheitsrichtlinie wurde dafür nicht gelockert; ein Browser-Regressionsfall prüft alle drei Webbeispiele einschließlich getrennter Fenster.
 
 Das tatsächlich heruntergeladene Studenten-Kit wurde vollständig entpackt und dessen `studio/server.mjs` gestartet. Geprüft: Neuanlage, Speicherung und Wiederherstellung nach Reload, separates Sprechpult, echter bearbeitbarer PowerPoint-Download sowie sämtliche angebotenen Offline-Downloadlinks. Der Server verweigert private beziehungsweise nicht freigegebene Pfade und Schreibmethoden. Keine externen Anfragen oder JavaScript-Fehler beobachtet.
 

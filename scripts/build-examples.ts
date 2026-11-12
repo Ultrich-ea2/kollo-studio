@@ -24,10 +24,24 @@ for (const example of showcaseExamples) {
     scene.warnings.map((warning) => `${example.id}/${index + 1}: ${warning}`),
   );
   if (warnings.length) throw new Error(warnings.join("\n"));
+  const standalone = await (await exportHtml(example.deck)).text();
+  await fs.writeFile(path.join(folder, "presentation.html"), standalone);
+  // The hosted site disallows inline scripts. Keep that policy intact while
+  // retaining the single-file HTML for downloads and the offline archives.
+  const scriptStart = standalone.lastIndexOf("<script>");
+  const scriptEnd = standalone.indexOf("</script>", scriptStart);
+  if (scriptStart < 0 || scriptEnd < 0)
+    throw new Error("Standalone player script missing");
   await fs.writeFile(
-    path.join(folder, "presentation.html"),
-    await (await exportHtml(example.deck)).text(),
+    path.join(folder, "player.js"),
+    standalone.slice(scriptStart + 8, scriptEnd),
   );
+  const hosted = (
+    standalone.slice(0, scriptStart) +
+    '<script src="./player.js"></script>' +
+    standalone.slice(scriptEnd + 9)
+  ).replace(/script-src 'sha256-[^']+'/, "script-src 'self'");
+  await fs.writeFile(path.join(folder, "vorfuehren.html"), hosted);
   await fs.writeFile(
     path.join(folder, "deck.kollo.json"),
     JSON.stringify(example.deck, null, 2) + "\n",
@@ -66,7 +80,7 @@ for (const example of showcaseExamples) {
     `# ${example.name}\n\n${example.description}\n\n${example.designNotes.map((note) => `- ${note}`).join("\n")}\n\nAlle Inhalte und Zahlen sind fiktives Übungsmaterial. Keine Forschungsbefunde.\n\n- presentation.html: direkt im Browser öffnen, schrittweise Einblendungen und getrennte Fenster ausprobieren. Enthält die fiktiven Sprechernotizen. Das Hauptfenster offen lassen.\n- deck.kollo.json: bearbeitbares Original in Kollo importieren.\n- bearbeitbar.pptx: editierbare Texte und Formen. Einblendungen erscheinen vollständig; einfache Folienübergänge bleiben erhalten. Schriftumbrüche am Zielgerät prüfen.\n- preview.svg: statische Übersicht der ersten Folie.\n\nDie HTML-Datei bleibt die Referenz für die Browseranimationen.\n`,
   );
   entries.push(
-    `<article><a href="${example.id}/presentation.html"><img src="${example.id}/preview.svg" alt="Titelfolie ${escape(example.name)}"></a><div><h2>${escape(example.name)}</h2><p>${escape(example.description)}</p><nav><a href="${example.id}/presentation.html">Vorführen & Teleprompter →</a><a href="${example.id}/deck.kollo.json" download>Projektdatei</a><a href="${example.id}/bearbeitbar.pptx" download>PowerPoint</a><a href="${example.id}/GESTALTUNG.md">Gestaltung</a></nav></div></article>`,
+    `<article><a href="${example.id}/vorfuehren.html"><img src="${example.id}/preview.svg" alt="Titelfolie ${escape(example.name)}"></a><div><h2>${escape(example.name)}</h2><p>${escape(example.description)}</p><nav><a href="${example.id}/vorfuehren.html">Vorführen & Teleprompter →</a><a href="${example.id}/presentation.html" download>HTML für unterwegs</a><a href="${example.id}/deck.kollo.json" download>Projektdatei</a><a href="${example.id}/bearbeitbar.pptx" download>PowerPoint</a><a href="${example.id}/GESTALTUNG.md">Gestaltung</a></nav></div></article>`,
   );
 }
 await fs.writeFile(

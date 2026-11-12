@@ -3,7 +3,7 @@
 Stand: 12. November 2026. Geprüft mit Node.js 24, Microsoft Edge und der lokal installierten Microsoft-PowerPoint-Version unter Windows.
 
 - 40 automatisierte Modell-, Layout-, Sicherheits-, Export- und Skill-Paritätstests erfolgreich.
-- 17 Browser-End-to-End-Tests erfolgreich: Bearbeitung, lokale Speicherung, Undo, ungültige Codeeingaben, XSS-Text, echte Downloads, Notizen, Mobilansicht, konkurrierende Fenster, unvollständige Diagrammwerte, mehrzeilige Spalten, BOM-Dateiimport, heruntergeladene Skill-Ressourcen, leere Neuanlage, Beispielvorschau ohne Projektverlust, Archivintegrität, Offline-Beispiele und synchronisierte Presenter-Fenster.
+- 18 Browser-End-to-End-Tests erfolgreich: Bearbeitung, lokale Speicherung, Undo, ungültige Codeeingaben, XSS-Text, echte Downloads, Notizen, Mobilansicht, konkurrierende Fenster, unvollständige Diagrammwerte, mehrzeilige Spalten, BOM-Dateiimport, heruntergeladene Skill-Ressourcen, leere Neuanlage, Beispielvorschau ohne Projektverlust, Archivintegrität, Offline-Beispiele, gehostete Beispiele unter der Produktions-CSP und synchronisierte Presenter-Fenster.
 - Die [Prüfung des Studenten-Kits](STUDENT-KIT-VERIFICATION.md) dokumentiert zusätzlich 21 gestaltete Beispielfolien, 63 in Microsoft PowerPoint gerenderte Folien, eine unabhängige Neuanlage aus einem Thema und die tatsächliche Verwendung des entpackten Offline-Studios.
 - Die zusätzliche [Skill-Prüfung](SKILL-VERIFICATION.md) dokumentiert 24 Python-Tests, 68 gemeinsame Formatfälle und drei unabhängige Arbeitsabläufe mit 17 Folien einschließlich echter PowerPoint-Prüfung.
 - Alle 31 Folien der drei Vorlagen sind gültig und ohne erkannte Layoutüberläufe. Das zusätzliche Skill-Beispiel und ein unabhängig erstelltes Beispieldeck wurden validiert.
