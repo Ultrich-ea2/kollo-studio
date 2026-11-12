@@ -40,6 +40,8 @@ Lies `references/schema.md` vor der ersten JSON-Ausgabe. Verwende ausschließlic
 
 Formuliere eine erkennbare Aussage pro Folie. Teile übervolle Folien, wenn der Auftrag es zulässt. Detailerklärungen gehören in `notes`, für die Interpretation entscheidende Einschränkungen auch auf die Folie. Kürze keine Zitate oder Zahlen so, dass sich ihre Bedeutung ändert. Fachbegriffe und notwendige Notation erhalten.
 
+Verwende in eigenen Formulierungen keine Em-Dashes (U+2014). Trenne Sätze oder verwende passende Satzzeichen.
+
 Leite die Gestaltung aus Thema, Publikum und Aussage ab. Die mitgelieferten Beispiele zeigen unterschiedliche Kompositionen; sie sind kein universeller Folienablauf. Nutze bewusste Hierarchie, Rhythmus und sinnvolle Einblendungen statt durchgehend gleicher Karten. Ein neuer Vortrag darf mit einer Idee beginnen: fehlende Forschungsergebnisse nicht durch plausible Zahlen ersetzen. Sprechtext und Folien gemeinsam planen. Für gewünschte Klicksignale die privaten Notizmarken `[KLICK]` und `[FOLIE]` nach dem [Teleprompter-Leitfaden](references/presenting-and-teleprompter.md) einsetzen: Sie halten die Leseführung an der nötigen manuellen Aktion an, schalten aber das Publikum nie automatisch weiter.
 
 Bei PPTX/PDF erst Inhalt und Darstellung sichten, dann Ausgangsfolien den neuen Folien zuordnen. Der Quellenhelfer bereitet Text, Notizen und bestimmte Bilder auf; er stellt Folien nicht dar und übernimmt Master und Animationen nicht vollständig. Ein Auftrag zur originalgetreuen nativen PPTX-Bearbeitung braucht ein geeignetes Präsentationswerkzeug. Dafür nicht stillschweigend einen Kollo-Neubau als identische Datei liefern.

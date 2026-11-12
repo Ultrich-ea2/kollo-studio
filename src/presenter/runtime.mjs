@@ -490,7 +490,7 @@ export function mountPresenter(root, options) {
     }
     try {
       const doc = child.document;
-      doc.title = `${role === "audience" ? "Publikum" : "Teleprompter · privat"} — ${options.title}`;
+      doc.title = `${role === "audience" ? "Publikum" : "Teleprompter · privat"}: ${options.title}`;
       doc.documentElement.lang = "de";
       doc.body.style.margin = "0";
       const childRoot = doc.createElement("div");

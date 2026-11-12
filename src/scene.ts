@@ -86,7 +86,7 @@ export function measureText(
     else if (/[A-ZÄÖÜ]/u.test(c)) em += 0.72;
     else if (/[0-9]/u.test(c)) em += 0.6;
     else if (/[a-zäöüß]/u.test(c)) em += 0.57;
-    else if (c === "—") em += 1.02;
+    else if (c.codePointAt(0) === 0x2014) em += 1.02;
     else if (/[+*=<>~–]/u.test(c)) em += 0.68;
     else if (/[-/\\()[\]{}]/u.test(c)) em += 0.48;
     else if ((c.codePointAt(0) || 0) > 0x2e7f) em += 1.05;

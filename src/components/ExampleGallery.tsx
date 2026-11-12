@@ -136,7 +136,7 @@ export function ExampleGallery(props: Props) {
             width="1920"
             height="1080"
             loading="lazy"
-            alt="PyTutorAI: Feedback, das den nächsten Schritt erklärt — Titelszene der DELFI-Präsentation"
+            alt="PyTutorAI: Feedback, das den nächsten Schritt erklärt. Titelszene der DELFI-Präsentation"
           />
           <span className="delfi-duration">
             <Play size={15} aria-hidden="true" /> 6:32
@@ -150,7 +150,7 @@ export function ExampleGallery(props: Props) {
             <em>In Bewegung.</em>
           </h3>
           <p>
-            PyTutorAI — Feedback, das den nächsten Schritt erklärt. Die
+            PyTutorAI: Feedback, das den nächsten Schritt erklärt. Die
             vollständige Originalpräsentation mit animierten Abläufen, Demo und
             zeitgenauem Sprechtext.
           </p>
