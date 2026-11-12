@@ -114,6 +114,10 @@ const SLIDE_KEYS = [
 const encoder = new TextEncoder();
 const owns = (value: object, key: PropertyKey) =>
   Object.prototype.hasOwnProperty.call(value, key);
+// JavaScript's $ also matches before a final line terminator. Require the
+// complete match so identifiers, colors and image URIs cannot carry one.
+const fullMatch = (pattern: RegExp, value: string) =>
+  pattern.exec(value)?.[0] === value;
 
 function record(
   value: unknown,
@@ -257,7 +261,7 @@ function imageBytes(value: string): { bytes: Uint8Array; mime: string } | null {
   if (value.length > Math.ceil(LIMITS.imageBytes / 3) * 4 + 64) return null;
   const match =
     /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
-  if (!match || match[2].length % 4 !== 0) return null;
+  if (!match || match[0] !== value || match[2].length % 4 !== 0) return null;
   const base64 = match[2];
   const length =
     (base64.length / 4) * 3 -
@@ -379,7 +383,7 @@ function inspect(input: unknown): string[] {
     ]) {
       if (
         typeof t[key] !== "string" ||
-        !/^#[0-9A-Fa-f]{6}$/.test(t[key] as string)
+        !fullMatch(/^#[0-9A-Fa-f]{6}$/, t[key] as string)
       )
         errors.push(`Design.${key}: Farbe im Format #RRGGBB erwartet.`);
     }
@@ -397,7 +401,7 @@ function inspect(input: unknown): string[] {
       if (!record(s, SLIDE_KEYS, p, errors)) return;
       if (
         !string(s.id, LIMITS.id, `${p}.id`, errors) ||
-        !/^[A-Za-z0-9_-]+$/.test(s.id as string)
+        !fullMatch(/^[A-Za-z0-9_-]+$/, s.id as string)
       )
         errors.push(
           `${p}.id: 1 bis 80 Buchstaben, Zahlen, Unterstriche oder Bindestriche erwartet.`,
@@ -474,7 +478,9 @@ export function parseDeck(input: unknown): Deck {
     if (encoder.encode(input).length > LIMITS.importBytes)
       throw new Error("Die Importdatei darf höchstens 10 MiB groß sein.");
     try {
-      value = JSON.parse(input);
+      // UTF-8 BOMs are common in Windows-authored JSON. Only a leading file
+      // marker is removed; string field contents remain unchanged.
+      value = JSON.parse(input.startsWith("\uFEFF") ? input.slice(1) : input);
     } catch {
       throw new Error("Die Datei enthält kein gültiges JSON.");
     }

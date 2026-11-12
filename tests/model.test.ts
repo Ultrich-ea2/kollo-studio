@@ -358,3 +358,27 @@ test("bundled authoring skill example follows the exact application schema", () 
   const deck = parseDeck(fs.readFileSync(path, "utf8"));
   assert.deepEqual(validateDeck(deck), []);
 });
+
+test("strict identifiers, colors and data URIs reject every final line terminator", () => {
+  for (const ending of ["\n", "\r", "\r\n", "\u2028", "\u2029"]) {
+    checkError((d) => {
+      d.slides[0].id = "slide-1" + ending;
+    }, /1 bis 80/);
+    checkError((d) => {
+      d.theme.primary = "#123456" + ending;
+    }, /#RRGGBB/);
+    checkError((d) => {
+      d.slides[0].image = tinyPng + ending;
+    }, /eingebettetes PNG/);
+  }
+});
+
+test("a single UTF-8 file BOM is accepted without altering content fields", () => {
+  const deck = fresh();
+  deck.slides[0].body = "\uFEFFText mit absichtlichem Zeichen";
+  assert.deepEqual(parseDeck("\uFEFF" + JSON.stringify(deck)), deck);
+  assert.throws(
+    () => parseDeck("\uFEFF\uFEFF" + JSON.stringify(deck)),
+    /kein gültiges JSON/,
+  );
+});
