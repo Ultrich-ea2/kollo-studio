@@ -1,0 +1,15 @@
+{
+  "original_filename": "PyTutorAI_DELFI.html",
+  "original_sha256": "4299dcf2a341c369fe2987022e3341a303782d9a24714b45cb86e41db871e2a3",
+  "video_sha256": "c909e7b75744d132dd56524d0e88b9c536f69d9ab239cdb5080bdac43710096b",
+  "poster_sha256": "b3ba2e61bdc40f0e3ff665f224fa91f6e67de7827057487e5aac0ea7acf52c42",
+  "duration_seconds": 392,
+  "scene_count": 16,
+  "media_preservation": "Original video and poster bytes are unchanged. Scene timing, speech and credits are preserved.",
+  "publication_changes": [
+    "Source split into content, template, CSS, JavaScript and media.",
+    "Descriptive page title, visible credits and offline instructions.",
+    "Owned synchronized audience window lifecycle and unique session names.",
+    "Separate hosted assets and a self-contained offline HTML with an exact script hash CSP."
+  ]
+}

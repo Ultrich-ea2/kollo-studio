@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    {{CSP}}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="PyTutorAI – das Sprechpult zur animierten DELFI-Präsentation. Video und Sprechtext in einer offline nutzbaren Datei."
+    />
+    <title>PyTutorAI · DELFI · 6:32 mit Teleprompter</title>
+    {{STYLES}}
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 28 28">
+              <path d="m10 8-5 6 5 6m8-12 5 6-5 6m-2-16-4 24" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">PyTutorAI</div>
+            <div class="brand-sub">Sprechpult · DELFI 2026</div>
+          </div>
+        </div>
+        <div class="header-tools">
+          <span class="duration-pill"
+            ><i></i>16 Szenen<span>·</span><span class="mono">06:32</span></span
+          >
+          <button
+            class="icon-button quiet"
+            id="focus-button"
+            aria-pressed="false"
+            title="Nur den Sprechtext anzeigen"
+          >
+            <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10" /></svg
+            ><span class="tool-label">Nur Text</span>
+          </button>
+          <button
+            class="icon-button quiet"
+            id="fullscreen-button"
+            title="Vollbild (F)"
+            aria-label="Vollbild"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />
+            </svg>
+          </button>
+          <button
+            class="icon-button quiet"
+            id="help-button"
+            title="Bedienung und Tastenkürzel"
+            aria-label="Hilfe"
+          >
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" />
+              <path
+                d="M9.5 9a2.5 2.5 0 0 1 5 .3c0 1.9-2.5 1.6-2.5 3.8m0 3.3v.1"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+      <nav class="mobile-switch" aria-label="Ansicht">
+        <button id="text-view" aria-pressed="true">Sprechtext</button
+        ><button id="video-view" aria-pressed="false">
+          Video &amp; Szenen
+        </button>
+      </nav>
+      <main class="workspace">
+        <section class="prompter" aria-label="Teleprompter">
+          <div class="prompt-toolbar">
+            <h1>Dein Sprechtext</h1>
+            <div class="prompt-tools">
+              <button
+                class="font-button"
+                id="font-down"
+                aria-label="Schrift verkleinern"
+                title="Schrift verkleinern (−)"
+              >
+                A<sup>−</sup>
+              </button>
+              <button
+                class="font-button"
+                id="font-up"
+                aria-label="Schrift vergrößern"
+                title="Schrift vergrößern (+)"
+              >
+                A<sup>+</sup></button
+              ><span class="tool-divider"></span>
+              <button
+                class="icon-button quiet"
+                id="mirror-button"
+                aria-label="Sprechtext spiegeln"
+                aria-pressed="false"
+                title="Spiegelmodus für Teleprompter-Glas (M)"
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3v18M8 6 3 18h5V6Zm8 0 5 12h-5V6Z" />
+                </svg>
+              </button>
+              <button
+                class="icon-button quiet"
+                id="follow-button"
+                aria-label="Automatisch mitlesen"
+                aria-pressed="true"
+                title="Automatisch mitlesen (R)"
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 5h14M5 10h14M5 15h8m4 0v6m-3-3 3 3 3-3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="scene-header">
+            <div class="scene-topline">
+              <span id="scene-number" class="scene-number mono">01 / 16</span
+              ><span id="scene-chapter" class="small-label"
+                >PYTUTORAI · DELFI 2026</span
+              >
+            </div>
+            <h2 id="scene-title">
+              Feedback, das den nächsten Schritt erklärt.
+            </h2>
+          </div>
+          <div class="read-area">
+            <div class="reading-mark" aria-hidden="true"></div>
+            <div
+              class="script-viewport"
+              id="script-viewport"
+              tabindex="0"
+              aria-label="Sprechtext; beim Scrollen pausiert die automatische Leseführung"
+            >
+              <div class="paper" id="paper"></div>
+            </div>
+          </div>
+          <div class="prompt-footer">
+            <span class="follow-status" id="follow-status"
+              ><i></i><span id="follow-label">Leseführung an</span></span
+            ><span id="scene-remaining" class="mono">18 s in dieser Szene</span
+            ><button class="follow-button" id="return-follow" hidden>
+              Zur Leseposition ↗
+            </button>
+          </div>
+        </section>
+        <aside class="side-panel" aria-label="Präsentation und Szenen">
+          <section class="video-card">
+            <div class="video-top">
+              <div>
+                <h2>Deine Präsentation</h2>
+                <span class="small-label">Originalvideo · ohne Ton</span>
+              </div>
+              <button
+                id="detach-button"
+                class="icon-button quiet"
+                aria-label="Präsentationsfenster öffnen"
+                title="Nur das Video in einem zweiten Fenster öffnen"
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 3h7v7m0-7L11 13M9 4H4v16h16v-5" /></svg
+                ><span class="tool-label">Abtrennen</span>
+              </button>
+            </div>
+            <div class="video-stage">
+              <video
+                id="presentation-video"
+                preload="auto"
+                muted
+                playsinline
+                disablepictureinpicture
+                poster="{{POSTER}}"
+                src="{{VIDEO}}"
+                aria-label="Animierte PyTutorAI-Präsentation"
+              ></video
+              ><span id="loading" class="loading">Video wird geladen …</span>
+            </div>
+            <div class="visual-cue">
+              <span class="small-label">Jetzt im Bild</span>
+              <p id="visual-cue">
+                Titelaufbau; Code, Test und Hinweis verbinden sich.
+              </p>
+            </div>
+          </section>
+          <section class="scene-panel">
+            <div class="scene-panel-header">
+              <h2>Dein Ablauf</h2>
+              <span>Klicken zum Üben</span>
+            </div>
+            <nav
+              class="scene-list"
+              id="scene-list"
+              aria-label="Szenennavigation"
+            ></nav>
+          </section>
+        </aside>
+      </main>
+      <footer class="transport" aria-label="Wiedergabe">
+        <div class="timeline-meta">
+          <div class="time-display mono">
+            <strong id="current-time">00:00</strong><span>/</span>06:32
+          </div>
+          <span id="next-scene"
+            >Danach: Ein roter Test ist erst der Anfang.</span
+          >
+        </div>
+        <div class="timeline">
+          <div class="segments" id="segments" aria-hidden="true"></div>
+          <input
+            id="timeline"
+            type="range"
+            min="0"
+            max="392"
+            step="0.1"
+            value="0"
+            aria-label="Zeitposition"
+            aria-valuetext="00:00 von 06:32"
+          />
+        </div>
+        <div class="control-row">
+          <div class="control-left">
+            <span class="status-dot"></span
+            ><span id="play-status" class="play-status"
+              >Bereit für deinen Vortrag</span
+            ><span class="key-hint"><kbd>Leertaste</kbd> Start / Pause</span>
+          </div>
+          <div class="main-controls">
+            <button
+              id="restart-button"
+              class="nav-button"
+              aria-label="Von vorne beginnen"
+              title="Zurück zum Anfang (Pos1)"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M3 4v6h6m-6 0a9 9 0 1 1 1 8" />
+              </svg></button
+            ><button
+              id="previous-button"
+              class="nav-button"
+              aria-label="Vorherige Szene"
+              title="Vorherige Szene (←)"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M5 5v14m13-14L8 12l10 7V5Z" />
+              </svg>
+            </button>
+            <button
+              id="play-button"
+              class="play-button"
+              aria-label="Starten"
+              disabled
+            >
+              <svg id="play-icon" viewBox="0 0 24 24">
+                <path d="m8 5 11 7-11 7V5Z" fill="currentColor" /></svg
+              ><span id="play-label">Starten</span>
+            </button>
+            <button
+              id="next-button"
+              class="nav-button"
+              aria-label="Nächste Szene"
+              title="Nächste Szene (→)"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M19 5v14M6 5l10 7-10 7V5Z" />
+              </svg>
+            </button>
+            <button
+              id="countdown-button"
+              class="nav-button"
+              aria-label="Mit drei Sekunden Vorlauf starten"
+              title="Mit 3 Sekunden Vorlauf starten"
+            >
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="13" r="8" />
+                <path d="M9 2h6m-3 3v3m0 5 3-3" />
+              </svg>
+            </button>
+          </div>
+          <div class="control-right">
+            <label class="speed-label" for="speed">Tempo</label
+            ><select
+              id="speed"
+              aria-label="Tempo für Video und Text"
+              title="Ändert das Tempo von Video und Sprechtext gemeinsam"
+            >
+              <option value="0.75">0,75×</option>
+              <option value="0.85">0,85×</option>
+              <option value="1" selected>1,00×</option>
+              <option value="1.1">1,10×</option>
+              <option value="1.25">1,25×</option>
+            </select>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <div class="dialog-head">
+        <h2 id="help-title">Dein Vortrag. Dein Tempo.</h2>
+        <button
+          class="icon-button quiet"
+          id="close-help"
+          aria-label="Hilfe schließen"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="dialog-body">
+        <ol>
+          <li>
+            <strong>Starten</strong> spielt das Video ab und führt dich durch
+            den Sprechtext. Die Uhr daneben startet mit drei Sekunden Vorlauf.
+          </li>
+          <li>
+            Wähle rechts eine <strong>Szene</strong>, um genau diesen Abschnitt
+            zu üben. Mit <strong>Tempo</strong> werden Video und Leseführung
+            gemeinsam langsamer oder schneller.
+          </li>
+          <li>
+            <strong>Abtrennen</strong> öffnet das reine Video für einen zweiten
+            Bildschirm. Ziehe das Fenster dorthin; ein Doppelklick auf das Video
+            aktiviert dort Vollbild. Bedient wird es weiter hier.
+          </li>
+          <li>
+            <strong>A− / A+</strong> ändern die Schriftgröße. „Nur Text“
+            vergrößert den Lesebereich. Der Spiegelmodus ist für
+            Teleprompter-Glas gedacht.
+          </li>
+        </ol>
+        <p class="help-note">
+          {{DELIVERY_NOTE}} Die Leseführung orientiert sich an den Szenenzeiten;
+          sie hört dir nicht zu. Beim manuellen Scrollen hält nur die
+          Leseführung an. „Zur Leseposition“ schaltet sie wieder ein.
+        </p>
+        <p class="help-note">
+          Originalpräsentation: <strong>Ultrich Edima Edima</strong> ·
+          Mitarbeit: <strong>André Greubel</strong>. Stand der Demo: 08.09.2026.
+          <a
+            href="https://greubela.github.io/edusquirrel-workbook/feedback-demo/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Feedback-Demo öffnen (Internet erforderlich)</a
+          >.
+        </p>
+        <div class="shortcut-grid">
+          <kbd>Leertaste</kbd><span>Start / Pause</span><kbd>← / →</kbd
+          ><span>Vorherige / nächste Szene</span><kbd>J / L</kbd
+          ><span>5 Sekunden zurück / vor</span><kbd>+ / −</kbd
+          ><span>Schriftgröße ändern</span><kbd>F</kbd><span>Vollbild</span
+          ><kbd>M</kbd><span>Spiegelmodus</span><kbd>R</kbd
+          ><span>Zur aktuellen Leseposition</span><kbd>Pos1</kbd
+          ><span>Zurück zum Anfang</span>
+        </div>
+      </div>
+    </dialog>
+    <div id="countdown-overlay" hidden>
+      <span class="small-label">Gleich geht’s los</span>
+      <div id="countdown-number">3</div>
+      <p>Du sprichst. Das Video läuft mit.</p>
+      <button id="cancel-countdown">Abbrechen</button>
+    </div>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <noscript
+      ><p
+        style="
+          position: fixed;
+          inset: 0;
+          background: #0b1422;
+          color: white;
+          padding: 40px;
+          z-index: 50;
+        "
+      >
+        Bitte öffne diese HTML-Datei in einem Browser mit aktiviertem
+        JavaScript, damit Video und Sprechtext zusammenlaufen.
+      </p></noscript
+    >
+    {{CONTENT}} {{PLAYER}}
+  </body>
+</html>

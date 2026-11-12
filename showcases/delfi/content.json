@@ -1,0 +1,170 @@
+{
+  "title": "PyTutorAI – Feedback, das den nächsten Schritt erklärt",
+  "presenter": "Ultrich Edima Edima",
+  "collaborator": "André Greubel",
+  "source_url": "https://greubela.github.io/edusquirrel-workbook/feedback-demo/",
+  "scenes": [
+    {
+      "id": "title",
+      "duration": 18,
+      "chapter": "PYTUTORAI · DELFI 2026",
+      "title": "Feedback, das den\nnächsten Schritt erklärt.",
+      "visual": "Titelaufbau; Code, Test und Hinweis verbinden sich.",
+      "speech": "Hallo zusammen. Ich stelle heute die Feedback-Pipeline aus meinem PyTutorAI-Projekt vor, die wir im Kontext der digitalen Workbooks für die DELFI präsentieren. Ich zeige zuerst die Lernidee, dann ein konkretes Beispiel und anschließend, wie die einzelnen Schritte technisch zusammenarbeiten.",
+      "start": 0,
+      "end": 18
+    },
+    {
+      "id": "problem",
+      "duration": 24,
+      "chapter": "DIE LERNIDEE",
+      "title": "Ein roter Test ist erst der Anfang.",
+      "visual": "Ein Test schlägt fehl. Erwartetes und tatsächliches Ergebnis erscheinen, danach die offene Frage nach dem nächsten Schritt.",
+      "speech": "Beim Programmieren reicht die Information, dass ein Test fehlschlägt, oft noch nicht aus. Gerade am Anfang ist unklar, ob das Problem in der Berechnung, im Funktionsnamen oder an einer anderen Stelle liegt. Die eigentliche Frage ist deshalb: Was bedeutet dieser Fehler für meinen Code, und wie komme ich jetzt weiter?",
+      "start": 18,
+      "end": 42
+    },
+    {
+      "id": "questions",
+      "duration": 24,
+      "chapter": "DIE LERNIDEE",
+      "title": "Drei Fragen machen Feedback nutzbar.",
+      "visual": "Problem, Ursache und nächster Schritt werden nacheinander aufgebaut.",
+      "speech": "Unser Feedback soll drei Fragen beantworten. Erstens: Was ist das wichtigste Problem? Zweitens: Warum entsteht es? Und drittens: Was kann ich als Nächstes überprüfen oder verändern? Die Idee ist, Lernende bei ihrer eigenen Überarbeitung zu unterstützen. Wie viel Hilfe ein Hinweis geben sollte, ist dabei auch eine didaktische Frage.",
+      "start": 42,
+      "end": 66
+    },
+    {
+      "id": "workbook",
+      "duration": 24,
+      "chapter": "IM DIGITALEN WORKBOOK",
+      "title": "Der Lernschritt bleibt im Workbook.",
+      "visual": "Schematisches Workbook mit Aufgabe und Code; Feedback führt zurück zur eigenen Überarbeitung.",
+      "speech": "Die Pipeline ist im Umfeld der digitalen Workbooks entstanden. Aufgabe, eigener Code und Rückmeldung gehören dabei zu einem zusammenhängenden Lernablauf. Lernende bearbeiten eine Aufgabe, lassen ihren Versuch prüfen und überarbeiten ihn anschließend. Die Grafik zeigt diese Einbettung schematisch. In der separaten Demo können wir den Feedback-Teil gezielt nachvollziehen.",
+      "start": 66,
+      "end": 90
+    },
+    {
+      "id": "interface",
+      "duration": 20,
+      "chapter": "DIE DEMO",
+      "title": "Eine Aufgabe, ein nachvollziehbarer Verlauf.",
+      "visual": "Originaloberfläche der GitHub-Demo; Aufgabe, Python-Editor und Feedback werden hervorgehoben.",
+      "speech": "Hier sehen wir die aktuelle Demo. Links wähle ich Aufgabe und Sprache aus, rechts bearbeite ich den Python-Code. Darunter erscheinen Feedback und Testergebnisse. Ich verwende die Aufgabe Maximum einer Liste. Für unser Beispiel betrachten wir Listen mit mindestens einem Element.",
+      "start": 90,
+      "end": 110
+    },
+    {
+      "id": "code",
+      "duration": 24,
+      "chapter": "DIE DEMO",
+      "title": "Dieser Startwert wirkt harmlos.",
+      "visual": "Der tatsächlich getestete Code wird groß dargestellt. Die Zeile m = 0 wird hervorgehoben; positive Zahlen werden durchlaufen.",
+      "speech": "Dieser Lösungsversuch startet mit dem Wert null. Danach wird jedes Listenelement mit dem bisher größten Wert verglichen. Bei den positiven Beispielen wirkt das zunächst richtig: Der gespeicherte Wert wird Schritt für Schritt größer. Genau deshalb eignet sich dieser Fehler gut für die Demo. Er fällt nicht bei jedem Test auf.",
+      "start": 110,
+      "end": 134
+    },
+    {
+      "id": "negative",
+      "duration": 28,
+      "chapter": "DEN FEHLER VERSTEHEN",
+      "title": "Negative Zahlen zeigen die Schwäche.",
+      "visual": "Die Liste [-5, -1, -9] wird durchlaufen. Der Kandidat bleibt fälschlich 0; richtig wäre -1.",
+      "speech": "Bei ausschließlich negativen Zahlen funktioniert der Startwert aber nicht. Nehmen wir minus fünf, minus eins und minus neun. Keine dieser Zahlen ist größer als null. Deshalb bleibt der gespeicherte Wert unverändert, und die Funktion gibt null zurück. Das richtige Maximum wäre minus eins. Der Fehler liegt also in der Initialisierung des Vergleichswerts.",
+      "start": 134,
+      "end": 162
+    },
+    {
+      "id": "tests",
+      "duration": 22,
+      "chapter": "DIE DEMO",
+      "title": "Die Tests machen den Fehler sichtbar.",
+      "visual": "Bewegter Originalausschnitt der Ausführung, danach vergrößerte Original-Testergebnisse: zwei bestanden, einer fehlgeschlagen.",
+      "speech": "Jetzt lasse ich diesen Versuch in der Demo prüfen. Die beiden positiven Beispiele bestehen. Der Test mit negativen Zahlen schlägt fehl. Die Rückmeldung kann sich auf dieses konkrete Muster beziehen: Der Code funktioniert für einige Eingaben, aber nicht für diesen Randfall.",
+      "start": 162,
+      "end": 184
+    },
+    {
+      "id": "hint",
+      "duration": 28,
+      "chapter": "FEEDBACK MIT KONTEXT",
+      "title": "Der Hinweis erklärt den nächsten Schritt.",
+      "visual": "Original-Feedback als Ausschnitt, daneben die drei Ebenen Problem, Ursache und nächster Schritt.",
+      "speech": "Die KI-markierte Rückmeldung lenkt den Blick auf die Initialisierung: Der Startwert muss auch für negative Zahlen geeignet sein. Der Hinweis verbindet damit das sichtbare Testergebnis mit seiner Ursache im Code. Daraus entsteht ein konkreter nächster Schritt: Ich überprüfe, woher mein erster Vergleichswert kommt. Die eigentliche Überarbeitung bleibt bei mir als lernender Person.",
+      "start": 184,
+      "end": 212
+    },
+    {
+      "id": "fix",
+      "duration": 24,
+      "chapter": "SELBST ÜBERARBEITEN",
+      "title": "Der Startwert kommt jetzt aus der Liste.",
+      "visual": "m = 0 wird zu m = xs[0]. Die negative Liste wird mit dem neuen Startwert erneut durchlaufen.",
+      "speech": "Ich verwende jetzt das erste Listenelement als Startwert, hier also minus fünf. Minus eins ist größer und wird als neues Maximum übernommen. Minus neun verändert daran nichts. Für unsere nichtleere Liste startet der Vergleich damit bei einem Wert, der tatsächlich in der Liste vorkommt.",
+      "start": 212,
+      "end": 236
+    },
+    {
+      "id": "success",
+      "duration": 20,
+      "chapter": "DIE DEMO",
+      "title": "Alle drei Tests bestehen.",
+      "visual": "Original-Tests nach der Korrektur und ein animierter Zähler 3 / 3.",
+      "speech": "Nach der Änderung bestehen alle drei Tests, auch der mit den negativen Zahlen. Im geprüften Durchlauf wurde jetzt kein Sprachmodell mehr aufgerufen. Testbewertung und KI-Nutzung sind also getrennte Schritte. Wir haben den Fehler verstanden, den Code selbst überarbeitet und die Änderung erneut geprüft.",
+      "start": 236,
+      "end": 256
+    },
+    {
+      "id": "pipeline",
+      "duration": 34,
+      "chapter": "DIE PIPELINE",
+      "title": "Sieben Schritte führen zum Feedback.",
+      "visual": "Animierter Ablauf mit sieben nummerierten Schritten; der optionale KI-Zweig und der direkte Weg zum Feedback werden sichtbar.",
+      "speech": "Dahinter steht die im Beitrag beschriebene Pipeline mit sieben Schritten. Zuerst wird der Code eingelesen und normalisiert. Danach folgen statische Prüfungen und die lokalen Unit-Tests. Die Signale werden zusammengeführt, und das System bestimmt ein Hauptproblem sowie mögliche Ursachen. Erst anschließend kommt gegebenenfalls das Sprachmodell hinzu. Zum Schluss wird die Rückmeldung zusammengestellt. Die ersten fünf Schritte bilden dabei die deterministische Grundlage.",
+      "start": 256,
+      "end": 290
+    },
+    {
+      "id": "gate",
+      "duration": 30,
+      "chapter": "DIE ROLLE DER KI",
+      "title": "Die KI ist ein optionaler Schritt.",
+      "visual": "Ein direkter Feedback-Weg und ein optionaler LLM-Zweig; Qualitätsprüfung, ein erneuter Versuch und Rückfall werden animiert.",
+      "speech": "Ein Sprachmodell soll nur dann ergänzen, wenn der Aufruf sinnvoll und verfügbar ist. Im beschriebenen System wird seine Ausgabe anschließend durch ein regelbasiertes Quality Gate geprüft, etwa auf Länge oder unerwünschten Lösungscode. Bei Ablehnung ist ein weiterer Versuch vorgesehen. Wird auch dieser verworfen, bleibt die Rückmeldung aus den vorhandenen Signalen. So führt auch der Weg ohne Modelltext zum Feedback.",
+      "start": 290,
+      "end": 320
+    },
+    {
+      "id": "name",
+      "duration": 24,
+      "chapter": "FEEDBACK OHNE KI",
+      "title": "Ein Namensfehler braucht keinen KI-Aufruf.",
+      "visual": "Originalcode ad statt add und die echte Rückmeldung; der direkte Weg zum Hinweis wird hervorgehoben.",
+      "speech": "Das lässt sich an einem zweiten kurzen Fall zeigen. Die Aufgabe erwartet eine Funktion namens add. Im Code heißt sie aber ad. Die Demo erkennt die Abweichung und fordert direkt zur Umbenennung auf. In diesem geprüften Durchlauf gab es keinen LLM-Aufruf. Für einen solchen klaren Fehler reicht eine gezielte, regelbasierte Erklärung.",
+      "start": 320,
+      "end": 344
+    },
+    {
+      "id": "architecture",
+      "duration": 28,
+      "chapter": "TECHNISCHE EINBETTUNG",
+      "title": "Die Tests laufen im Browser.",
+      "visual": "Browser mit Oberfläche, Analyse und separatem WebWorker; nur die optionale Modellanfrage führt über einen Proxy nach außen.",
+      "speech": "Technisch ist die Anwendung mit Scala.js umgesetzt. Die Python-Tests laufen mit Pyodide in einem separaten WebWorker im Browser. Das trennt die Ausführung von der Oberfläche. Für die optionale Verbindung zum Sprachmodell beschreibt der Beitrag einen Proxy, der unter anderem den API-Schlüssel verwaltet. Bei einer solchen Anfrage werden ausgewählte Informationen an den Modell-Dienst übertragen; dieser Teil ist also nicht rein lokal.",
+      "start": 344,
+      "end": 372
+    },
+    {
+      "id": "closing",
+      "duration": 20,
+      "chapter": "DISKUSSION",
+      "title": "Entscheidend ist der nächste eigene Schritt.",
+      "visual": "Der Lernkreislauf schließt sich; die Diskussionsfrage und der Demo-Link erscheinen.",
+      "speech": "Das Ziel ist ein nachvollziehbarer Weg vom eigenen Lösungsversuch zur nächsten sinnvollen Überarbeitung. Für die Diskussion möchte ich euch eine Frage mitgeben: Wie konkret darf ein Hinweis sein, damit Lernende selbst weiterdenken? Ich freue mich auf eure Rückmeldungen und danke euch fürs Zuhören.",
+      "start": 372,
+      "end": 392
+    }
+  ],
+  "verified_on": "2026-09-08",
+  "duration": 392
+}
