@@ -31,13 +31,16 @@ function Example({
   return (
     <article className={`showcase showcase-${example.id}`}>
       <div className="showcase-caption">
-        <span className="showcase-number">0{order + 1}</span>
+        <span className="showcase-number" aria-hidden="true">
+          0{order + 1}
+        </span>
         <div>
           <p className="eyebrow">
-            {deck.slides.length} FOLIEN · FIKTIVES BEISPIEL
+            BEARBEITBARE VORLAGE / {deck.slides.length} FOLIEN
           </p>
           <h3>{example.name}</h3>
           <p>{example.description}</p>
+          <span className="showcase-fiction">Fiktives Beispiel</span>
         </div>
       </div>
       <div
@@ -59,7 +62,7 @@ function Example({
         >
           <ArrowLeft size={17} />
         </button>
-        <span aria-live="polite">
+        <span className="showcase-counter" aria-live="polite">
           {String(index + 1).padStart(2, "0")} /{" "}
           {String(deck.slides.length).padStart(2, "0")}
         </span>
@@ -75,11 +78,14 @@ function Example({
         </button>
       </div>
       <div className="showcase-details">
-        <ul>
-          {example.designNotes.map((note) => (
-            <li key={note}>{note}</li>
-          ))}
-        </ul>
+        <div className="showcase-design-notes">
+          <span className="eyebrow">GESTALTUNG IN DREI ZÜGEN</span>
+          <ul>
+            {example.designNotes.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
+          </ul>
+        </div>
         <div className="showcase-actions">
           <button className="button primary" onClick={() => onUse(deck)}>
             Als Ausgangspunkt <ArrowUpRight size={17} />
@@ -102,19 +108,27 @@ export function ExampleGallery(props: Props) {
   return (
     <section className="example-gallery" aria-labelledby="examples-title">
       <div className="gallery-intro">
-        <p className="eyebrow">VORLAGEN & EIN ECHTER AUFTRITT</p>
-        <h2 id="examples-title">
-          Schau hin.
-          <br />
-          <em>Dann mach es anders.</em>
-        </h2>
-        <p>
-          Blättere durch die fertigen Beispiele oder führe sie mit Einblendungen
-          und Teleprompter vor. Die Vorschau verändert dein eigenes Projekt
-          nicht.
+        <div>
+          <p className="eyebrow">DER VORFÜHRRAUM / VIER PERSPEKTIVEN</p>
+          <h2 id="examples-title">
+            Ansehen.
+            <br />
+            Weiterdenken.
+          </h2>
+        </div>
+        <p className="gallery-description">
+          Ein Originalauftritt. Drei veränderbare Vorlagen. Blättere durch die
+          Folien, teste Einblendungen und Teleprompter. Dein eigenes Projekt
+          bleibt dabei unverändert.
         </p>
       </div>
       <article className="delfi-showcase">
+        <div className="delfi-slate" aria-hidden="true">
+          <span>
+            <b>00</b> ORIGINALAUFTRITT
+          </span>
+          <span>16 SZENEN / 06:32 MIN</span>
+        </div>
         <a
           className="delfi-preview"
           href={
@@ -145,9 +159,9 @@ export function ExampleGallery(props: Props) {
         <div className="delfi-caption">
           <p className="eyebrow">ORIGINALDEMO · DELFI · 16 SZENEN</p>
           <h3>
-            Ein Gedanke.
+            Ein Vortrag.
             <br />
-            <em>In Bewegung.</em>
+            In voller Länge.
           </h3>
           <p>
             PyTutorAI: Feedback, das den nächsten Schritt erklärt. Die

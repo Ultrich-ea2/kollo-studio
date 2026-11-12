@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
-  ArrowRight,
-  ArrowLeft,
   Plus,
   Play,
   Download,
   Upload,
   Code2,
-  SlidersHorizontal,
   Undo2,
   Redo2,
   Copy,
@@ -39,6 +36,7 @@ import { createScene, type Scene } from "./scene";
 import { useProject } from "./useProject";
 import { ExampleGallery } from "./components/ExampleGallery";
 import { NewProject } from "./components/NewProject";
+import { HomeStage } from "./components/HomeStage";
 import { Presenter } from "./presenter/Presenter";
 type Route = "home" | "editor" | "templates" | "downloads" | "guide";
 const uid = () => crypto.randomUUID();
@@ -505,7 +503,11 @@ function App() {
     );
   return (
     <div className={"app route-" + route}>
-      <button type="button" className="skip" onClick={() => jumpToContent("main")}>
+      <button
+        type="button"
+        className="skip"
+        onClick={() => jumpToContent("main")}
+      >
         Zum Inhalt
       </button>
       <header className="site-header">
@@ -514,7 +516,7 @@ function App() {
           onClick={() => navigate("home")}
           aria-label="Kollo Startseite"
         >
-          kollo<span>↗</span>
+          kollo<span aria-hidden="true">↗</span>
         </button>
         <nav aria-label="Hauptnavigation">
           {(
@@ -524,18 +526,26 @@ function App() {
               ["downloads", "Mitnehmen"],
               ["guide", "Anleitung"],
             ] as const
-          ).map(([r, label]) => (
+          ).map(([r, label], navIndex) => (
             <button
               key={r}
               aria-current={route === r ? "page" : undefined}
               onClick={() => navigate(r)}
             >
-              {label}
+              <span className="nav-index" aria-hidden="true">
+                0{navIndex + 1}
+              </span>
+              <span>{label}</span>
             </button>
           ))}
         </nav>
         <div className="header-end">
-          <span className="local-dot" /> <span>Lokal. Dein Projekt.</span>
+          <span className="local-dot" />{" "}
+          <span>
+            Dein Gerät.
+            <br />
+            Dein Projekt.
+          </span>
           <a
             href="https://github.com/Ultrich-ea2/kollo-studio"
             target="_blank"
@@ -573,151 +583,24 @@ function App() {
       )}
       <main id="main" tabIndex={-1}>
         {route === "home" && (
-          <>
-            <section className="hero">
-              <div className="hero-copy">
-                <p className="eyebrow">
-                  FÜR DEN MOMENT, IN DEM DU ES ERKLÄRST.
-                </p>
-                <h1>
-                  Deine Forschung.
-                  <br />
-                  <span>Deine Bühne.</span>
-                </h1>
-                <p className="hero-description">
-                  Von der ersten Idee bis zum letzten „Danke“.
-                  <br />
-                  Baue deine Präsentation, wie du denkst: visuell, mit Code oder
-                  gemeinsam mit deiner KI.
-                </p>
-                <div className="hero-actions">
-                  <Button
-                    className="primary"
-                    onClick={() => navigate("editor")}
-                  >
-                    Werkstatt öffnen <ArrowUpRight size={20} />
-                  </Button>
-                  <button
-                    className="text-button"
-                    onClick={() => navigate("templates")}
-                  >
-                    Neu anfangen & Beispiele <ArrowRight size={17} />
-                  </button>
-                </div>
-                <div className="hero-facts">
-                  <span>
-                    <Check size={14} /> Ohne Anmeldung
-                  </span>
-                  <span>
-                    <Check size={14} /> Auf deinem Gerät
-                  </span>
-                  <span>
-                    <Check size={14} /> Frei veränderbar
-                  </span>
-                </div>
-              </div>
-              <div className="hero-object">
-                <div className="object-top">
-                  <span>DEIN NÄCHSTER VORTRAG</span>
-                  <span>16:9 / LIVE</span>
-                </div>
-                <div className="hero-art">
-                  <SceneView
-                    scene={createScene(defaultDeck.slides[0], defaultDeck, 0)}
-                    label="Beispiel für das Bachelor-Thema"
-                  />
-                </div>
-                <div className="object-bottom">
-                  <span className="swatch" />
-                  <span>Midnight / ein Thema für deine Forschung</span>
-                  <button
-                    onClick={() => {
-                      setActive(0);
-                      setPresent(true);
-                    }}
-                    aria-label="Aktuelles Projekt ausprobieren"
-                  >
-                    <Play size={16} />
-                  </button>
-                </div>
-                <span className="annotation">Gedanken werden Folien.</span>
-              </div>
-            </section>
-            <section className="path-section">
-              <div className="section-intro">
-                <span className="eyebrow">DREI WEGE. EIN EIGENER VORTRAG.</span>
-                <h2>
-                  Du entscheidest,
-                  <br />
-                  wie du anfängst.
-                </h2>
-              </div>
-              <button className="path-card" onClick={() => navigate("editor")}>
-                <span className="path-number">01</span>
-                <SlidersHorizontal />
-                <h3>Mit den Händen.</h3>
-                <p>
-                  Text, Farben, Bilder und Bewegung direkt ändern. Du siehst
-                  sofort, was daraus wird.
-                </p>
-                <span className="path-link">
-                  Im Editor arbeiten <ArrowUpRight />
-                </span>
-              </button>
-              <button
-                className="path-card"
-                onClick={() => {
-                  setTab("code");
-                  navigate("editor");
-                }}
-              >
-                <span className="path-number">02</span>
-                <Code2 />
-                <h3>Mit Struktur.</h3>
-                <p>
-                  Das ganze Deck als lesbares JSON. Mit Vorschau, Prüfung und
-                  Platz für deine eigenen Inhalte.
-                </p>
-                <span className="path-link">
-                  Code öffnen <ArrowUpRight />
-                </span>
-              </button>
-              <a
-                className="path-card"
-                href="./downloads/kollo-theme.zip"
-                download
-              >
-                <span className="path-number">03</span>
-                <BookOpen />
-                <h3>Mit deiner KI.</h3>
-                <p>
-                  Gib deiner KI den Theme-Skill. Sie lernt die Gestaltung und
-                  liefert ein importierbares Projekt.
-                </p>
-                <span className="path-link">
-                  Skill mitnehmen <Download />
-                </span>
-              </a>
-            </section>
-            <section className="manifesto">
-              <span className="eyebrow">DEIN THEMA BLEIBT DEINS.</span>
-              <h2>
-                Vortrag im Browser.
-                <br />
-                Dateien in deiner Tasche.
-              </h2>
-              <p>
-                PowerPoint, PDF, HTML und Projektdatei. Du brauchst am Tag der
-                Präsentation weder WLAN noch einen Account.
-              </p>
-              <Button onClick={() => navigate("downloads")}>
-                Alle Formate ansehen <ArrowRight size={18} />
-              </Button>
-              <span className="giant-asterisk" aria-hidden="true">
-                ✳
-              </span>
-            </section>
-          </>
+          <HomeStage
+            deck={deck}
+            onEditor={() => navigate("editor")}
+            onTemplates={() => navigate("templates")}
+            onCode={() => {
+              setTab("code");
+              navigate("editor");
+            }}
+            onDownloads={() => navigate("downloads")}
+            onPresent={(slideIndex) => {
+              if (codeDirty) {
+                notify("Code zuerst übernehmen.");
+                return;
+              }
+              setActive(slideIndex);
+              setPresent(true);
+            }}
+          />
         )}
         {route === "editor" && (
           <>
@@ -859,33 +742,35 @@ function App() {
                     <Plus size={18} />
                   </button>
                 </div>
-                {deck.slides.map((s, i) => (
-                  <button
-                    key={s.id}
-                    className={"thumbnail " + (i === index ? "selected" : "")}
-                    onClick={() => {
-                      setActive(i);
-                      setMobile("preview");
-                    }}
-                    aria-label={`Folie ${i + 1}: ${s.title}`}
-                    aria-current={i === index ? "true" : undefined}
-                  >
-                    <span className="thumb-meta">
-                      <b>{String(i + 1).padStart(2, "0")}</b>
-                      <span>{layouts[s.layout]}</span>
-                    </span>
-                    <SceneView
-                      scene={createScene(s, deck, i)}
-                      label={s.title}
-                    />
-                    <span className="thumb-title">
-                      {s.title || "Ohne Titel"}
-                    </span>
-                  </button>
-                ))}
-                <Button className="add-slide" onClick={() => add()}>
-                  <Plus size={16} /> Neue Folie
-                </Button>
+                <div className="sequence-items">
+                  {deck.slides.map((s, i) => (
+                    <button
+                      key={s.id}
+                      className={"thumbnail " + (i === index ? "selected" : "")}
+                      onClick={() => {
+                        setActive(i);
+                        setMobile("preview");
+                      }}
+                      aria-label={`Folie ${i + 1}: ${s.title}`}
+                      aria-current={i === index ? "true" : undefined}
+                    >
+                      <span className="thumb-meta">
+                        <b>{String(i + 1).padStart(2, "0")}</b>
+                        <span>{layouts[s.layout]}</span>
+                      </span>
+                      <SceneView
+                        scene={createScene(s, deck, i)}
+                        label={s.title}
+                      />
+                      <span className="thumb-title">
+                        {s.title || "Ohne Titel"}
+                      </span>
+                    </button>
+                  ))}
+                  <Button className="add-slide" onClick={() => add()}>
+                    <Plus size={16} /> Neue Folie
+                  </Button>
+                </div>
               </aside>
               <section className="stage">
                 <div className="stage-meta">
@@ -945,29 +830,29 @@ function App() {
                     ))}
                   </div>
                 )}
-                <div className="notes-area">
-                  <label htmlFor="speaker-notes">
-                    <FileText size={15} /> Sprechernotizen{" "}
-                    <span>Nur hier, solange du sie nicht exportierst.</span>
-                  </label>
-                  <textarea
-                    id="speaker-notes"
-                    aria-describedby="speaker-notes-help"
-                    value={current.notes}
-                    maxLength={5000}
-                    onChange={(e) => patch({ notes: e.target.value })}
-                    placeholder="Was möchtest du zu dieser Folie sagen?"
-                    rows={3}
-                  />
-                  <p id="speaker-notes-help" className="notes-help">
-                    Setze <code>[KLICK]</code> vor die Erklärung einer neuen
-                    Einblendung und <code>[FOLIE]</code> an den Folienwechsel,
-                    jeweils auf eine eigene Zeile. Der Teleprompter zeigt dort
-                    ein privates Signal und hält die Leseführung an, bis du
-                    weiterdrückst.
-                  </p>
-                </div>
               </section>
+              <div className="notes-area">
+                <label htmlFor="speaker-notes">
+                  <FileText size={15} /> Sprechernotizen{" "}
+                  <span>Nur hier, solange du sie nicht exportierst.</span>
+                </label>
+                <textarea
+                  id="speaker-notes"
+                  aria-describedby="speaker-notes-help"
+                  value={current.notes}
+                  maxLength={5000}
+                  onChange={(e) => patch({ notes: e.target.value })}
+                  placeholder="Was möchtest du zu dieser Folie sagen?"
+                  rows={3}
+                />
+                <p id="speaker-notes-help" className="notes-help">
+                  Setze <code>[KLICK]</code> vor die Erklärung einer neuen
+                  Einblendung und <code>[FOLIE]</code> an den Folienwechsel,
+                  jeweils auf eine eigene Zeile. Der Teleprompter zeigt dort ein
+                  privates Signal und hält die Leseführung an, bis du
+                  weiterdrückst.
+                </p>
+              </div>
               <aside className="inspector">
                 <div className="inspector-tabs">
                   {(["content", "theme", "code"] as const).map((t, i) => (
@@ -1660,7 +1545,11 @@ function App() {
                   ["export", "04 / Richtig exportieren"],
                   ["privacy", "05 / Daten & Sicherheit"],
                 ].map(([id, label]) => (
-                  <button type="button" key={id} onClick={() => jumpToContent(id)}>
+                  <button
+                    type="button"
+                    key={id}
+                    onClick={() => jumpToContent(id)}
+                  >
                     {label}
                   </button>
                 ))}
@@ -1869,7 +1758,7 @@ function App() {
       </main>
       <footer className="footer">
         <button className="wordmark" onClick={() => navigate("home")}>
-          kollo<span>↗</span>
+          kollo<span aria-hidden="true">↗</span>
         </button>
         <span>Für deine Forschung. Für deinen eigenen Weg.</span>
         <div>

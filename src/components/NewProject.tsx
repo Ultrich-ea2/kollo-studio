@@ -11,17 +11,20 @@ export function NewProject({ onCreate }: { onCreate: (deck: Deck) => void }) {
   const [error, setError] = useState("");
   return (
     <section className="new-project" aria-labelledby="new-project-title">
-      <div>
-        <p className="eyebrow">DEIN ERSTES LEERES BLATT</p>
+      <div className="new-project-intro">
+        <p className="eyebrow">NEUSTART / OHNE VORLAGE</p>
         <h2 id="new-project-title">
-          Du brauchst keine
+          Folie 01.
           <br />
-          fertigen Folien.
+          Alles offen.
         </h2>
         <p>
-          Beginne mit einer Titelfolie. Wähle danach die passenden Layouts und
-          baue deine eigene Geschichte auf.
+          Ein Titel, eine Zeit, eine erste Richtung. Danach bestimmst du, welche
+          Folien deine Geschichte braucht.
         </p>
+        <span className="new-project-format">
+          16:9 <span>DEIN NÄCHSTER VORTRAG</span>
+        </span>
       </div>
       <form
         onSubmit={(event) => {
