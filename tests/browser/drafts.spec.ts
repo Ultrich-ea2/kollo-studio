@@ -88,17 +88,19 @@ test("multiline columns preserve item boundaries and revealed items stay hidden 
   await page.getByRole("button", { name: "Präsentieren", exact: true }).click();
   await page.waitForTimeout(800);
   expect(
-    await page.locator(".scene-element.is-hidden").count(),
+    await page.locator('.slide[aria-current="true"] .unrevealed').count(),
   ).toBeGreaterThan(0);
   expect(
     await page
-      .locator(".scene-element.is-hidden")
+      .locator('.slide[aria-current="true"] .unrevealed')
       .first()
       .evaluate((e) => getComputedStyle(e).visibility),
   ).toBe("hidden");
-  const before = await page.locator(".scene-element.is-hidden").count();
+  const before = await page
+    .locator('.slide[aria-current="true"] .unrevealed')
+    .count();
   await page.keyboard.press("ArrowRight");
-  expect(await page.locator(".scene-element.is-hidden").count()).toBeLessThan(
-    before,
-  );
+  expect(
+    await page.locator('.slide[aria-current="true"] .unrevealed').count(),
+  ).toBeLessThan(before);
 });
