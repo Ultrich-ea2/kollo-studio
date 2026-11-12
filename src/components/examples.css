@@ -1,0 +1,236 @@
+.example-gallery {
+  margin: 80px 0 56px;
+}
+.gallery-intro {
+  max-width: 760px;
+  margin-bottom: 50px;
+}
+.gallery-intro h2 {
+  font-size: clamp(36px, 5vw, 70px);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+  margin: 20px 0;
+}
+.gallery-intro h2 em {
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.gallery-intro > p:last-child {
+  max-width: 620px;
+  line-height: 1.7;
+}
+.showcase {
+  margin: 0 0 80px;
+  border-top: 1px solid var(--line, #c7c9bd);
+  padding-top: 26px;
+}
+.showcase-caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+.showcase-number {
+  font:
+    italic 52px/1 Georgia,
+    serif;
+  color: var(--green, #24483b);
+}
+.showcase-caption h3 {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  margin: 8px 0 10px;
+}
+.showcase-caption p {
+  max-width: 750px;
+  line-height: 1.6;
+  margin: 0;
+}
+.showcase-stage {
+  aspect-ratio: 16/9;
+  background: #131b24;
+  box-shadow: 0 18px 35px #17271a14;
+}
+.showcase-stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.showcase-pagination {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid #c7c9bd;
+  padding: 14px 0;
+  font-variant-numeric: tabular-nums;
+}
+.showcase-pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #b5bbae;
+  padding: 10px 13px;
+  min-height: 42px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.showcase-pagination button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.showcase-pagination .showcase-play {
+  margin-left: auto;
+  border-color: transparent;
+  font-weight: 650;
+}
+.showcase-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-start;
+  padding-top: 22px;
+}
+.showcase-details ul {
+  margin: 0;
+  padding-left: 18px;
+  max-width: 630px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.showcase-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.new-project {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 40px;
+  background: #e8eddf;
+  border: 1px solid #c5cdbb;
+  margin-top: 30px;
+}
+.new-project h2 {
+  font-size: clamp(28px, 3.5vw, 46px);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  margin: 16px 0;
+}
+.new-project p {
+  max-width: 420px;
+  line-height: 1.65;
+}
+.new-project form {
+  display: grid;
+  gap: 20px;
+  align-content: center;
+}
+.new-project label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.new-project input,
+.new-project select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #a4af9b;
+  background: #f9faee;
+  color: #153a2c;
+  border-radius: 0;
+  font: inherit;
+  font-size: 16px;
+}
+.new-project-options {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 20px;
+}
+.new-project small {
+  line-height: 1.5;
+  opacity: 0.8;
+}
+.student-kit-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  border-top: 1px solid #c5cdbb;
+  border-bottom: 1px solid #c5cdbb;
+  padding: 30px 0;
+  margin: 45px 0;
+}
+.student-kit-callout h2 {
+  font-size: 32px;
+  margin: 5px 0 12px;
+  letter-spacing: -0.04em;
+}
+.student-kit-callout p {
+  line-height: 1.65;
+  max-width: 680px;
+}
+.student-kit-callout a {
+  flex-shrink: 0;
+}
+.template-library-heading {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  margin: 70px 0 24px;
+}
+.workbench-new {
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .new-project {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 25px;
+  }
+  .showcase-caption {
+    gap: 18px;
+  }
+  .showcase-caption h3 {
+    font-size: 27px;
+  }
+  .showcase-details {
+    flex-direction: column;
+  }
+  .showcase-actions {
+    justify-content: flex-start;
+  }
+  .showcase-pagination {
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .showcase-pagination .showcase-play {
+    font-size: 13px;
+  }
+  .student-kit-callout {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .example-gallery {
+    margin-top: 60px;
+  }
+  .showcase {
+    margin-bottom: 50px;
+  }
+  .new-project-options {
+    gap: 12px;
+  }
+  .new-project select {
+    font-size: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .example-gallery * {
+    scroll-behavior: auto !important;
+  }
+}

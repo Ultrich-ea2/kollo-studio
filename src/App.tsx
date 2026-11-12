@@ -18,9 +18,6 @@ import {
   Check,
   BookOpen,
   X,
-  Maximize2,
-  Pause,
-  RotateCcw,
   ExternalLink,
   FolderOpen,
   FileText,
@@ -40,6 +37,8 @@ import {
 } from "./model";
 import { createScene, type Scene } from "./scene";
 import { useProject } from "./useProject";
+import { ExampleGallery } from "./components/ExampleGallery";
+import { NewProject } from "./components/NewProject";
 import { Presenter } from "./presenter/Presenter";
 type Route = "home" | "editor" | "templates" | "downloads" | "guide";
 const uid = () => crypto.randomUUID();
@@ -253,6 +252,7 @@ function App() {
   const [toast, setToast] = useState(""),
     [busy, setBusy] = useState(""),
     [present, setPresent] = useState(false),
+    [previewDeck, setPreviewDeck] = useState<Deck | null>(null),
     [includeNotes, setIncludeNotes] = useState(false),
     [code, setCode] = useState(""),
     [codeError, setCodeError] = useState(""),
@@ -294,6 +294,7 @@ function App() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [codeDirty]);
   useEffect(() => {
+    if (present) return;
     const key = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
@@ -304,7 +305,7 @@ function App() {
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
-  }, [project]);
+  }, [project, present]);
   function patch(p: Partial<Slide>) {
     const id = current.id;
     change(
@@ -488,7 +489,14 @@ function App() {
     : "Sprechernotizen bleiben aus PPTX und HTML ausgeschlossen. PDF enthält nie Sprechernotizen.";
   if (present)
     return (
-      <Presenter deck={deck} start={index} onClose={() => setPresent(false)} />
+      <Presenter
+        deck={previewDeck || deck}
+        start={previewDeck ? 0 : index}
+        onClose={() => {
+          setPresent(false);
+          setPreviewDeck(null);
+        }}
+      />
     );
   return (
     <div className={"app route-" + route}>
@@ -588,7 +596,7 @@ function App() {
                     className="text-button"
                     onClick={() => navigate("templates")}
                   >
-                    Vorlage entdecken <ArrowRight size={17} />
+                    Neu anfangen & Beispiele <ArrowRight size={17} />
                   </button>
                 </div>
                 <div className="hero-facts">
@@ -733,6 +741,12 @@ function App() {
                 </span>
               </div>
               <div className="editor-actions">
+                <Button
+                  title="Neues Projekt"
+                  onClick={() => navigate("templates")}
+                >
+                  <Plus size={17} />
+                </Button>
                 <Button
                   title="Rückgängig"
                   onClick={project.undo}
@@ -1158,6 +1172,28 @@ function App() {
                       ))}
                     </div>
                     <label className="field">
+                      <span>Komposition</span>
+                      <select
+                        value={deck.theme.composition || "classic"}
+                        onChange={(event) =>
+                          theme({
+                            composition: event.target.value as NonNullable<
+                              Deck["theme"]["composition"]
+                            >,
+                          })
+                        }
+                      >
+                        <option value="classic">Klassisch / Kollo</option>
+                        <option value="editorial">
+                          Editorial / Satzspiegel
+                        </option>
+                        <option value="technical">
+                          Technisch / Systemplan
+                        </option>
+                        <option value="stage">Bühne / Kontrast</option>
+                      </select>
+                    </label>
+                    <label className="field">
                       <span>Schrift</span>
                       <select
                         value={deck.theme.font}
@@ -1298,11 +1334,49 @@ function App() {
                 <em>zu erzählen?</em>
               </h1>
               <p>
-                Ein Aufbau für deine Argumentation. Jede Folie, Farbe und
-                Bewegung lässt sich ändern. Die Beispielinhalte sind keine
-                Forschungsergebnisse.
+                Beginne mit einem leeren Projekt oder entdecke drei sehr
+                unterschiedliche Gestaltungen. Inhalt, Aufbau und Bewegung
+                bleiben in deiner Hand. Alle Beispielinhalte sind fiktiv.
               </p>
             </div>
+            <NewProject onCreate={replace} />
+            <ExampleGallery
+              onUse={replace}
+              onDownload={(example) => void output("json", example)}
+              onPreview={(example) => {
+                setPreviewDeck(example);
+                setPresent(true);
+              }}
+            />
+            <div className="student-kit-callout">
+              <div>
+                <p className="eyebrow">EIN ZIP FÜR DEINE LERNGRUPPE</p>
+                <h2>Die ganze Werkstatt zum Weitergeben.</h2>
+                <p>
+                  Beispiele zum Öffnen, Teleprompter zum Üben, Skill für deine
+                  KI, Offline-Studio und Quellcode. Alles sauber getrennt und
+                  mit einem eigenen Einstieg.
+                </p>
+              </div>
+              {document.documentElement.dataset.offline === "true" ? (
+                <a
+                  className="button primary"
+                  href="./downloads/kollo-examples.zip"
+                  download
+                >
+                  Beispielsammlung herunterladen <Download size={18} />
+                </a>
+              ) : (
+                <a
+                  className="button primary"
+                  href="./downloads/kollo-student-kit.zip"
+                  download
+                >
+                  Studenten-Kit herunterladen <Download size={18} />
+                </a>
+              )}
+            </div>
+            <h2 className="template-library-heading">Weitere Ausgangspunkte</h2>
             <div className="template-grid">
               {templates.map((t, i) => (
                 <article className="template-card" key={t.id}>
@@ -1479,6 +1553,29 @@ function App() {
               </div>
               <div className="toolkit-links">
                 {document.documentElement.dataset.offline !== "true" && (
+                  <a href="./downloads/kollo-student-kit.zip" download>
+                    <FolderOpen />
+                    <span>
+                      <strong>Komplettes Studenten-Kit</strong>
+                      <small>
+                        ZIP · Beispiele · Skill · Offline-Studio · Quellcode
+                      </small>
+                    </span>
+                    <Download />
+                  </a>
+                )}
+                <a href="./downloads/kollo-examples.zip" download>
+                  <Play />
+                  <span>
+                    <strong>Drei gestaltete Beispiele</strong>
+                    <small>
+                      HTML mit Teleprompter · bearbeitbares JSON ·
+                      Gestaltungshinweise
+                    </small>
+                  </span>
+                  <Download />
+                </a>
+                {document.documentElement.dataset.offline !== "true" && (
                   <a href="./downloads/kollo-studio-offline.zip" download>
                     <FolderOpen />
                     <span>
@@ -1543,8 +1640,9 @@ function App() {
                   <span className="eyebrow">01 / ANFANGEN</span>
                   <h2>Erst die Aussage. Dann die Folie.</h2>
                   <p>
-                    Wähle eine Vorlage. Ersetze Titel und Beispielinhalte. In
-                    der Werkstatt findest du links die Folien, in der Mitte die
+                    Lege unter „Vorlagen“ ein leeres Projekt an oder wähle ein
+                    Beispiel. Ersetze Titel und Beispielinhalte. In der
+                    Werkstatt findest du links die Folien, in der Mitte die
                     Vorschau und rechts Inhalt, Gestaltung und Code.
                   </p>
                   <ol>
@@ -1572,8 +1670,9 @@ function App() {
                   <h2>Vom Download zum eigenen Studio.</h2>
                   <p>
                     Für den Vortrag reicht die HTML-Datei: herunterladen,
-                    doppelklicken, präsentieren. Für das gesamte Studio lade den
-                    Quellcode, entpacke ihn und installiere{" "}
+                    doppelklicken, präsentieren. Das Studenten-Kit enthält dazu
+                    Beispiele, den Skill und das fertige Offline-Studio. Für den
+                    Editor installiere einmal{" "}
                     <a
                       href="https://nodejs.org/en/download"
                       target="_blank"
@@ -1583,12 +1682,50 @@ function App() {
                     </a>
                     .
                   </p>
-                  <pre>npm ci{"\n"}npm run dev</pre>
+                  <p>
+                    Entpacke das Kit. Unter Windows starte{" "}
+                    <code>studio/Start-Kollo.cmd</code>; unter macOS und Linux
+                    führe im Ordner <code>studio</code> den Befehl{" "}
+                    <code>node server.mjs</code> aus. Es ist keine
+                    Paketinstallation nötig.
+                  </p>
+                  <h3>Am Quellcode arbeiten</h3>
+                  <p>
+                    Entpacke dafür zusätzlich das Archiv im Ordner{" "}
+                    <code>source</code>. Im Quellcodeordner:
+                  </p>
+                  <pre>npm ci --ignore-scripts{"\n"}npm run dev</pre>
                   <p>
                     Öffne die ausgegebene lokale Adresse im Browser. Nach der
                     einmaligen Installation brauchst du dafür keine
                     Internetverbindung. Ändere Dateien in <code>src/</code>,
                     wenn du eigene Layouts entwickeln möchtest.
+                  </p>
+                </section>
+                <section id="rehearse">
+                  <span className="eyebrow">
+                    VORTRAGEN / GETRENNTE BILDSCHIRME
+                  </span>
+                  <h2>Dein Text bleibt bei dir.</h2>
+                  <p>
+                    Starte „Präsentieren“. Öffne das Publikumsfenster und den
+                    Teleprompter jeweils per Klick und ziehe sie auf die
+                    gewünschten Bildschirme. Folie, Einblendungen, Schwarzbild
+                    und Vortragsuhr bleiben synchron. Das Hauptfenster muss
+                    offen bleiben.
+                  </p>
+                  <p>
+                    Im Teleprompter kannst du Schriftgröße, Lesetempo,
+                    Spiegelung und Textfokus einstellen. Die Leseführung folgt
+                    einem einstellbaren Tempo; sie hört deiner Stimme nicht zu.
+                    Manuelles Scrollen pausiert die Leseführung. Die nächste
+                    Folie bestimmst du selbst.
+                  </p>
+                  <p>
+                    Für HTML mit Sprechtext beim Export die Notizen ausdrücklich
+                    einschließen. Eigene Notizen bleiben Bestandteil dieser
+                    Datei, auch wenn das Publikumsfenster sie nicht anzeigt. Zum
+                    Weitergeben ohne Notizen exportieren.
                   </p>
                 </section>
                 <section id="ai">
