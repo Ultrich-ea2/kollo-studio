@@ -119,6 +119,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
   };
   const t = deck.theme,
     scale = t.scale;
+  const composition = t.composition || "classic";
   const panel = blend(t.background, t.primary, 0.075),
     border = blend(t.background, t.muted, 0.24);
   const warn = (message: string) => {
@@ -169,6 +170,36 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
       ...(style.align ? { align: style.align } : {}),
       ...(style.group ? { group: style.group } : {}),
     });
+  };
+  // Art direction changes the structure of a panel, not the user's content.
+  // Open editorial rules and stage dividers deliberately avoid repeated cards.
+  const surface = (
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    group: number,
+  ) => {
+    if (composition === "editorial") {
+      rect(x, y, w, 2, t.primary, 0, undefined, group);
+      rect(x, y + h - 1, w, 1, border, 0, undefined, group);
+    } else if (composition === "stage") {
+      rect(
+        x,
+        y,
+        4,
+        h,
+        group % 2 ? t.primary : t.secondary,
+        0,
+        undefined,
+        group,
+      );
+    } else if (composition === "technical") {
+      rect(x, y, w, h, panel, 0, border, group);
+      rect(x, y, 18, 3, t.primary, 0, undefined, group);
+      rect(x, y, 3, 18, t.primary, 0, undefined, group);
+      rect(x + w - 18, y + h - 3, 18, 3, t.secondary, 0, undefined, group);
+    } else rect(x, y, w, h, panel, 16, border, group);
   };
   const wrap = (
     text: string,
@@ -304,13 +335,36 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
     });
   };
 
-  // Persistent frame: no browser effects are needed to read the exported scene.
-  rect(LEFT, 28, 32, 4, t.primary, 2);
-  rect(94, 28, 12, 4, t.secondary, 2);
+  // Persistent frame: all art direction survives the static exports.
+  if (composition === "editorial") {
+    rect(0, 0, 12, HEIGHT, t.primary);
+    rect(LEFT, 62, RIGHT - LEFT, 1, t.foreground);
+    rect(LEFT, 26, 42, 8, t.primary);
+  } else if (composition === "technical") {
+    rect(24, 24, 16, 2, t.primary);
+    rect(24, 24, 2, 16, t.primary);
+    rect(1240, 24, 16, 2, t.primary);
+    rect(1254, 24, 2, 16, t.primary);
+    rect(24, 694, 16, 2, t.secondary);
+    rect(24, 680, 2, 16, t.secondary);
+    rect(1240, 694, 16, 2, t.secondary);
+    rect(1254, 680, 2, 16, t.secondary);
+    rect(LEFT, 28, 44, 2, t.primary);
+  } else if (composition === "stage") {
+    rect(1248, 0, 32, HEIGHT, t.primary);
+    rect(LEFT, 27, 44, 6, t.secondary);
+  } else {
+    rect(LEFT, 28, 32, 4, t.primary, 2);
+    rect(94, 28, 12, 4, t.secondary, 2);
+  }
   block(
     slide.section,
     { x: 122, y: 21, w: 1000, h: 40 },
-    { size: 16 * scale, color: t.muted },
+    {
+      size: 16 * scale,
+      color: t.muted,
+      ...(composition === "technical" ? { font: "Courier New" } : {}),
+    },
     "Kapitel",
   );
   rect(LEFT, 639, RIGHT - LEFT, 1, border);
@@ -346,7 +400,88 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
       "Bild: Das gespeicherte Bild ist in diesem Layout nicht sichtbar. Zum Bildlayout wechseln oder das Bild entfernen.",
     );
 
-  if (slide.layout === "title") {
+  if (slide.layout === "title" && composition !== "classic") {
+    const editorial = composition === "editorial";
+    const stage = composition === "stage";
+    const titleStyle = {
+      size: (editorial ? 76 : stage ? 82 : 72) * scale,
+      bold: !editorial,
+    };
+    const titleX = editorial ? 70 : 80;
+    const titleY = editorial ? 138 : 146;
+    const width = editorial ? 1060 : 940;
+    const titleH = block(
+      slide.title,
+      { x: titleX, y: titleY, w: width, h: 3 * lineHeight(titleStyle.size) },
+      titleStyle,
+      "Titel",
+    );
+    let y = titleY + titleH + 26;
+    y += block(
+      slide.subtitle,
+      {
+        x: titleX + 2,
+        y,
+        w: width - 40,
+        h: Math.min(100, Math.max(0, 510 - y)),
+      },
+      { size: 27 * scale, color: t.muted },
+      "Untertitel",
+    );
+    if (slide.body) {
+      y += 20;
+      y += block(
+        slide.body,
+        { x: titleX + 2, y, w: width - 40, h: Math.max(0, 510 - y) },
+        bodyStyle,
+        "Text",
+      );
+    }
+    if (slide.items.length) {
+      y += 20;
+      list(
+        slide.items,
+        { x: titleX + 2, y, w: width - 40, h: Math.max(0, 510 - y) },
+        26 * scale,
+      );
+    }
+    const identity = [deck.author, deck.institution, deck.date]
+      .filter(Boolean)
+      .join(" · ");
+    block(
+      identity,
+      { x: titleX + 2, y: 552, w: 1080, h: 52 },
+      { size: 19 * scale, color: t.muted },
+      "Vortragsangaben",
+    );
+    if (editorial) {
+      rect(72, 108, 126, 6, t.primary);
+      rect(1150, 120, 1, 392, border);
+      line(String(index + 1).padStart(2, "0"), 1160, 128, 64, {
+        size: 38,
+        color: t.primary,
+        align: "right",
+      });
+    } else if (stage) {
+      rect(1114, 152, 90, 46, t.primary);
+      rect(1114, 215, 60, 46, t.secondary);
+      rect(1114, 278, 30, 46, t.primary);
+    } else {
+      // A measured sequence, not a decorative dashboard: each marker follows
+      // the same signal path, suitable for live technical demos.
+      rect(1140, 146, 2, 330, border);
+      [0, 1, 2].forEach((i) => {
+        const y = 146 + i * 150;
+        rect(1124, y, 34, 34, i === 1 ? t.secondary : t.primary);
+        rect(1173, y + 7, 48, 2, t.muted);
+        line(String(i + 1).padStart(2, "0"), 1173, y + 15, 48, {
+          size: 15,
+          font: "Courier New",
+          color: t.muted,
+        });
+      });
+    }
+  } else if (slide.layout === "title") {
     const titleStyle = { size: 64 * scale, bold: true };
     const titleH = block(
       slide.title,
@@ -405,7 +540,15 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
       if (i < 2) rect(1031, cy + 40, 2, 23, border);
     }
   } else {
-    const headingStyle = { size: 60 * scale, bold: true };
+    const headingStyle = {
+      size:
+        (composition === "editorial"
+          ? 54
+          : composition === "technical"
+            ? 56
+            : 60) * scale,
+      bold: composition !== "editorial",
+    };
     const headingH = block(
       slide.title,
       { x: LEFT, y: 82, w: 1168, h: 3 * lineHeight(headingStyle.size) },
@@ -453,7 +596,9 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
         slide.items.forEach((item, i) => {
           const y = box.y + i * (rowH + gap);
           if (y + rowH > box.y + box.h + 0.01) return;
-          rect(LEFT, y, 1168, rowH, panel, 12, border, i + 1);
+          if (composition === "classic")
+            rect(LEFT, y, 1168, rowH, panel, 12, border, i + 1);
+          else rect(LEFT, y + rowH, 1168, 1, border, 0, undefined, i + 1);
           line(
             String(i + 1).padStart(2, "0"),
             79,
@@ -490,7 +635,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
         }
         const x = LEFT + i * (width + 24),
           accent = i ? t.secondary : t.primary;
-        rect(x, box.y, width, box.h, panel, 16, border, i + 1);
+        surface(x, box.y, width, box.h, i + 1);
         rect(x + 26, box.y + 25, 42, 4, accent, 2, undefined, i + 1);
         const parts = item.replace(/\r\n?/g, "\n").split("\n");
         const title = parts.shift() || "";
@@ -532,7 +677,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
         if (height < 118 * scale) return;
         const x = LEFT + (i % 4) * (width + gap),
           y = box.y + Math.floor(i / 4) * (height + gap);
-        rect(x, y, width, height, panel, 16, border, i + 1);
+        surface(x, y, width, height, i + 1);
         rect(
           x + 21,
           y + 22,
@@ -578,7 +723,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
           y = box.y + Math.floor(i / 3) * (height + gap);
         const [value = "", label = ""] = item.split("|").map((v) => v.trim()),
           accent = i % 2 ? t.secondary : t.primary;
-        rect(x, y, width, height, panel, 16, border, i + 1);
+        surface(x, y, width, height, i + 1);
         rect(x + 24, y + 24, 38, 4, accent, 2, undefined, i + 1);
         const valueH = block(
           value,
@@ -682,7 +827,15 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
           25 * scale,
         );
     } else if (slide.layout === "code") {
-      rect(LEFT, box.y, box.w, box.h, panel, 16, border);
+      rect(
+        LEFT,
+        box.y,
+        box.w,
+        box.h,
+        panel,
+        composition === "technical" ? 0 : 16,
+        border,
+      );
       const size = 23 * scale,
         lh = lineHeight(size),
         lines = slide.body
@@ -694,13 +847,22 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
         warn(
           `Code: Überlauf (${lines.length} Zeilen, Platz für ${capacity}). Code aufteilen oder kürzen.`,
         );
+      // In a technical demo, blank lines delimit explanation blocks. Keep the
+      // setup visible; reveal complete later blocks without animating braces.
+      const stagedCode =
+        composition === "technical" && lines.some((value) => !value.trim());
+      let codeGroup = 0;
+      let previousWasEmpty = false;
       lines.slice(0, capacity).forEach((value, i) => {
+        if (stagedCode && !value.trim() && !previousWasEmpty) codeGroup++;
+        previousWasEmpty = !value.trim();
+        const group = stagedCode ? codeGroup : 1;
         line(
           String(i + 1).padStart(2, "0"),
           LEFT + 22,
           box.y + 20 + i * lh,
           38,
-          { size: 17 * scale, color: t.muted, font: "Courier New", group: 1 },
+          { size: 17 * scale, color: t.muted, font: "Courier New", group },
         );
         if (measureText(value, size, "Courier New") > box.w - 102)
           warn(
@@ -710,7 +872,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
           line(value, LEFT + 80, box.y + 20 + i * lh, box.w - 102, {
             size,
             font: "Courier New",
-            group: 1,
+            group,
           });
       });
       if (slide.items.length)
@@ -794,7 +956,7 @@ export function createScene(slide: Slide, deck: Deck, index: number): Scene {
         slide.items.slice(0, 3).forEach((item, i) => {
           const x = LEFT + i * (width + gap),
             accent = i % 2 ? t.secondary : t.primary;
-          rect(x, box.y, width, height, panel, 16, border, i + 1);
+          surface(x, box.y, width, height, i + 1);
           rect(x + 23, box.y + 25, 35, 4, accent, 2, undefined, i + 1);
           block(
             item,

@@ -1,6 +1,6 @@
 # Kollo-Dateiformat, Version 1
 
-Die Datei ist ein JSON-Objekt mit Endung `.kollo.json`. Alle unten genannten Felder sind erforderlich; leere Textfelder und leere Listen sind erlaubt. Zusätzliche Felder sind nicht vorgesehen. Nutze `""` statt `null`. Speichere reine Daten, keine Markdown-Codeumzäunung um das JSON.
+Die Datei ist ein JSON-Objekt mit Endung `.kollo.json`. Alle unten genannten Felder außer dem ausdrücklich optionalen `theme.composition` sind erforderlich; leere Textfelder und leere Listen sind erlaubt. Zusätzliche Felder sind nicht vorgesehen. Nutze `""` statt `null`. Speichere reine Daten, keine Markdown-Codeumzäunung um das JSON.
 
 ## Präsentation
 
@@ -19,18 +19,23 @@ Die gesamte UTF-8-Datei darf höchstens 10 MiB groß sein. Die Zeichenlimits ent
 
 ## Thema
 
-| Feld           | Wert                           |
-| -------------- | ------------------------------ |
-| `background`   | Hintergrund als `#RRGGBB`      |
-| `foreground`   | Haupttext als `#RRGGBB`        |
-| `muted`        | Nebentext als `#RRGGBB`        |
-| `primary`      | erster Akzent als `#RRGGBB`    |
-| `secondary`    | zweiter Akzent als `#RRGGBB`   |
-| `font`         | `"Arial"` oder `"Georgia"`     |
-| `scale`        | endliche Zahl von 0.8 bis 1.25 |
-| `showProgress` | `true` oder `false`            |
+| Feld           | Wert                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| `background`   | Hintergrund als `#RRGGBB`                                                                    |
+| `foreground`   | Haupttext als `#RRGGBB`                                                                      |
+| `muted`        | Nebentext als `#RRGGBB`                                                                      |
+| `primary`      | erster Akzent als `#RRGGBB`                                                                  |
+| `secondary`    | zweiter Akzent als `#RRGGBB`                                                                 |
+| `font`         | `"Arial"` oder `"Georgia"`                                                                   |
+| `scale`        | endliche Zahl von 0.8 bis 1.25                                                               |
+| `showProgress` | `true` oder `false`                                                                          |
+| `composition`  | optional: `"classic"`, `"editorial"`, `"technical"` oder `"stage"`; ohne Feld gilt `classic` |
 
 Die Beispielpalette verwendet einen dunklen Hintergrund und helle Akzente. Erhalte eine vom Nutzer gewählte gültige Palette. Prüfe Kontrast in der Vorschau, insbesondere bei neuen Farben. Schriftarten sind Systemschriften und werden nicht mitgeliefert oder in PowerPoint eingebettet.
+
+`composition` verändert die räumliche Gestaltung, nicht den fachlichen Inhalt: `editorial` verwendet offene Satzspiegel und feine Trennlinien, `technical` ein präzises Raster mit technischen Markierungen, `stage` große Typografie und kräftige Akzentflächen. Alle zwölf Layouts bleiben verfügbar. Ein Wechsel kann durch andere Textbreiten neue Überlaufhinweise auslösen; immer jede Folie prüfen. Bei gezielten Inhaltskorrekturen das vorhandene Feld beziehungsweise dessen Abwesenheit erhalten. Ältere Kollo-Versionen ohne diese Erweiterung können das Feld ablehnen; dann aktuelle Studio-Version verwenden, nicht ungeprüft löschen.
+
+Bei `technical` + Layout `code` + `reveal: true` trennen Leerzeilen logische Codeblöcke: Der erste Block bleibt sichtbar, spätere Blöcke erscheinen schrittweise. Ganze zusammengehörige Anweisungen in einen Block setzen; keine bloße Zerlegung nach Einzelzeilen. Ohne Leerzeilen erscheint der Code wie bisher gemeinsam. Die Animation führt den Code nicht aus.
 
 ## Folie
 

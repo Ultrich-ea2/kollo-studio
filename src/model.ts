@@ -23,6 +23,8 @@ export type Theme = {
   font: "Arial" | "Georgia";
   scale: number;
   showProgress: boolean;
+  /** Optional art direction; omission preserves the original Kollo composition. */
+  composition?: "classic" | "editorial" | "technical" | "stage";
 };
 export type Slide = {
   id: string;
@@ -124,6 +126,7 @@ function record(
   keys: string[],
   path: string,
   errors: string[],
+  optional: string[] = [],
 ): value is Record<string, unknown> {
   if (
     !value ||
@@ -139,7 +142,7 @@ function record(
   for (const key of Reflect.ownKeys(value)) {
     if (
       typeof key !== "string" ||
-      !keys.includes(key) ||
+      (!keys.includes(key) && !optional.includes(key)) ||
       ["__proto__", "prototype", "constructor"].includes(key)
     ) {
       errors.push(`${path}: unerlaubtes Feld ${String(key)}.`);
@@ -372,7 +375,7 @@ function inspect(input: unknown): string[] {
   ] as const)
     string(input[key], max, `Präsentation.${key}`, errors);
   finite(input.duration, 1, 240, "Präsentation.duration", errors, true);
-  if (record(input.theme, THEME_KEYS, "Design", errors)) {
+  if (record(input.theme, THEME_KEYS, "Design", errors, ["composition"])) {
     const t = input.theme;
     for (const key of [
       "background",
@@ -391,6 +394,15 @@ function inspect(input: unknown): string[] {
       errors.push("Design.font: nur Arial oder Georgia sind erlaubt.");
     finite(t.scale, 0.8, 1.25, "Design.scale", errors);
     boolean(t.showProgress, "Design.showProgress", errors);
+    if (
+      owns(t, "composition") &&
+      !["classic", "editorial", "technical", "stage"].includes(
+        t.composition as string,
+      )
+    )
+      errors.push(
+        "Design.composition: classic, editorial, technical oder stage erwartet.",
+      );
   }
   if (array(input.slides, LIMITS.slides, "Folien", errors)) {
     if (!input.slides.length)

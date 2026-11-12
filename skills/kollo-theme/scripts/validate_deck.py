@@ -88,13 +88,13 @@ def validate_deck(deck):
         if len(errors) < 40:
             errors.append(f"{path}: {message}")
 
-    def object_keys(value, expected, path):
+    def object_keys(value, expected, path, optional=frozenset()):
         if not isinstance(value, dict):
             fail(path, "Objekt erwartet")
             return False
-        if set(value) != expected:
+        if not expected <= set(value) or not set(value) <= expected | optional:
             missing = sorted(expected - set(value))
-            extra = sorted(set(value) - expected)
+            extra = sorted(set(value) - expected - optional)
             if missing:
                 fail(path, "Pflichtfelder fehlen: " + ", ".join(missing))
             if extra:
@@ -149,7 +149,7 @@ def validate_deck(deck):
         text(deck.get(field), maximum, field)
     integer(deck.get("duration"), 1, 240, "duration")
     theme = deck.get("theme")
-    if object_keys(theme, THEME_KEYS, "theme"):
+    if object_keys(theme, THEME_KEYS, "theme", {"composition"}):
         for field in ("background", "foreground", "muted", "primary", "secondary"):
             if not isinstance(theme.get(field), str) or not re.fullmatch(r"#[0-9A-Fa-f]{6}", theme[field]):
                 fail("theme." + field, "Farbe #RRGGBB erwartet")
@@ -157,6 +157,8 @@ def validate_deck(deck):
             fail("theme.font", "Arial oder Georgia erwartet")
         finite(theme.get("scale"), 0.8, 1.25, "theme.scale")
         boolean(theme.get("showProgress"), "theme.showProgress")
+        if "composition" in theme and theme["composition"] not in ("classic", "editorial", "technical", "stage"):
+            fail("theme.composition", "classic, editorial, technical oder stage erwartet")
     slides = deck.get("slides")
     if not isinstance(slides, list):
         fail("slides", "Liste erwartet")

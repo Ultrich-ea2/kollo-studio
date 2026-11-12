@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360">
+  <title>Entwurfsskizze eines fiktiven Campusplatzes ohne Maßstab</title>
+  <desc>Ein durchgängiger Weg verbindet links und rechts. Oberhalb liegt die offene Mitte, unterhalb befinden sich drei Sitzbereiche am Rand.</desc>
+  <rect width="1280" height="360" fill="#24142D"/>
+  <rect x="35" y="30" width="1210" height="295" fill="none" stroke="#725C7D" stroke-width="2"/>
+  <path d="M0 238 H1280" stroke="#FFF5E9" stroke-width="56"/>
+  <path d="M20 238 H1258" stroke="#24142D" stroke-width="2" stroke-dasharray="12 14"/>
+  <path d="M1241 226 L1259 238 L1241 250" fill="none" stroke="#24142D" stroke-width="3"/>
+  <rect x="282" y="61" width="718" height="112" fill="#C9B8FF"/>
+  <text x="640" y="132" text-anchor="middle" fill="#24142D" font-family="Arial,sans-serif" font-size="42" font-weight="700">OFFENE MITTE</text>
+  <text x="76" y="119" fill="#D4BEDB" font-family="Arial,sans-serif" font-size="24">ZUGANG</text>
+  <path d="M121 140 V192" stroke="#D4BEDB" stroke-width="2"/>
+  <path d="M112 181 L121 193 L130 181" fill="none" stroke="#D4BEDB" stroke-width="2"/>
+  <text x="1045" y="119" fill="#D4BEDB" font-family="Arial,sans-serif" font-size="24">WEITER</text>
+  <path d="M1095 140 V192" stroke="#D4BEDB" stroke-width="2"/>
+  <path d="M1086 181 L1095 193 L1104 181" fill="none" stroke="#D4BEDB" stroke-width="2"/>
+  <rect x="287" y="288" width="141" height="17" fill="#FFB57D"/>
+  <rect x="568" y="288" width="141" height="17" fill="#FFB57D"/>
+  <rect x="850" y="288" width="141" height="17" fill="#FFB57D"/>
+  <text x="640" y="352" fill="#FFB57D" text-anchor="middle" font-family="Arial,sans-serif" font-size="24">SITZRAND</text>
+  <text x="640" y="246" fill="#24142D" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="700" stroke="#FFF5E9" stroke-width="9" paint-order="stroke">DURCHGÄNGIGER WEG</text>
+</svg>

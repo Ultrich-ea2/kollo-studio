@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "title": "Lesespuren",
+  "author": "Kollo · Beispielstudio",
+  "institution": "Fiktives Lehrprojekt",
+  "date": "",
+  "duration": 5,
+  "theme": {
+    "background": "#F5F0E6",
+    "foreground": "#26231F",
+    "muted": "#62584B",
+    "primary": "#AC371F",
+    "secondary": "#385D56",
+    "font": "Georgia",
+    "scale": 1,
+    "showProgress": false,
+    "composition": "editorial"
+  },
+  "slides": [
+    {
+      "id": "reading-01",
+      "layout": "title",
+      "title": "Was bleibt\nnach dem Lesen?",
+      "section": "LESESPUREN / 01",
+      "subtitle": "Eine Frage. Zwei Formate. Ein begrenzter Befund.",
+      "body": "",
+      "items": [],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Stellen Sie sich zwei Fassungen desselben Textes vor. Die erste läuft durch, die zweite enthält Zwischenüberschriften. Welche Fassung hilft beim Wiedergeben der Inhalte? Diese Präsentation führt durch ein erfundenes Lehrbeispiel. Alle Werte sind konstruiert. Wir üben daran, einen Vergleich zu erklären und seine Grenzen sichtbar zu halten.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": false,
+      "seconds": 35
+    },
+    {
+      "id": "reading-02",
+      "layout": "columns",
+      "title": "Der Inhalt bleibt gleich.",
+      "section": "ANORDNUNG / 02",
+      "subtitle": "Geändert wird nur die Gliederung des Textes.",
+      "body": "",
+      "items": [
+        "Fassung A\nEin fortlaufender Text. Gleiche Wörter, gleiche Reihenfolge.",
+        "Fassung B\nDerselbe Text mit drei Zwischenüberschriften."
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Zuerst sehen Sie Fassung A. Sie enthält den gesamten Text als fortlaufenden Absatz. Nun blenden wir Fassung B ein. Die Wörter bleiben gleich, aber Zwischenüberschriften markieren die Abschnitte. Damit ist die beabsichtigte Variation eingegrenzt. Das allein genügt noch nicht, um jeden anderen Einfluss auszuschließen.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 40
+    },
+    {
+      "id": "reading-03",
+      "layout": "process",
+      "title": "Ein Vergleich in drei Schritten.",
+      "section": "VORGEHEN / 03",
+      "subtitle": "Gleiches Zeitfenster. Dieselben Verständnisfragen.",
+      "body": "",
+      "items": [
+        "Lesen",
+        "Wiedergeben",
+        "Vergleichen"
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Wir bauen den Ablauf von links nach rechts auf. Zuerst lesen die Personen ihre jeweilige Fassung. Danach beantworten sie dieselben Verständnisfragen, ohne erneut in den Text zu schauen. Schließlich vergleichen wir die Punktwerte. Für eine echte Untersuchung müssten unter anderem Zuteilung, Vorwissen, Material und Auswertung festgelegt werden.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 40
+    },
+    {
+      "id": "reading-04",
+      "layout": "chart",
+      "title": "Im Beispiel: ein Punkt mehr.",
+      "section": "BEFUND / 04",
+      "subtitle": "Erfundene Mittelwerte · Punkte (0–10)\nBalkenlänge relativ zum größten dargestellten Wert",
+      "body": "",
+      "items": [
+        "6 | Fassung A",
+        "7 | Fassung B"
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Die Einheit steht über dem Diagramm und bleibt beim Einblenden sichtbar. Fassung A erreicht im erfundenen Beispiel sechs von zehn Punkten. Fassung B erreicht sieben. Der Unterschied beträgt einen Punkt auf dieser Skala. Wir sehen hier keine Verteilungen, keine Stichprobengröße und keine Unsicherheit. Aus den beiden Balken folgt deshalb noch keine belastbare Aussage über eine allgemeine Wirkung.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 40
+    },
+    {
+      "id": "reading-05",
+      "layout": "columns",
+      "title": "Unterschied ist nicht Ursache.",
+      "section": "EINORDNUNG / 05",
+      "subtitle": "",
+      "body": "",
+      "items": [
+        "Sichtbar\nDie beiden erfundenen Mittelwerte unterscheiden sich um einen Punkt.",
+        "Noch offen\nStreuung, Zuteilung und mögliche Unterschiede im Vorwissen."
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Links steht die Aussage, die sich aus den gezeigten Werten direkt ablesen lässt. Rechts stehen die fehlenden Informationen. Die Gestaltung trennt diese Ebenen, damit ein sichtbarer Unterschied nicht versehentlich als Ursachenbeleg gelesen wird. In einer tatsächlichen Arbeit würden wir die passenden Analysen und ihre Einschränkungen ergänzen.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 40
+    },
+    {
+      "id": "reading-06",
+      "layout": "section",
+      "title": "Die nächste Frage ist genauer.",
+      "section": "WEITERDENKEN / 06",
+      "subtitle": "Unter welchen Bedingungen helfen Zwischenüberschriften?",
+      "body": "",
+      "items": [
+        "Vorwissen erfassen",
+        "Textarten vergleichen",
+        "Unsicherheit berichten"
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Aus der begrenzten Antwort entsteht eine präzisere nächste Frage. Erstens sollten wir das Vorwissen erfassen. Zweitens wäre zu prüfen, ob das Muster für unterschiedliche Textarten gilt. Drittens müssen Unsicherheiten berichtet werden. Das sind Vorschläge für ein weiteres Vorgehen, keine Ergebnisse dieses Beispiels.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 40
+    },
+    {
+      "id": "reading-07",
+      "layout": "closing",
+      "title": "Eine gute Folie zeigt auch Grenzen.",
+      "section": "MITNEHMEN / 07",
+      "subtitle": "",
+      "body": "",
+      "items": [
+        "Vergleich erklären",
+        "Einheit erhalten",
+        "Reichweite benennen"
+      ],
+      "image": "",
+      "imageAlt": "",
+      "notes": "Nehmen Sie drei Gestaltungsentscheidungen mit. Erklären Sie, was verglichen wird. Halten Sie Einheit und Bezugsgröße sichtbar. Und nennen Sie, wie weit die Aussage tatsächlich reicht. Die konkrete Gliederung können Sie verändern. Diese drei Entscheidungen helfen jedoch dabei, aus einer Zahlenfolie ein nachvollziehbares Argument zu machen.",
+      "source": "Fiktives Lehrbeispiel · keine Forschungsdaten",
+      "transition": "fade",
+      "reveal": true,
+      "seconds": 25
+    }
+  ]
+}
