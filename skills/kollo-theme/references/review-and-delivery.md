@@ -29,6 +29,16 @@ Spiele die Präsentation durch: Einblendungen, Navigation, Tastatur, Pausen und 
 
 Kann die Umgebung weder Vorschau öffnen noch rendern, kennzeichne den Entwurf als visuell ungeprüft und benenne ausstehende Kontrollen. Keine PowerPoint-Prüfung behaupten, wenn nur XML gelesen wurde.
 
+Bei einer neuen Gestaltung die dichteste Inhaltsfolie, längste Titel und alle verwendeten Layouts ansehen. Prüfe bewusst unterschiedliche Kompositionen, wenn mehrere Beispiele geliefert werden. Eine dunkle und eine helle Kopie desselben Aufbaus belegen noch keine gestalterische Vielfalt. Keine Inhaltsebene wegen eines auffälligen Designs weglassen.
+
+## Sprechpult und getrennte Fenster
+
+Bei einem entsprechenden Auftrag die Fenster tatsächlich gemeinsam öffnen. Folie und Einblendungsstand müssen zusammenbleiben; Vorwärts- und Rückwärtsnavigation, Pause und Schwarzschaltung prüfen, soweit die Oberfläche sie anbietet. Sprechernotizen dürfen nicht im sichtbaren Publikumsbild auftauchen. Sie können trotzdem in einer exportierten Datei enthalten sein: ausgeblendet bedeutet nicht vertraulich geschützt.
+
+Teste Schriftgröße, Textspiegelung, Scrolltempo und manuelles Lesen mit kurzem, langem und leerem Sprechtext. Nach einem Folienwechsel muss der richtige Text erscheinen. Regiehinweise sind nur Text, keine automatische Klick- oder Pausensteuerung. Die Probe mit gesprochener Sprache bleibt nötig; ein Zeitmesser ist keine Spracherkennung.
+
+Öffne den tatsächlich heruntergeladenen HTML-Export lokal. Prüfe dort das zusätzliche Fenster, Popup-Blockierung, Schließen und Wiederöffnen, sowie die Meldung bei getrennter Steuerverbindung. Den Browser und geprüften Betriebsweg nennen. Zwei Browserfenster auf demselben Monitor sind ein sinnvoller Funktionstest, aber kein Nachweis für eine reale Beamer-/Mehrmonitorprobe. Für diese muss die Anzeige erweitert und das reine Publikumsfenster auf dem Zielbildschirm kontrolliert werden.
+
 ## Benötigte Ausgaben öffnen
 
 | Ausgabe           | Prüfen                                                                                                            |
@@ -40,6 +50,7 @@ Kann die Umgebung weder Vorschau öffnen noch rendern, kennzeichne den Entwurf a
 | HTML              | Offline öffnen, Navigation, Einblendungen, Notizenwahl, reduzierte Bewegung, Druckansicht                         |
 | Arbeitskit        | ZIP öffnen: aktuelles JSON und HTML, Ressourcen; Notizen sind enthalten                                           |
 | Offline-Studio    | Entpacken, lokalen Starter ausführen, Editor und Exporte prüfen; Node.js nötig                                    |
+| Studentenpaket    | ZIP frisch entpacken; Startanleitung, Beispiele samt Vorschau, kompletter Skill, fertiges Studio und getrennten Quellcode auf Vollständigkeit und funktionierende relative Links prüfen |
 
 Teste die beauftragten Ausgaben und relevanten Risiken. Bei ausdrücklich ausführlicher Prüfung sind mehrere Formate und Rückimporte sinnvoll. Gib genaue Testergebnisse an und trenne sie von bloß vorgesehenen Tests.
 

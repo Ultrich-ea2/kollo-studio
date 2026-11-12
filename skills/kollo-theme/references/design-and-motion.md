@@ -2,6 +2,23 @@
 
 Kollo verwendet eine gemeinsame Fläche von 1280 × 720. Vorschau und Export teilen diese Geometrie. Die Beispielpalette ist dunkelblau mit Cyan und Mint; die Farbwerte stehen in der Beispieldatei. Eine vorhandene gültige Palette bleibt erhalten, solange der Auftrag keine neue Gestaltung verlangt. Arial und Georgia sind die unterstützten Schriftfamilien und werden nicht eingebettet.
 
+## Eine eigene gestalterische Richtung
+
+Entscheide vor der Ausarbeitung, wie der Inhalt gesehen werden soll. Ein philologischer Textvergleich, eine technische Demo und eine Entscheidungsvorlage brauchen unterschiedliche visuelle Beziehungen. „Modern“ allein ist noch keine Richtung. Formuliere eine konkrete Absicht, etwa: „ruhige Satzspiegel mit großen Textbelegen“, „präzise technische Beschriftungen mit klarer Leserichtung“ oder „große Behauptung, danach sparsame Evidenz“.
+
+Die optionale `theme.composition` wählt `classic`, `editorial`, `technical` oder `stage`; ohne Angabe gilt `classic`. Das ändert die Anordnung der unterstützten Layouts, nicht das Datenmodell. Die drei zusätzlichen Beispielreihen zeigen unterschiedliche Richtungen. Ihre fiktiven Themen, Texte, Zahlen und Ablaufpläne sind kein wissenschaftliches Ausgangsmaterial.
+
+| Richtung | Sinnvolle Verwendung | Worauf achten |
+| --- | --- | --- |
+| `classic` | Bestehende Kollo-Dateien, klare akademische Erklärung | Gewohnte Hierarchie bewahren; nicht jede Folie als Liste behandeln |
+| `editorial` | Textargument, gesellschaftliche Frage, begründeter Vergleich | Großzügige Fläche, kurze Überschriften, kontrollierte Textmenge |
+| `technical` | Ablauf, System, Messung, nachvollziehbare Demo | Präzise Labels, Einheiten und Leserichtung; keine technisch wirkende Dekoration ohne Bedeutung |
+| `stage` | Pointierter Einstieg, Projektidee, mündlich getragene Argumentation | Starke Größenunterschiede brauchen kurze Texte; Evidenz und Einschränkungen bleiben lesbar |
+
+Ein eigenständiger Vortrag entsteht durch die passende Auswahl und Ausarbeitung, nicht durch eine behauptete „KI-freie“ Ästhetik. Prüfe insbesondere, ob jede Folie denselben austauschbaren Aufbau aus Überschrift und drei Kacheln wiederholt. Wechsle dort die Darstellung, wo sich die Beziehung der Inhalte ändert: Vergleich, Beleg, Prozess, Bild oder Antwort. Vermeide zufällige Variation ohne inhaltlichen Grund.
+
+Halte Palette, typografische Hierarchie, Beschriftungen und Abstände innerhalb des Vortrags konsistent. Setze große ruhige Flächen neben präzise dichte Belege. Dekorative Farbverläufe, Glanz, riesige Nummern oder abstrakte Formen sind keine Pflicht; benutze sie nur, wenn die tatsächlich unterstützte Komposition und der Auftrag dazu passen. Keine externen Fonts, CSS oder beliebigen Skripte in die JSON-Datei schreiben.
+
 ## Layout nach Beziehung der Inhalte wählen
 
 | Inhalt                                 | Layout und praktische Grenze                                                     |
@@ -29,6 +46,8 @@ Titel tragen eine präzise Aussage oder Frage. Keine unbelegten Steigerungen wie
 
 Fachlich wichtige Grafiken haben Vorrang vor dekorativen Bildern. Ein wissenschaftlicher Vortrag braucht keine Illustration auf jeder Seite. Farben nicht als einziges Unterscheidungsmerkmal einsetzen; Beschriftung oder Form ergänzen. Auch Quellen, Einschränkungen und Nebentext müssen lesbar sein.
 
+Bei erklärenden Folien ist eine präzise Aussage im Titel mit einem passenden sichtbaren Beleg eine hilfreiche Möglichkeit. Harvard Catalyst beschreibt diesen Assertion-Evidence-Ansatz. Nutze ihn dort, wo er dem Inhalt dient; er ersetzt weder den eigenen Fachstil noch vorgeschriebene Vorlagen. Eine Textanalyse braucht nicht zwanghaft ein Diagramm, ein Diagramm keine dekorative Illustration. [Harvard Catalyst: Slides](https://catalyst.harvard.edu/writing-communication-center/visualize-science/slides/)
+
 Der Kontrastprüfer nutzt 4,5:1 für normalen und 3:1 für großen Text als Orientierung nach WCAG. Er kennt nicht jede tatsächliche Hintergrundfläche oder Projektionseigenschaft und stellt keine Barrierefreiheitszertifizierung aus. Bilder lokal prüfen, sinnvoll zuschneiden und bei Bedarf neu speichern. Alttext beschreibt die Funktion und die relevante Aussage, statt nur „Grafik“ zu schreiben.
 
 ## Bewegung mit einem Zweck
@@ -36,6 +55,12 @@ Der Kontrastprüfer nutzt 4,5:1 für normalen und 3:1 für großen Text als Orie
 `transition` wählt `none`, `fade`, `slide` oder `zoom`. `reveal` blendet geeignete Inhaltsgruppen ein; es ist keine frei programmierbare Zeitleiste. `seconds` plant die Redezeit, löst keinen automatischen Wechsel aus.
 
 Einblendungen helfen bei Prozessen, Herleitungen oder schrittweisen Vergleichen. Gleichzeitig benötigte Inhalte müssen gleichzeitig sichtbar sein. Dauerndes Zoomen oder wechselnde Übergänge erschweren das Lesen. Reduzierte Bewegung respektieren, Tastatursteuerung und vollständig sichtbaren Endzustand prüfen.
+
+Gestalte einen gedanklichen Takt statt eines Effektkatalogs. Bei einem Prozess erklärt der Sprechtext erst den aktuellen Schritt, dann folgt die nächste Einblendung. Bei einer Gegenüberstellung dürfen die beiden Vergleichspartner nicht unnötig nacheinander verschwinden. Eine kurze, einfache Bewegung kann die Blickführung unterstützen; die Information muss auch ohne Bewegung verständlich sein.
+
+Kollo kann vorhandene Inhaltsgruppen einblenden und Folien überblenden. Es bietet keine frei programmierbaren Bewegungspfade, Zeichenanimation von Diagrammverbindungen, Videozeitleiste, automatisch synchronisierte Stimme oder PowerPoint-Morph-Effekte. Eine gewünschte semantische Animation gegebenenfalls mit aufeinanderfolgenden Folienzuständen, einer übersichtlichen Prozessfolge oder einem geeigneten externen Werkzeug umsetzen. Zusätzliche Folien dürfen dabei nicht als verschiedene Forschungsergebnisse erscheinen. Keine nicht unterstützte Funktion als „fertig“ beschreiben.
+
+Plane für eine Demo bewusst den ersten sichtbaren Zustand und den Endzustand. Kontrolliere mit zurückgesetzten Einblendungen, ob eine Frage noch verständlich ist, bevor ihre Antwort erscheint. Sprechernotizen können eine Regiezeile wie `[KLICK: nächsten Schritt zeigen]` enthalten; diese Zeile ist eine lesbare Merkhilfe, keine ausführbare Anweisung. Einzelheiten in [Präsentieren und Teleprompter](presenting-and-teleprompter.md).
 
 HTML erhält Browserfunktionen. PowerPoint erhält einfache Übergänge; Zoom wird Fade, Einblendungen werden nicht vollständig übertragen. PDF ist statisch. Ein Spannungsaufbau kann im PDF die Antwort sofort zeigen. Die statische Folie muss auch allein verständlich bleiben.
 

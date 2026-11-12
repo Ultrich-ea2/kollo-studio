@@ -1,5 +1,21 @@
 # Kollo Studio – Anleitung
 
+## Das Studentenpaket weitergeben
+
+Unter **Mitnehmen** kannst du das **Studenten-Kit** als ein ZIP herunterladen. Entpacke es vollständig und öffne `START-HIER.html`; die Textfassung `START-HIER.txt` funktioniert auch ohne Browser. Das Paket enthält allgemeine, ausdrücklich fiktive Beispiele und keine privaten Ausgangsarbeiten.
+
+| Ordner | Inhalt und Verwendung |
+| --- | --- |
+| `examples/` | `index.html` zeigt die drei Beispielreihen. Jeder Beispielordner enthält `preview.svg`, den Offline-Vortrag `presentation.html`, das bearbeitbare Projekt `deck.kollo.json`, `bearbeitbar.pptx` und `GESTALTUNG.md`. |
+| `skills/kollo-theme/` | Vollständiger KI-Skill mit Referenzen, Beispieldaten und lokalen Python-Helfern. Für eine KI diesen ganzen Ordner verwenden. |
+| `studio/` | Fertiger Editor für den eigenen Rechner. Startanleitung und lokaler Server liegen dabei; keine npm-Paketinstallation nötig. |
+| `source/` | `kollo-studio-source.zip` für eigene Codeänderungen. Das Archiv vor der Entwicklungsarbeit separat entpacken. |
+| `guides/` | Ausführliche Nutzungshinweise. |
+
+Die HTML-Beispiele lassen sich direkt im Browser ansehen, ohne Installation und ohne Internet. Für das Bearbeiten im fertigen Offline-Studio brauchst du Node.js wie unten beschrieben. Ein Beispiel in PowerPoint weiterzubearbeiten ist ebenfalls möglich; prüfe danach Schrift und Umbrüche auf deinem Rechner. Die `.kollo.json` bleibt der passende Projektstand für Kollo.
+
+Nur Beispiele gewünscht? Das separate Beispiele-ZIP enthält denselben Einstieg und die Beispielordner. Nur mit einer KI arbeiten? Dafür reicht das vollständige Skill-ZIP. Deine eigenen Vorträge exportierst du separat als Projektdatei oder Arbeitskit.
+
 ## Fertiges Studio ohne Paketinstallation
 
 Unter **Mitnehmen → Fertiges Offline-Studio** findest du die gebaute Anwendung. ZIP entpacken, einmalig Node.js 22 oder neuer installieren (empfohlen: 24 LTS), dann unter Windows `Start-Kollo.cmd` öffnen. Auf macOS/Linux im entpackten Ordner `node server.mjs` ausführen. Die Adresse `http://127.0.0.1:4179` im Browser öffnen. Das Terminal bleibt während der Arbeit offen. Der Server ist ausschließlich über das eigene Gerät erreichbar. Beenden mit Strg+C.
@@ -10,13 +26,21 @@ Mit Kollo Studio gestaltest du einen Abschlussvortrag, ein Seminar oder ein Koll
 
 ## Schnell zum eigenen Vortrag
 
-1. Wähle eine Vorlage oder beginne mit der Beispielpräsentation.
+1. Beginne mit einer leeren Präsentation, einer Vorlage oder einem gestalteten Beispiel.
 2. Trage Titel, Name, Hochschule, Datum und geplante Redezeit ein.
 3. Wähle je Folie ein Layout und bearbeite Texte, Punkte, Quellen und Notizen. Nutze kurze Aussagen; längere Erklärungen passen in die Vortragsnotizen.
 4. Prüfe die Vorschau und behebe Hinweise auf überlaufenden Inhalt. Teile eine volle Folie auf zwei Folien auf.
 5. Sichere das Projekt als `.kollo.json`. Probiere den Vortrag und die vorgesehenen Exporte vor der Abgabe aus.
 
 Das Dateiformat erhält Texte, Thema, Bilder, Ablauf und Notizen. Es eignet sich deshalb als Hauptsicherung und zum späteren Weiterarbeiten. Ein PDF oder eine PowerPoint-Datei ersetzt diesen Projektstand nicht.
+
+Du kannst auch nur mit einem Thema beginnen. Formuliere die Frage, die dein Publikum am Ende beantworten können soll, und wähle dafür passende Belege oder Beispiele. Die KI-Anleitung unten unterstützt diesen Weg ebenso wie die Anpassung vorhandener Folien. Fehlende Ergebnisse bleiben offen; die Beispielzahlen dürfen nicht als eigene Forschung übernommen werden.
+
+## Drei Beispiele, vier Kompositionen
+
+Die gestalteten Beispielreihen zeigen unterschiedliche visuelle Sprachen: offene redaktionelle Seiten, präzise technische Anordnungen und pointierte Bühnenfolien. Sie sind vollständig durchspielbar und enthalten Sprechtext, Einblendungen und Zeitplanung. In `GESTALTUNG.md` steht, warum eine Darstellung gewählt wurde und wie du sie sinnvoll anpasst.
+
+Im Thema wählst du `classic`, `editorial`, `technical` oder `stage`. Farben, Schrift und Maßstab bleiben anpassbar. Ein Wechsel verändert verfügbare Textbreiten: Kontrolliere danach jede Folie. Alle zwölf Layouts bleiben erhalten. Du musst weder das Thema des Beispiels noch dessen Gliederung übernehmen.
 
 ## Layouts und Bilder
 
@@ -42,6 +66,33 @@ Im Präsentationsmodus folgen Einblendungen und Folien auf Tastatureingaben. Die
 Im bearbeitbaren PPTX bleiben Texte und Formen einzelne Objekte. Ein anderes Betriebssystem oder eine Ersatzschrift kann Umbrüche verändern. Im visuellen PPTX und PDF sind Folien Bilder; ihre Texte sind nicht einzeln bearbeitbar, eine durchsuchbare Textebene wird nicht zugesichert. Arial und Georgia werden vom System bereitgestellt und nicht mit dem Projekt geliefert oder in PowerPoint eingebettet.
 
 HTML spielt die Browser-Übergänge und Einblendungen ab. PPTX und PDF enthalten den vollständig sichtbaren Endzustand jeder Folie. PowerPoint erhält einfache Übergänge: Fade bleibt Fade, Slide wird Push, Zoom wird Fade. Elementanimationen des Browsers werden nicht vollständig nach PowerPoint übertragen. PDF enthält keine Animationen.
+
+Kollo unterstützt keine frei programmierbaren Videozeitleisten, Tonaufnahmen oder beliebigen Bewegungspfade. Einblendungen dienen dazu, den gerade erklärten Schritt sichtbar zu machen. Passe das Gesprochene und die Klicks aufeinander an; eine statische Abgabe muss auch mit allen Elementen gleichzeitig verständlich bleiben.
+
+## Teleprompter und Publikumsfenster
+
+Öffne im Präsentationsmodus **Publikumsfenster öffnen** und **Teleprompter öffnen**. Das Publikumsfenster zeigt nur die Folien. Das Sprechpult zeigt deine Notizen, die aktuelle Folie, eine Vorschau der nächsten Folie und gemeinsame Steuerung. Folie, Einblendungsstand, Schwarzbild und Vortragsuhr bleiben zusammen.
+
+Für einen Beamer oder zweiten Monitor die Anzeige im Betriebssystem **erweitern** und das Publikumsfenster dorthin ziehen. Teile in einer Videokonferenz nur dieses Fenster. Eine Spiegelung des ganzen Bildschirms könnte deine privaten Notizen zeigen. Vollbild wird jeweils im aktiven Fenster eingeschaltet; Kollo verschiebt Fenster nicht automatisch auf einen bestimmten Bildschirm.
+
+Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück. Ein Folienwechsel zeigt die neuen Notizen von vorn.
+
+Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter. Kurze Notizzeilen wie `[KLICK: Vergleich zeigen]` oder `[PAUSE: Frage abwarten]` helfen bei der Probe, sind aber keine automatischen Befehle.
+
+| Taste | Wirkung |
+| --- | --- |
+| → / Bild ab / Leertaste | Nächste Einblendung oder Folie |
+| ← / Bild auf | Zurück |
+| Pos1 / Ende | Erste / letzte Folie |
+| T oder P | Vortragsuhr starten oder pausieren |
+| R | Vortragsuhr zurücksetzen |
+| B | Schwarzbild |
+| F | Vollbild |
+| N | Notizen im Ausgangsfenster |
+
+Lass das Ausgangsfenster offen. Wird ein Zusatzfenster geschlossen oder neu geladen, öffne es erneut über dessen Knopf in der Steuerzentrale. Das übernimmt den aktuellen Stand. Beim Schließen oder Neuladen der Steuerzentrale endet die Sitzung. Der Ablauf ist keine Synchronisierung mit einem zweiten Gerät.
+
+Das funktioniert auch mit der eigenständigen HTML-Datei. Für deine private Probe beim HTML-Export **Notizen mitgeben** einschalten; im Arbeitskit sind sie enthalten. Ohne Notizen bleibt das Präsentieren möglich, der Teleprompter hat dann keinen Sprechtext. Die Zusatzfenster kann ein Browser als Tab öffnen oder blockieren. Bei einer Blockmeldung Popups für deine Kollo-Adresse beziehungsweise die lokale Datei zulassen und erneut öffnen.
 
 ## Daten und Notizen
 
@@ -78,7 +129,7 @@ Der Produktionsbuild liegt in `dist`. `preview` öffnet ihn über einen lokalen 
 
 Lade das Skill-ZIP herunter und entpacke den vollständigen Ordner `skills/kollo-theme`. Verwende den inneren Ordner `kollo-theme` für die Installation. Er enthält Anweisungen, Leitfäden zu Argumentation, Belegen, Feedback, Gestaltung und bestehenden Präsentationen, Beispielaufträge, einen Arbeitsbrief und drei lokale Python-Helfer. Er benötigt keine API-Schlüssel und installiert sich nicht selbst.
 
-Der Skill ist Arbeitswissen für deine KI. Du gibst ihr den Skill, deine freigegebenen Materialien und einen Auftrag. Die KI erstellt oder überarbeitet eine `.kollo.json`; du importierst sie in Kollo und exportierst die benötigten Dateien. Kollo selbst ruft dafür keine KI auf. Was deine KI lesen, rendern und prüfen kann, hängt von ihren verfügbaren Werkzeugen ab.
+Der Skill ist Arbeitswissen für deine KI. Du gibst ihr den Skill, dein Thema oder freigegebene Materialien und einen Auftrag. Die KI erstellt oder überarbeitet eine `.kollo.json`; du importierst sie in Kollo und exportierst die benötigten Dateien. Kollo selbst ruft dafür keine KI auf. Was deine KI lesen, rendern und prüfen kann, hängt von ihren verfügbaren Werkzeugen ab.
 
 | Werkzeug        | Lokale Einrichtung                                                                                                                                                                                                                                                                       |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -91,6 +142,14 @@ Der Skill ist Arbeitswissen für deine KI. Du gibst ihr den Skill, deine freigeg
 Ein geeigneter Auftrag lautet:
 
 > Nutze kollo-theme. Erstelle aus meinen beigefügten Forschungsnotizen einen deutschen Vortrag für 12 Minuten. Übernimm nur belegte Ergebnisse. Kennzeichne offene Punkte. Liefere eine importierbare vortrag.kollo.json und nenne fehlende Informationen. Behalte die vorhandene Farbpalette bei.
+
+Ohne Ausgangsfolien:
+
+> Nutze kollo-theme. Ich beginne von null mit meinem genannten Thema. Entwickle einen verständlichen Vortrag für acht Minuten, eine passende eigenständige Gestaltung und Sprechtext für den Teleprompter. Recherchiere benötigte Fachbelege, erfinde keine Ergebnisse und kennzeichne offene Punkte. Liefere .kollo.json und prüfe die Folien tatsächlich.
+
+Für eine Demo:
+
+> Nutze kollo-theme. Zeige aus meinen Projektunterlagen Ausgangslage, Handlung, tatsächliches Ergebnis und Bedeutung. Plane passende Einblendungen und eine manuell gehaltene Publikumsfrage. Schreibe Sprechtext mit lesbaren Regiehinweisen. Prüfe Publikumsfenster und Teleprompter gemeinsam und nenne nicht unterstützte Funktionen.
 
 ### Kann der Skill meine bestehende Präsentation anpassen?
 

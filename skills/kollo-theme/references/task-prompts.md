@@ -2,6 +2,22 @@
 
 Zeit, Sprache, Dateien und Umfang anpassen. Persönliche Inhalte und Zugangsdaten nicht in den Skill selbst schreiben.
 
+## Ganz von null beginnen
+
+> Nutze kollo-theme. Ich habe noch keine Folien. Erstelle einen verständlichen deutschen Vortrag über mein genanntes Thema für eine studentische Zielgruppe und acht Minuten Redezeit. Entwickle zuerst den Gedankengang und eine passende gestalterische Richtung. Recherchiere fachliche Aussagen bei Bedarf anhand geeigneter Primärquellen; erfinde keine Ergebnisse. Liefere .kollo.json mit Sprechtext und Zeitplanung, kennzeichne offene Punkte und prüfe die tatsächlich erzeugten Folien.
+
+## Eine nachvollziehbare Demo entwickeln
+
+> Nutze kollo-theme für eine Demo aus meinen freigegebenen Projektunterlagen. Zeige Ausgangslage, Handlung, beobachtbares Ergebnis und Bedeutung. Trenne tatsächliche Funktion, Simulation und geplante Arbeit. Plane passende Einblendungen, eine manuell gehaltene Publikumsfrage und Sprechernotizen mit lesbaren Regiehinweisen. Nutze nur Fähigkeiten des aktuellen Kollo-Formats. Liefere zusätzlich einen Ablaufplan und eine statische Ersatzdarstellung für die benötigte Live-Situation.
+
+## Eine eigene visuelle Sprache finden
+
+> Gestalte meinen Vortrag mit kollo-theme eigenständig und passend zu Thema und Publikum. Wähle eine begründete Komposition aus classic, editorial, technical oder stage und eine gut lesbare Palette. Entwickle einen Rhythmus aus Aussagen, präzisen Belegen und bewusstem Freiraum. Wiederhole nicht auf jeder Folie dieselben Karten. Bewahre Fachinhalt und Quellen; prüfe auch dichteste Folie, erste Einblendung und statischen Export.
+
+## Sprechpult und Teleprompter vorbereiten
+
+> Bereite meine .kollo.json für einen Vortrag mit getrenntem Publikumsfenster und Teleprompter vor. Schreibe natürlich sprechbare Notizen, kennzeichne Klicks und Pausen als manuelle Regiehinweise und stimme sie mit Folien und Einblendungen ab. Plane die Redezeit realistisch. Prüfe die Fenster gemeinsam, inklusive Pause, Rücksprung, Schriftgröße und Wiederöffnen. Liefere einen HTML-Export mit ausdrücklich enthaltenen Notizen für meine eigene Probe und eine passende Ausgabe zum Teilen ohne private Notizen.
+
 ## Bestehende Kollo-Datei gezielt ändern
 
 > Nutze kollo-theme für meine .kollo.json. Überarbeite nur die Folien mit den IDs `frage` und `methode`. Mache Formulierungen verständlicher, bewahre fachliche Aussage, Zahlen, Quellen und alle übrigen Folien. Behalte Palette und IDs. Liefere JSON und nenne tatsächliche Änderungen und offene Punkte.

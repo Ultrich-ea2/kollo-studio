@@ -1,6 +1,6 @@
 ---
 name: kollo-theme
-description: Erstelle, prüfe oder überarbeite Kollo-Präsentationen aus bestehenden Folien, Forschungsunterlagen und Feedback. Nutze den Skill für .kollo.json, die Übertragung von PPTX/PDF in das Kollo-Thema und wissenschaftliche Vorträge mit nachvollziehbaren Belegen.
+description: Erstelle Kollo-Präsentationen von null oder aus vorhandenen Folien und Forschungsunterlagen. Gestalte eigenständige Vorträge und Demos mit belegten Aussagen, abgestimmten Einblendungen, Sprechtext und synchronisiertem Teleprompter; prüfe .kollo.json und benötigte Exporte.
 ---
 
 # Kollo: aus Material wird ein nachvollziehbarer Vortrag
@@ -13,9 +13,13 @@ Nutze Zielgruppe, Sprache, Redezeit, gewünschte Änderung und Materialien aus d
 
 | Auftrag                                                       | Relevante Ressourcen                                                                                                              |
 | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Neues Thema, erste Idee oder Demo ohne Ausgangsfolien         | [Von null beginnen](references/new-from-zero.md), dann [Gestaltung und Bewegung](references/design-and-motion.md) |
 | Vorhandene Präsentation bearbeiten, kürzen oder neu gestalten | [Bestehende Folien anpassen](references/adapt-existing.md); für PPTX/PDF auch [Material aufbereiten](references/source-packet.md) |
 | Vortrag aus Thesis, Paper oder Projektunterlagen              | [Argumentation](references/academic-story.md) und [Belege und Feedback](references/research-evidence.md)                          |
 | Gestaltung oder Bewegung ändern                               | [Gestaltung und Bewegung](references/design-and-motion.md)                                                                        |
+| Konkrete Gestaltungsbeispiele ansehen oder abwandeln           | [Beispielatlas](references/example-atlas.md) mit drei vollständigen Projekten |
+| Eigene Layouts oder Animationen im Quellcode entwickeln        | [Erweiterungen im Code](references/advanced-code.md); der Quellcode liegt separat im Studenten-Kit |
+| Sprechtext, Probe, getrennte Fenster oder Teleprompter         | [Präsentieren und Teleprompter](references/presenting-and-teleprompter.md) |
 | JSON erzeugen oder Importfehler beheben                       | [Vollständiges Schema](references/schema.md), [kleines Beispiel](assets/beispiel.kollo.json)                                      |
 | Prüfen und übergeben                                          | [Prüfung und Übergabe](references/review-and-delivery.md)                                                                         |
 | Arbeitsauftrag formulieren                                    | [Beispielaufträge](references/task-prompts.md), optional [Arbeitsbrief](assets/arbeitsbrief.md)                                   |
@@ -36,6 +40,8 @@ Lies `references/schema.md` vor der ersten JSON-Ausgabe. Verwende ausschließlic
 
 Formuliere eine erkennbare Aussage pro Folie. Teile übervolle Folien, wenn der Auftrag es zulässt. Detailerklärungen gehören in `notes`, für die Interpretation entscheidende Einschränkungen auch auf die Folie. Kürze keine Zitate oder Zahlen so, dass sich ihre Bedeutung ändert. Fachbegriffe und notwendige Notation erhalten.
 
+Leite die Gestaltung aus Thema, Publikum und Aussage ab. Die mitgelieferten Beispiele zeigen unterschiedliche Kompositionen; sie sind kein universeller Folienablauf. Nutze bewusste Hierarchie, Rhythmus und sinnvolle Einblendungen statt durchgehend gleicher Karten. Ein neuer Vortrag darf mit einer Idee beginnen: fehlende Forschungsergebnisse nicht durch plausible Zahlen ersetzen. Sprechtext und Folien gemeinsam planen; Regiehinweise in Notizen lösen keine Befehle aus.
+
 Bei PPTX/PDF erst Inhalt und Darstellung sichten, dann Ausgangsfolien den neuen Folien zuordnen. Der Quellenhelfer bereitet Text, Notizen und bestimmte Bilder auf; er stellt Folien nicht dar und übernimmt Master und Animationen nicht vollständig. Ein Auftrag zur originalgetreuen nativen PPTX-Bearbeitung braucht ein geeignetes Präsentationswerkzeug. Dafür nicht stillschweigend einen Kollo-Neubau als identische Datei liefern.
 
 ## Lokal prüfen
@@ -48,6 +54,8 @@ python scripts/review_deck.py vortrag.kollo.json --json
 ```
 
 Der erste Prüfer kontrolliert das Format, der zweite gibt Hinweise etwa zu Zeitplanung, Kontrast und nicht sichtbaren Inhalten. Beide ersetzen weder Quellenprüfung noch visuelle Kontrolle. Importiere die Datei tatsächlich in Kollo, kontrolliere jede Folie und exportiere die benötigten Formate. Nenne ausdrücklich, wenn ein Schritt nicht möglich war. Gültiges JSON allein ist keine erfolgreiche Sichtprüfung.
+
+Bei einem Teleprompter-Auftrag zusätzlich Sprechpult und Publikumsfenster zusammen prüfen: gleiche Folie und Einblendung, Navigation, Pause, Schriftgröße, getrennte Anzeigen und Verhalten nach Schließen eines Fensters. Synchronisierung bedeutet hier Folienzustand und gemeinsame Steuerung, keine Erkennung gesprochener Wörter oder automatische Videovertonung.
 
 ## Sichere und ehrliche Übergabe
 
