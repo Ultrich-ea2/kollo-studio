@@ -48,7 +48,8 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-select:focus-visible {
+select:focus-visible,
+[tabindex="-1"]:focus-visible {
   outline: 3px solid #b74e23;
   outline-offset: 4px;
 }
@@ -1116,8 +1117,9 @@ button {
   gap: 22px;
   font-size: 12px;
 }
-.guide-layout > aside a {
-  text-decoration: none;
+.guide-layout > aside button {
+  padding: 0;
+  text-align: left;
 }
 .guide-content {
   max-width: 720px;

@@ -44,6 +44,11 @@ type Route = "home" | "editor" | "templates" | "downloads" | "guide";
 const uid = () => crypto.randomUUID();
 const safeName = (s: string) =>
   s.replace(/[^\p{L}\p{N}_-]+/gu, "-").slice(0, 70) || "kollo";
+function jumpToContent(id: string) {
+  const target = document.getElementById(id);
+  target?.focus({ preventScroll: true });
+  target?.scrollIntoView({ block: "start" });
+}
 function Button({
   children,
   onClick,
@@ -500,9 +505,9 @@ function App() {
     );
   return (
     <div className={"app route-" + route}>
-      <a className="skip" href="#main">
+      <button type="button" className="skip" onClick={() => jumpToContent("main")}>
         Zum Inhalt
-      </a>
+      </button>
       <header className="site-header">
         <button
           className="wordmark"
@@ -566,7 +571,7 @@ function App() {
           </button>
         </div>
       )}
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         {route === "home" && (
           <>
             <section className="hero">
@@ -1648,14 +1653,20 @@ function App() {
             </div>
             <div className="guide-layout">
               <aside>
-                <a href="#begin">01 / Anfangen</a>
-                <a href="#local">02 / Lokal arbeiten</a>
-                <a href="#ai">03 / Mit KI arbeiten</a>
-                <a href="#export">04 / Richtig exportieren</a>
-                <a href="#privacy">05 / Daten & Sicherheit</a>
+                {[
+                  ["begin", "01 / Anfangen"],
+                  ["local", "02 / Lokal arbeiten"],
+                  ["ai", "03 / Mit KI arbeiten"],
+                  ["export", "04 / Richtig exportieren"],
+                  ["privacy", "05 / Daten & Sicherheit"],
+                ].map(([id, label]) => (
+                  <button type="button" key={id} onClick={() => jumpToContent(id)}>
+                    {label}
+                  </button>
+                ))}
               </aside>
               <div className="guide-content">
-                <section id="begin">
+                <section id="begin" tabIndex={-1}>
                   <span className="eyebrow">01 / ANFANGEN</span>
                   <h2>Erst die Aussage. Dann die Folie.</h2>
                   <p>
@@ -1684,7 +1695,7 @@ function App() {
                     Texteingabe-Rückgängig-Funktion.
                   </p>
                 </section>
-                <section id="local">
+                <section id="local" tabIndex={-1}>
                   <span className="eyebrow">02 / LOKAL ARBEITEN</span>
                   <h2>Vom Download zum eigenen Studio.</h2>
                   <p>
@@ -1747,7 +1758,7 @@ function App() {
                     Weitergeben ohne Notizen exportieren.
                   </p>
                 </section>
-                <section id="ai">
+                <section id="ai" tabIndex={-1}>
                   <span className="eyebrow">03 / MIT KI ARBEITEN</span>
                   <h2>Gib deiner KI das Handwerkszeug.</h2>
                   <p>
@@ -1797,7 +1808,7 @@ function App() {
                     Ausführliche Anleitung mit Beispielen herunterladen
                   </a>
                 </section>
-                <section id="export">
+                <section id="export" tabIndex={-1}>
                   <span className="eyebrow">04 / RICHTIG EXPORTIEREN</span>
                   <h2>Die Datei muss zum Einsatz passen.</h2>
                   <p>
@@ -1820,7 +1831,7 @@ function App() {
                     Bewegung in den Systemeinstellungen.
                   </p>
                 </section>
-                <section id="privacy">
+                <section id="privacy" tabIndex={-1}>
                   <span className="eyebrow">05 / DATEN & SICHERHEIT</span>
                   <h2>Deine Inhalte bleiben bei dir.</h2>
                   <p>
