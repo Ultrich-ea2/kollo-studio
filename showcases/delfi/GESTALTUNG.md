@@ -1,45 +1,30 @@
 # DELFI · Feedback, das den nächsten Schritt erklärt
 
-Die originale PyTutorAI-Präsentation von Ultrich Edima Edima, mit André Greubel. 16 Szenen, 6 Minuten 32 Sekunden. Das Video, die Szenenzeiten und der Sprechtext sind erhalten. Stand des darin gezeigten Projekts: 8. September 2026.
+Die originale PyTutorAI-Präsentation von Ultrich Edima Edima, mit André Greubel. Das Bildmaterial umfasst 16 Szenen und 6 Minuten 32 Sekunden. Originalvideo und ursprünglicher Sprechtext bleiben erhalten. Stand des gezeigten Projekts: 8. September 2026.
 
-## Vorführen
+## Gemeinsam vorführen
 
-`presentation.html` enthält Video, Vorschaubild, Sprechtext und Bedienoberfläche in einer Datei. Herunterladen und per Doppelklick in Edge, Chrome oder Safari öffnen. Zum Abspielen ist keine Internetverbindung nötig. Das Originalvideo hat keine Tonspur: Du sprichst selbst, der Teleprompter folgt der Videozeit. Er hört dir nicht zu.
+Dieses Beispiel verwendet dieselbe Vortragssteuerung wie die bearbeitbaren Kollo-Beispiele. `presentation.html` enthält Video, Vorschauen, Sprechtext und Steuerung in einer Datei. Herunterladen und im Browser öffnen. Das Originalvideo hat keine Tonspur; du sprichst selbst.
 
-1. „Starten“ spielt Video und Leseführung gemeinsam ab; Leertaste pausiert beide.
-2. „Abtrennen“ öffnet nur das Video für den Beamer. Das Hauptfenster mit deinem Text bleibt offen. Das zweite Fenster auf den gewünschten Bildschirm ziehen; mit F oder Doppelklick Vollbild einschalten.
-3. Im Hauptfenster eine Szene auswählen oder die Zeitleiste verschieben. Das Publikumsvideo folgt. „Tempo“ verändert Video und Leseführung gemeinsam.
-4. Textgröße, Spiegelmodus und „Nur Text“ nach Bedarf einstellen. Manuelles Scrollen pausiert die Leseführung; „Zur Leseposition“ schaltet sie wieder ein.
+1. Im Hauptfenster steht der private Sprechtext neben dem Bild. Die hellen Hinweise mitten im Text nennen die nächste Aktion und die Taste **→**.
+2. **→** spielt genau eine Animationsphase und hält an deren Ende. Ein weiterer Druck während der Animation beendet diese Phase, ohne die nächste vorzumerken. Erst ein neuer Druck nach der letzten Phase wechselt die Szene.
+3. **←** geht eine Phase zurück. Am Anfang einer Szene führt die Taste zur letzten Phase der vorherigen Szene. Bild, private Markierung und Leseposition bleiben zusammen.
+4. **Publikumsfenster öffnen** zeigt ausschließlich das Bild. **Teleprompter öffnen** öffnet denselben privaten Leser separat. Die Fenster können auf verschiedene Bildschirme gezogen werden; das Hauptfenster bleibt offen.
+5. Die optionale Leseführung startet nur nach einem bewussten Klick. Sie hält vor einem Klicksignal an und schaltet die Präsentation niemals selbst weiter. Eine manuelle Phasenwahl pausiert sie und setzt den Text zur passenden Erklärung. Schriftgröße, Spiegeln und Lesefokus sind in beiden Lesern verfügbar.
 
-Ein blockiertes Fenster wird erklärt; Pop-ups für die Seite erlauben und „Abtrennen“ erneut wählen. Zwei gleichzeitig geöffnete Präsentationen steuern jeweils ihr eigenes Fenster. Nach dem Neuladen oder Navigieren des Publikumsfensters „Abtrennen“ erneut wählen: Das frühere Fenster wird nicht wiederverwendet. Das Schließen oder Verlassen des Hauptfensters schließt sein noch verbundenes Publikumsfenster.
+Es gibt keinen automatischen Durchlauf. 6:32 beschreibt die Länge des zugrunde liegenden Bildmaterials; die tatsächliche Vortragsdauer hängt von deinem Tempo ab. Standbilder zwischen Animationen werden übersprungen, soweit sie keine neue Bildinformation enthalten.
 
-Der externe Link zur Feedback-Demo in der Hilfe öffnet sich nur nach Anklicken und benötigt Internet. Beim Öffnen und Abspielen werden keine externen Dienste geladen. Die beiden Namen sind die Originalcredits dieses Beispiels; für deine eigene Arbeit deine eigenen Credits verwenden.
+## Herkunft der neuen Klickphasen
 
-## Was die Gestaltung zeigt
+`content.json` bewahrt die ursprünglichen Szenenzeiten, Texte und Credits. `phases.json` ergänzt 81 redaktionell gesetzte, anhand des Originalvideos überprüfte Haltepunkte und die zugehörigen Einfügepositionen für Klicksignale. Diese Phasen waren im Original nicht als Klickanimationen gespeichert. Die Erklärtexte werden durch das Einfügen der Marker nicht umgeschrieben. Die Dateiprüfung rekonstruiert jedes ursprüngliche Wort.
 
-- Code und Testergebnis werden als zusammenhängender Ablauf erklärt: Erst der plausible Versuch, dann der Gegenfall, danach die eigene Korrektur.
-- Animationen folgen der Erklärung. Sie markieren einen konkreten Startwert, einen Testfall oder einen Weg durch die Pipeline.
-- Ruhige dunkelblaue Flächen und Cyan-/Mintakzente verbinden schematische Szenen mit echten Aufnahmen der Demo.
-- Ein wiederkehrender Gedanke verbindet den Anfang und den Schluss: der nächste eigene Lernschritt.
+Gleichzeitig ablaufende oder eng verbundene Bewegungen bilden eine gemeinsame Phase. Die einzelnen Grafikelemente liegen im Originalvideo bereits zusammen; sie lassen sich hier nicht unabhängig bearbeiten. Dekorative Bewegung erhält keine zusätzlichen Klicks. `frames/` enthält die Basisansichten der Szenen für die Vorschau.
 
-Die Animationen sind im originalen Video enthalten. Sie werden weder in einzelne PowerPoint-Formen zurückverwandelt noch als editierbare Folien angeboten. Die drei anderen Beispiele enthalten zusätzlich editierbare Kollo-Projekte und PowerPoint-Dateien.
+## Dateien und Grenzen
 
-## Quellcode und Anpassung
+- `presentation.mp4` und `preview.jpg`: unveränderte Originalmedien, geprüft gegen `provenance.json`.
+- `content.json`: Originalinhalte; `phases.json`: neue manuelle Regie.
+- `player.js`: kleiner Einstieg in den gemeinsamen Kollo-Presenter. Der Build verwendet `src/presenter/runtime.mjs` und dessen gemeinsame Gestaltung.
+- `vorfuehren.html`: veröffentlichte Fassung mit getrennten Dateien; `presentation.html`: vollständige Offline-Datei.
 
-Im Quellcode-ZIP liegt dieses Beispiel getrennt unter `showcases/delfi/`:
-
-| Datei              | Aufgabe                                                         |
-| ------------------ | --------------------------------------------------------------- |
-| `content.json`     | Originaltexte, Credits und 16 Szenen mit Anfang, Ende und Dauer |
-| `template.html`    | Struktur und Bedienelemente mit Build-Platzhaltern              |
-| `style.css`        | Darstellung des Sprechpults                                     |
-| `player.js`        | Videozeit, Leseführung und sichere Fenstersteuerung             |
-| `presentation.mp4` | Unverändertes Originalvideo                                     |
-| `preview.jpg`      | Unverändertes Originalvorschaubild                              |
-| `provenance.json`  | Originaldateiname, Dauer und SHA-256-Prüfsummen                 |
-
-`scripts/build-delfi.mjs` erzeugt die Online-Fassung mit getrennten Assets und die vollständig eingebettete Offline-Datei. `npm run build` erstellt beide. Der Build prüft die Originalmedien und die vollständige Szenenfolge.
-
-Für eine neue eigene Videopräsentation das Beispiel in einen eigenen Ordner kopieren, ein eigenes Video verwenden und dazu passende Texte und Zeiten erstellen. Geänderte Sprechtexte verändern die eingebrannten Bilder im Video nicht. Für frei bearbeitbare Folien von null oder den Umbau einer bestehenden Präsentation den allgemeinen Kollo-Skill und die editierbaren Beispiele verwenden.
-
-Die Originaldarstellung in diesem Video bleibt bei deaktivierten Browseranimationen unverändert, weil sie Teil der Videodatei ist. Die Oberfläche respektiert reduzierte Bewegung bei der Leseführung. Bei Bedarf pausieren, die Zeitposition wählen und die Szenen im eigenen Tempo besprechen.
+Dieses Video ist ein Anschauungsbeispiel, keine bearbeitbare Kollo- oder PowerPoint-Datei. Eigene bearbeitbare Präsentationen entstehen aus den drei anderen Vorlagen. Veröffentliche private Notizen nur bewusst. Das Publikumsfenster enthält keine Sprechtexte; die vollständige HTML-Datei enthält sie im Quelltext.

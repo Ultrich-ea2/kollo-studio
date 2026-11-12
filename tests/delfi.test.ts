@@ -56,7 +56,7 @@ test("DELFI preserves the original 392-second video, poster, credits and 16 cont
   );
 });
 
-test("DELFI builds exact-media offline HTML and external-script hosted HTML with restrictive CSP", async () => {
+test("DELFI builds one shared presenter with exact media, original narration and a restrictive CSP", async () => {
   const { buildDelfi } = await import(
     pathToFileURL(path.resolve("scripts/build-delfi.mjs")).href
   );
@@ -64,7 +64,23 @@ test("DELFI builds exact-media offline HTML and external-script hosted HTML with
     path.join(os.tmpdir(), "kollo-delfi-test-"),
   );
   try {
-    assert.equal((await buildDelfi(destination)).duration, 392);
+    const result = await buildDelfi(destination);
+    assert.equal(result.duration, 392);
+    assert.equal(result.scenes, 16);
+    const original = JSON.parse(
+      await fs.readFile(path.join(source, "content.json"), "utf8"),
+    );
+    const plan = JSON.parse(
+      await fs.readFile(path.join(source, "phases.json"), "utf8"),
+    );
+    assert.equal(
+      result.phases,
+      plan.scenes.reduce(
+        (total: number, scene: { stops: number[] }) =>
+          total + scene.stops.length,
+        0,
+      ),
+    );
     const offline = await fs.readFile(
       path.join(destination, "presentation.html"),
       "utf8",
@@ -78,26 +94,67 @@ test("DELFI builds exact-media offline HTML and external-script hosted HTML with
     ];
     assert.equal(scripts.length, 2);
     assert.match(scripts[0][1], /type="application\/json"/);
-    const content = JSON.parse(scripts[0][2]);
-    assert.deepEqual(
-      content,
-      JSON.parse(await fs.readFile(path.join(source, "content.json"), "utf8")),
-    );
+    assert.match(scripts[0][1], /id="presenter-data"/);
+    const config = JSON.parse(scripts[0][2]);
+    assert.equal(config.title, original.title);
+    assert.equal(config.duration, 392 / 60);
+    assert.equal(config.showNotes, true);
+    assert.equal(config.slides.length, 16);
+    for (let index = 0; index < original.scenes.length; index++) {
+      const slide = config.slides[index],
+        scene = original.scenes[index],
+        phase = plan.scenes[index];
+      assert.equal(
+        slide.notes.replace(/\n\[(?:KLICK|FOLIE)\](?:\n|$)/g, ""),
+        scene.speech,
+      );
+      assert.equal(
+        (slide.notes.match(/^\[KLICK\]$/gm) || []).length,
+        phase.stops.length,
+      );
+      assert.equal(
+        (slide.notes.match(/^\[FOLIE\]$/gm) || []).length,
+        index < 15 ? 1 : 0,
+      );
+      assert.equal(slide.seconds, scene.duration);
+      assert.deepEqual(slide.media, {
+        start: phase.start,
+        starts: phase.starts,
+        stops: phase.stops,
+        labels: phase.labels,
+      });
+      assert.match(slide.svg, /data:image\/jpeg;base64,/);
+    }
     const executable = scripts[1][2];
-    const base64Hash = createHash("sha256").update(executable).digest("base64");
+    const { mountPresenter } = await import("../src/presenter/runtime.mjs");
+    assert.ok(
+      executable.startsWith(mountPresenter.toString().replace(/\r\n?/g, "\n")),
+    );
+    // HTML parsing normalizes source line endings before the browser checks CSP.
+    // Hashing raw Windows CRLF made the downloadable file block its own player.
+    const base64Hash = createHash("sha256")
+      .update(executable.replace(/\r\n?/g, "\n"))
+      .digest("base64");
     assert.ok(offline.includes(`script-src 'sha256-${base64Hash}'`));
     assert.match(offline, /media-src data:/);
     assert.match(offline, /connect-src 'none'/);
-    const embeddedVideo = Buffer.from(
-      offline.match(/src="data:video\/mp4;base64,([^"]+)"/)![1],
-      "base64",
-    );
+    assert.match(config.media.src, /^data:video\/mp4;base64,/);
+    const embeddedVideo = Buffer.from(config.media.src.split(",")[1], "base64");
     assert.equal(
       sha(embeddedVideo),
       sha(await fs.readFile(path.join(source, "presentation.mp4"))),
     );
     assert.doesNotMatch(offline, /(?:src|href)="(?:\.\/|\.\.\/)/);
     assert.doesNotMatch(hosted, /data:video\/mp4/);
+    const hostedScripts = [
+      ...hosted.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g),
+    ];
+    assert.equal(hostedScripts.length, 2);
+    const hostedConfig = JSON.parse(hostedScripts[0][2]);
+    assert.deepEqual(hostedConfig, {
+      ...config,
+      media: { src: "./presentation.mp4", poster: "./preview.jpg" },
+    });
     assert.match(hosted, /<script src="\.\/player\.js"><\/script>/);
     assert.match(hosted, /<link rel="stylesheet" href="\.\/style\.css">/);
     assert.match(hosted, /media-src 'self'/);
@@ -127,4 +184,139 @@ test("DELFI builds exact-media offline HTML and external-script hosted HTML with
   } finally {
     await fs.rm(destination, { recursive: true, force: true });
   }
+});
+
+test("DELFI rejects phase plans that lose provenance, cross scene bounds or misplace speech signals", async () => {
+  const { validatePhases } = await import(
+    pathToFileURL(path.resolve("scripts/build-delfi.mjs")).href
+  );
+  const content = JSON.parse(
+    await fs.readFile(path.join(source, "content.json"), "utf8"),
+  );
+  const plan = JSON.parse(
+    await fs.readFile(path.join(source, "phases.json"), "utf8"),
+  );
+  assert.equal(validatePhases(content, plan).length, 16);
+  type Phase = {
+    id: string;
+    originalSpeechSha256: string;
+    start: number;
+    starts: number[];
+    stops: number[];
+    labels: string[];
+    offsets: number[];
+  };
+  type Plan = { scenes: Phase[] };
+  const invalid: [string, (copy: Plan) => void][] = [
+    [
+      "missing scene",
+      (copy) => {
+        copy.scenes.pop();
+      },
+    ],
+    [
+      "reordered scene",
+      (copy) => {
+        [copy.scenes[0], copy.scenes[1]] = [copy.scenes[1], copy.scenes[0]];
+      },
+    ],
+    [
+      "changed speech hash",
+      (copy) => {
+        copy.scenes[0].originalSpeechSha256 = "0".repeat(64);
+      },
+    ],
+    [
+      "mismatched arrays",
+      (copy) => {
+        copy.scenes[0].labels.pop();
+      },
+    ],
+    [
+      "baseline before scene",
+      (copy) => {
+        copy.scenes[1].start = content.scenes[1].start - 1;
+      },
+    ],
+    [
+      "baseline at next scene",
+      (copy) => {
+        copy.scenes[0].start = content.scenes[0].end;
+      },
+    ],
+    [
+      "non-finite baseline",
+      (copy) => {
+        copy.scenes[0].start = NaN;
+      },
+    ],
+    [
+      "backward segment",
+      (copy) => {
+        copy.scenes[0].starts[0] = copy.scenes[0].start - 0.1;
+      },
+    ],
+    [
+      "empty segment",
+      (copy) => {
+        copy.scenes[0].stops[0] = copy.scenes[0].starts[0];
+      },
+    ],
+    [
+      "scene boundary crossed",
+      (copy) => {
+        copy.scenes[0].stops[0] = content.scenes[0].end;
+      },
+    ],
+    [
+      "overlapping segments",
+      (copy) => {
+        copy.scenes[0].starts[1] = copy.scenes[0].stops[0] - 0.1;
+      },
+    ],
+    [
+      "non-finite stop",
+      (copy) => {
+        copy.scenes[0].stops[0] = Infinity;
+      },
+    ],
+    [
+      "duplicate speech offset",
+      (copy) => {
+        copy.scenes[0].offsets[1] = copy.scenes[0].offsets[0];
+      },
+    ],
+    [
+      "offset beyond speech",
+      (copy) => {
+        copy.scenes[0].offsets[0] = content.scenes[0].speech.length;
+      },
+    ],
+    [
+      "offset inside word",
+      (copy) => {
+        copy.scenes[0].offsets[0] = 1;
+      },
+    ],
+    [
+      "fractional offset",
+      (copy) => {
+        copy.scenes[0].offsets[0] = 1.5;
+      },
+    ],
+    [
+      "missing visible label",
+      (copy) => {
+        copy.scenes[0].labels[0] = " ";
+      },
+    ],
+  ];
+  for (const [reason, mutate] of invalid) {
+    const copy = structuredClone(plan);
+    mutate(copy);
+    assert.throws(() => validatePhases(content, copy), Error, reason);
+  }
+  const changedContent = structuredClone(content);
+  changedContent.scenes[0].speech += " Changed source.";
+  assert.throws(() => validatePhases(changedContent, plan), /provenance/);
 });

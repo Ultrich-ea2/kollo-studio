@@ -1,0 +1,567 @@
+{
+  "version": 1,
+  "source": {
+    "originalFilename": "PyTutorAI_DELFI.html",
+    "originalSha256": "4299dcf2a341c369fe2987022e3341a303782d9a24714b45cb86e41db871e2a3",
+    "videoSha256": "c909e7b75744d132dd56524d0e88b9c536f69d9ab239cdb5080bdac43710096b",
+    "duration": 392,
+    "fps": 30
+  },
+  "method": {
+    "kind": "visually-curated-semantic-phases",
+    "description": "New click cues inferred from the original 30 fps video, checked with rendered frames and frame differences. Original scene boundaries and narration come from the source HTML. The source did not contain authored per-phase clicks.",
+    "grouping": "Parallel motion and tightly connected animation builds are one semantic phase. Decorative drift and loops are not new phases. Every stop remains inside its scene, before the scene-out fade.",
+    "offsetUnit": "Zero-based JavaScript string/Unicode character offset into unchanged scene.speech. Original German narration contains no surrogate pairs.",
+    "narration": "Cue insertion preserves the original speech exactly. Some source animation order differs from narration order; concise cue labels describe the immediate visual action independently of the surrounding sentence."
+  },
+  "scenes": [
+    {
+      "id": "title",
+      "start": 2.1,
+      "stops": [
+        3.1,
+        8.7
+      ],
+      "starts": [
+        2.2,
+        3.15
+      ],
+      "labels": [
+        "Browserbasierte Feedback-Pipeline",
+        "Code, Tests, Ursache und Hinweis verbinden"
+      ],
+      "offsets": [
+        16,
+        160
+      ],
+      "originalSpeechSha256": "80b3d2dcba1932b13772fc527cc2cd5a6b36eba5372983c0bf6463c3d25b1e7e",
+      "poster": "frames/title.jpg"
+    },
+    {
+      "id": "problem",
+      "start": 19.05,
+      "stops": [
+        20.1,
+        22.1,
+        23.8,
+        25.9,
+        28.2,
+        31.2
+      ],
+      "starts": [
+        19.1,
+        20.2,
+        22.8,
+        23.8,
+        27.2,
+        30.0
+      ],
+      "labels": [
+        "Beispielaufruf add(1, 2)",
+        "Erwartetes und tatsächliches Ergebnis",
+        "Fehlgeschlagenen Test markieren",
+        "Frage nach der Bedeutung",
+        "Frage nach dem nächsten Schritt",
+        "Prüfergebnis als Ausgangspunkt"
+      ],
+      "offsets": [
+        0,
+        26,
+        43,
+        90,
+        207,
+        286
+      ],
+      "originalSpeechSha256": "61352eec090785ab18dbd95314f09b4767c528dee77d0208c2fbf43deb510833",
+      "poster": "frames/problem.jpg"
+    },
+    {
+      "id": "questions",
+      "start": 43.05,
+      "stops": [
+        44.1,
+        48.1,
+        52.1,
+        57.2
+      ],
+      "starts": [
+        43.1,
+        47.0,
+        51.0,
+        56.2
+      ],
+      "labels": [
+        "Problem",
+        "Ursache",
+        "Nächster Schritt",
+        "Eigene Überarbeitung unterstützen"
+      ],
+      "offsets": [
+        45,
+        86,
+        115,
+        182
+      ],
+      "originalSpeechSha256": "058c25dcaac152fe8d5047af4fb0de83ecb0cfd439ddead70e797de07f842c23",
+      "poster": "frames/questions.jpg"
+    },
+    {
+      "id": "workbook",
+      "start": 67.05,
+      "stops": [
+        70.2,
+        72.2,
+        76.2,
+        81.2
+      ],
+      "starts": [
+        67.2,
+        71.2,
+        75.2,
+        76.4
+      ],
+      "labels": [
+        "Aufgabe im Workbook",
+        "Eigener Python-Code",
+        "Feedback im gleichen Lernablauf",
+        "Rückweg zur Überarbeitung und vollständiger Lernablauf"
+      ],
+      "offsets": [
+        63,
+        72,
+        85,
+        216
+      ],
+      "originalSpeechSha256": "d761f1ab52698ab69006a59a4e9071ec9fec889c1d52e4b9940f8c4ab788c8a8",
+      "poster": "frames/workbook.jpg"
+    },
+    {
+      "id": "interface",
+      "start": 92.4,
+      "stops": [
+        93.4,
+        95.5,
+        98.4,
+        103.4
+      ],
+      "starts": [
+        93.0,
+        94.2,
+        97.2,
+        102.8
+      ],
+      "labels": [
+        "Aufgabenauswahl hervorheben",
+        "Codebearbeitung zuordnen",
+        "Python-Editor hervorheben",
+        "Feedback und Tests hervorheben"
+      ],
+      "offsets": [
+        34,
+        75,
+        96,
+        113
+      ],
+      "originalSpeechSha256": "6c7cc700483fde5e929a4008c11d9273bd2b00b163734bc52094a4773ed94690",
+      "poster": "frames/interface.jpg"
+    },
+    {
+      "id": "code",
+      "start": 111.05,
+      "stops": [
+        113.9,
+        115.1,
+        118.3,
+        120.3,
+        122.3,
+        126.2
+      ],
+      "starts": [
+        111.1,
+        114.0,
+        115.2,
+        119.95,
+        121.95,
+        125.0
+      ],
+      "labels": [
+        "Lösungsversuch mit m = 0",
+        "Positive Beispielwerte",
+        "Erster Vergleichswert: 1",
+        "Nächster Vergleichswert: 2",
+        "Größter Vergleichswert: 3",
+        "Positive Beispiele funktionieren"
+      ],
+      "offsets": [
+        0,
+        49,
+        121,
+        178,
+        205,
+        233
+      ],
+      "originalSpeechSha256": "79af1ba72788876b3947dd46d3063cee045cb5930bcf0d71b5b59379e36b90bf",
+      "poster": "frames/code.jpg"
+    },
+    {
+      "id": "negative",
+      "start": 135.05,
+      "stops": [
+        137.1,
+        139.2,
+        144.2,
+        149.3,
+        153.3
+      ],
+      "starts": [
+        136.0,
+        137.15,
+        141.0,
+        146.0,
+        152.0
+      ],
+      "labels": [
+        "Startwert bleibt zunächst 0",
+        "Minus fünf ist nicht größer als null",
+        "Minus eins ist nicht größer als null",
+        "Minus neun ist nicht größer als null",
+        "Das richtige Maximum ist minus eins"
+      ],
+      "offsets": [
+        0,
+        75,
+        98,
+        109,
+        251
+      ],
+      "originalSpeechSha256": "1f15c9ba1d1a4efb7cbaf7e061e8d59fadd94bb166cd231ef36e349c69a26cd4",
+      "poster": "frames/negative.jpg"
+    },
+    {
+      "id": "tests",
+      "start": 164.1,
+      "stops": [
+        168.8,
+        173.3,
+        175.4
+      ],
+      "starts": [
+        164.6,
+        171.6,
+        174.0
+      ],
+      "labels": [
+        "Originalausführung der Demo",
+        "Testergebnisse vergrößern: zwei bestanden",
+        "Ein fehlgeschlagener Test"
+      ],
+      "offsets": [
+        0,
+        51,
+        92
+      ],
+      "originalSpeechSha256": "bf6c8d5b33f9a0c9541c39ddeb31de89ec6a532c305f8b9ff8e2fcc4f04d9306",
+      "poster": "frames/tests.jpg"
+    },
+    {
+      "id": "hint",
+      "start": 185.05,
+      "stops": [
+        186.1,
+        190.2,
+        195.2,
+        200.2,
+        204.2
+      ],
+      "starts": [
+        185.1,
+        189.0,
+        194.0,
+        199.0,
+        203.0
+      ],
+      "labels": [
+        "Originalrückmeldung anzeigen",
+        "Problem: negative Zahlen",
+        "Ursache: Startwert 0",
+        "Nächster Schritt: Initialisierung prüfen",
+        "Überarbeitung bleibt bei den Lernenden"
+      ],
+      "offsets": [
+        0,
+        89,
+        129,
+        212,
+        315
+      ],
+      "originalSpeechSha256": "c764b1c47e1eadc7c1922fbe8444b9bb17be1df7719ca9da6b3884f29899c9a0",
+      "poster": "frames/hint.jpg"
+    },
+    {
+      "id": "fix",
+      "start": 213.05,
+      "stops": [
+        214.2,
+        217.1,
+        220.1,
+        222.2,
+        224.1,
+        225.2,
+        230.2
+      ],
+      "starts": [
+        213.1,
+        214.3,
+        218.0,
+        221.0,
+        223.95,
+        224.15,
+        229.0
+      ],
+      "labels": [
+        "Bisheriger Startwert m = 0",
+        "Neuer Startwert m = xs[0]",
+        "Start mit dem ersten Element minus fünf",
+        "Minus eins vergleichen",
+        "Minus eins als neues Maximum",
+        "Minus neun verändert das Maximum nicht",
+        "Mit einem vorhandenen Listenwert starten"
+      ],
+      "offsets": [
+        0,
+        19,
+        58,
+        80,
+        102,
+        141,
+        176
+      ],
+      "originalSpeechSha256": "b5070b2c83d5f8d8c6bbf0a3f44fb705dffb45c9b376f5971999fe88af09f1d7",
+      "poster": "frames/fix.jpg"
+    },
+    {
+      "id": "success",
+      "start": 237.05,
+      "stops": [
+        238.1,
+        240.1,
+        244.2,
+        246.2
+      ],
+      "starts": [
+        237.1,
+        238.3,
+        242.0,
+        245.0
+      ],
+      "labels": [
+        "Testergebnisse nach der Korrektur",
+        "Zähler erreicht drei von drei",
+        "Kein KI-Aufruf in diesem Durchlauf",
+        "Auch der negative Randfall besteht"
+      ],
+      "offsets": [
+        0,
+        27,
+        79,
+        208
+      ],
+      "originalSpeechSha256": "1f6005f64d0542c62778c8f831da6c4f203253b122d5f80c28f68faa5426e8a0",
+      "poster": "frames/success.jpg"
+    },
+    {
+      "id": "pipeline",
+      "start": 257.05,
+      "stops": [
+        258.1,
+        261.1,
+        264.1,
+        267.1,
+        270.1,
+        273.1,
+        276.1,
+        286.1
+      ],
+      "starts": [
+        257.1,
+        258.1,
+        261.1,
+        264.1,
+        267.1,
+        270.1,
+        273.1,
+        278.0
+      ],
+      "labels": [
+        "01 Code normalisieren",
+        "02 Statische Prüfungen",
+        "03 Lokale Unit-Tests",
+        "04 Signale zusammenführen",
+        "05 Hauptproblem und Ursachen bestimmen",
+        "06 Optionaler LLM-Hinweis",
+        "07 Feedback zusammenstellen",
+        "Direkter Weg aus vorhandenen Signalen"
+      ],
+      "offsets": [
+        74,
+        124,
+        158,
+        186,
+        222,
+        288,
+        351,
+        402
+      ],
+      "originalSpeechSha256": "1f0ecf8aaed48cca25c6fd6d05cda17430d9b884fea1e9f249dd185b0bfa66a0",
+      "poster": "frames/pipeline.jpg"
+    },
+    {
+      "id": "gate",
+      "start": 291.05,
+      "stops": [
+        293.0,
+        296.2,
+        298.1,
+        302.7,
+        307.3,
+        315.5
+      ],
+      "starts": [
+        291.1,
+        293.1,
+        296.2,
+        298.1,
+        304.0,
+        310.0
+      ],
+      "labels": [
+        "Prüfen, ob KI sinnvoll ist",
+        "Optionaler LLM-Aufruf",
+        "Regelbasiertes Quality Gate",
+        "Direkter Feedback-Weg ohne KI",
+        "Ein erneuter Versuch bei Ablehnung",
+        "Rückfall auf vorhandene Signale"
+      ],
+      "offsets": [
+        0,
+        41,
+        85,
+        235,
+        253,
+        286
+      ],
+      "originalSpeechSha256": "2c20f017a52ee06ed0810a4b5df72d5adf8bb5dfeaa8ef83d3d23dbe74f54e4c",
+      "poster": "frames/gate.jpg"
+    },
+    {
+      "id": "name",
+      "start": 321.05,
+      "stops": [
+        321.9,
+        324.2,
+        326.2,
+        329.2,
+        333.4
+      ],
+      "starts": [
+        321.1,
+        323.0,
+        325.0,
+        328.0,
+        330.0
+      ],
+      "labels": [
+        "Code mit abweichendem Funktionsnamen",
+        "Erwarteter Funktionsname add",
+        "Originalrückmeldung zum Namensfehler",
+        "Namensabweichung zuordnen",
+        "Direkter Hinweis ohne KI"
+      ],
+      "offsets": [
+        0,
+        52,
+        126,
+        143,
+        158
+      ],
+      "originalSpeechSha256": "af89742cc114ccb22bf45b4a81ab648b452479b43a43fb42687264469cd782c3",
+      "poster": "frames/name.jpg"
+    },
+    {
+      "id": "architecture",
+      "start": 346.1,
+      "stops": [
+        347.2,
+        349.1,
+        351.2,
+        356.4,
+        360.2,
+        362.2,
+        365.2
+      ],
+      "starts": [
+        346.2,
+        347.2,
+        350.0,
+        351.2,
+        357.0,
+        360.2,
+        364.0
+      ],
+      "labels": [
+        "Aufgabe und Code in der Oberfläche",
+        "Analyse und Feedback im Browser",
+        "Pyodide im separaten WebWorker",
+        "Oberfläche und Ausführung verbinden",
+        "Optionaler Weg über den Proxy",
+        "Externer Modelldienst",
+        "Ausgewählte Informationen verlassen den Browser"
+      ],
+      "offsets": [
+        0,
+        52,
+        88,
+        129,
+        175,
+        304,
+        396
+      ],
+      "originalSpeechSha256": "42adbc2002e8d0238020fb351fce3558a366ba1d617b08b0603d660a76dc104d",
+      "poster": "frames/architecture.jpg"
+    },
+    {
+      "id": "closing",
+      "start": 373.05,
+      "stops": [
+        374.1,
+        376.1,
+        378.1,
+        381.2,
+        384.2
+      ],
+      "starts": [
+        373.1,
+        375.0,
+        377.0,
+        380.0,
+        383.0
+      ],
+      "labels": [
+        "Verstehen",
+        "Überarbeiten",
+        "Weiterlernen",
+        "Diskussionsfrage anzeigen",
+        "Demo-Link einblenden"
+      ],
+      "offsets": [
+        0,
+        66,
+        105,
+        161,
+        196
+      ],
+      "originalSpeechSha256": "ac7c1b06cdeda595bd147833407978d342b1b9687c56027c72a0902e1ad8f297",
+      "poster": "frames/closing.jpg"
+    }
+  ]
+}
