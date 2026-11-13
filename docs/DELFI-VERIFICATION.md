@@ -1,6 +1,6 @@
 # DELFI-Originalbeispiel: Prüfstand
 
-Stand: 13. November 2026. Das Originalvideo verwendet das gemeinsame Sprechpult mit manuell ausgelösten Animationsphasen. Version 1.5.1 ergänzt Leseführung nach jedem Vorwärtsschritt bis zum nächsten Signal, kompakte einzeilige Hinweise und ein Publikumsfenster ohne Schaltflächen. Die Phasenmetadaten und Originalmedien bleiben unverändert. Die lokale Prüfung der geänderten Bedienung ist abgeschlossen. Frühere Metadaten- und Laufzeitergebnisse der Versionen 1.5.0 und 1.2.0 bleiben gesondert erhalten; die Veröffentlichung wird am neuen Release-Commit geprüft.
+Stand: 13. November 2026. Das Originalvideo verwendet das gemeinsame Sprechpult mit manuell ausgelösten Animationsphasen. Version 1.5.2 korrigiert dessen Aktualisierung bei einem im Hintergrund liegenden Hauptfenster und macht Leser sowie Vortragsuhr unabhängig von Systemzeitsprüngen. Die Phasenmetadaten, Originalmedien und seit Version 1.5.1 geltenden Klickregeln bleiben unverändert. Die lokale Prüfung der Korrektur ist abgeschlossen; abgeschlossene Ergebnisse der Versionen 1.5.1, 1.5.0 und 1.2.0 bleiben gesondert erhalten.
 
 ## Geprüfte Originalfassung
 
@@ -35,6 +35,8 @@ DELFI verwendet denselben Player wie die bearbeitbaren Beispiele und HTML-Export
 - Beim Öffnen steht die Leseführung still. Ein Vorwärtsschritt richtet den Sprechtext aus und startet ihn bis zum nächsten Signal, wo er auf erneutes Weiter wartet. Eine ausdrückliche Pause oder manuelles Scrollen stoppt die Führung; der nächste Vorwärtsschritt startet sie erneut. Lesetempo und Vortragstimer lösen weder Phasen noch Szenenwechsel aus. Es gibt keine Spracherkennung oder Tonaufnahme.
 - Die privaten Signale stehen als kompakte einzeilige Pfeilhinweise innerhalb des Sprechtexts. Das Publikumsfenster enthält ausschließlich Folieninhalt, ohne Schaltflächen, Bedienleiste oder Regiehinweise; **F** bleibt für Vollbild verfügbar.
 
+Die Statuszeile beim nächsten Schritt unterscheidet laufenden Leser, bewusste Pause, Warten am Signal und Sprechtextende. Scrollen oder Wortwahl pausieren den Text absichtlich. Das Hauptfenster darf im Hintergrund liegen, muss aber offen bleiben, während der sichtbare Teleprompter verwendet wird. Für eine vollständig angehaltene Browser- oder Betriebssystemsitzung wird kein fortlaufender Betrieb zugesichert.
+
 Die Medienlänge bleibt 6:32 Minuten. Die tatsächliche Vortragsdauer hängt von Klicks und Sprechpausen ab. Definierte Animationsanfänge überspringen reine Wartezeiten im Originalvideo; zusammenhängende Bewegung bleibt erhalten. Eine Änderung des Sprechtexts verändert die bereits gerenderten Videobilder nicht.
 
 ## Abgeschlossene Prüfung der neuen Metadaten
@@ -52,6 +54,12 @@ Die zusätzlich untersuchte Originaldatei `PyTutorAI_DELFI_Animationen.pptx` ent
 - Die SHA-256-Prüfung bestätigt weiterhin die unveränderten ursprünglichen MP4-Bytes. Weder Video noch ursprünglicher Sprechtext wurden für die Klicksteuerung neu geschrieben.
 
 Diese Ergebnisse bestätigen die kuratierten Daten und ihre visuelle Zuordnung. Sie ersetzen noch keinen Browsernachweis, dass Wiedergabe, Tastatur, Leseposition und mehrere Fenster dieselben Zustände tatsächlich gemeinsam erreichen.
+
+## Abgeschlossene lokale Prüfung, Version 1.5.2
+
+Der gemeinsame Presenter ist nach gezielt reproduzierten Fehlern bei unterdrücktem Hauptfenster-Takt und simulierten Systemzeitsprüngen korrigiert. Ein sichtbares verbundenes Zusatzfenster treibt die gemeinsame Aktualisierung weiter an; Leser und Vortragsuhr verwenden dazu dieselbe monotone Zeitbasis. Die Reproduktion ist kein Nachweis des genauen Auslösers einer gemeldeten Sitzung. Details zum Versuchsaufbau stehen in [CUE-VERIFICATION.md](CUE-VERIFICATION.md).
+
+44 Node-Tests, 30 Python-Tests und alle 42 Browserfälle bestanden. Vier gezielte Zeitsteuerungsfälle prüfen unterdrückte Hauptfenster-Aktualisierungen bei weiterlaufendem sichtbarem Zusatzfenster, Schließen und Wiederöffnen, Warten am Signal, Systemzeitsprünge um minus und plus eine Stunde sowie gemeinsames Lesetempo ohne doppelte Aktualisierung. Drei dieser Regressionen schlugen vor der Korrektur fehl und bestehen mit ihr. Die echte Geräteuhr wurde dabei nicht verändert. Im zusätzlichen Vergleich am tatsächlichen DELFI-Player blieb Version 1.5.1 bei unterdrücktem Hauptfenster-Takt auf „heute“ stehen (Wortindex 4). Die korrigierte lokale und Offline-Fassung liefen unter derselben Bedingung bis „PyTutorAI-Projekt“ weiter (Index 9), ohne die Phase zu ändern. Vollständig suspendierte Browser oder Betriebssysteme sind damit nicht geprüft; der konkrete Auslöser der gemeldeten Sitzung wurde nicht nachgewiesen. CI und Produktionsarchive werden für denselben Release-Commit separat abgeglichen.
 
 ## Abgeschlossene lokale Prüfung, Version 1.5.1
 

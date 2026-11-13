@@ -88,9 +88,11 @@ Der Kollo-Folieneditor unterstützt keine frei programmierbaren Videozeitleisten
 
 Für einen Beamer oder zweiten Monitor die Anzeige im Betriebssystem **erweitern** und das Publikumsfenster dorthin ziehen. Teile in einer Videokonferenz nur dieses Fenster. Eine Spiegelung des ganzen Bildschirms könnte deine privaten Notizen zeigen. Vollbild wird jeweils im aktiven Fenster eingeschaltet; Kollo verschiebt Fenster nicht automatisch auf einen bestimmten Bildschirm.
 
-Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt auf Wunsch durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück, ohne sichtbare Einblendungen zu ändern. Beim nächsten Phasenwechsel richtet sich der Text wieder auf den zugehörigen Abschnitt aus.
+Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt auf Wunsch durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition und pausiert ebenfalls. **Textanfang** setzt den Text zurück, ohne sichtbare Einblendungen zu ändern. Beim nächsten Phasenwechsel richtet sich der Text wieder auf den zugehörigen Abschnitt aus.
 
 Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Beim Öffnen ist sie pausiert. Mit **Leseführung starten** kannst du den Ausgangstext lesen lassen. Jeder Vorwärtsschritt mit `→` oder **Weiter** startet sie beim zugehörigen Abschnitt und führt bis zum nächsten Klicksignal. Dort wartet sie. Eine ausdrückliche Pause oder manuelles Scrollen stoppt sie; der nächste Vorwärtsschritt startet sie erneut. Rückwärtsnavigation, Pos1, Ende und direkte Folienwahl lassen sie zum Nachlesen pausiert. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
+
+Die Statuszeile beim nächsten Schritt zeigt, ob die Leseführung läuft, pausiert ist, an einem Klicksignal wartet oder den Sprechtext beendet hat. Nach einer Pause kannst du mit **Leseführung starten** an der gewählten Textstelle weiterlesen. An einem Klicksignal führt `→` die angezeigte Aktion aus und setzt den nächsten Abschnitt fort. **Sprechtext zu Ende** bedeutet, dass die Leseposition das Ende der Notizen dieser Folie erreicht hat.
 
 ### Signale zum Weiterdrücken
 
@@ -127,7 +129,7 @@ Beim DELFI-Beispiel gelten dieselben Regeln. Die Phase spielt jeweils ihren Vide
 | F                       | Vollbild                           |
 | N                       | Notizen im Ausgangsfenster         |
 
-Lass das Ausgangsfenster offen. Wird ein Zusatzfenster geschlossen oder neu geladen, öffne es erneut über dessen Knopf in der Steuerzentrale. Das übernimmt den aktuellen Stand. Beim Schließen oder Neuladen der Steuerzentrale endet die Sitzung. Der Ablauf ist keine Synchronisierung mit einem zweiten Gerät.
+Lass das Ausgangsfenster offen. Es darf im Hintergrund bleiben, während du im sichtbaren Teleprompter liest. Wird ein Zusatzfenster geschlossen oder neu geladen, öffne es erneut über dessen Knopf in der Steuerzentrale. Das übernimmt den aktuellen Stand. Beim Schließen oder Neuladen der Steuerzentrale endet die Sitzung. Werden der Browser oder das Gerät angehalten, ist kein fortlaufender Betrieb zugesichert. Der Ablauf ist keine Synchronisierung mit einem zweiten Gerät.
 
 Das funktioniert auch mit der eigenständigen HTML-Datei. Für deine private Probe beim HTML-Export **Notizen mitgeben** einschalten; im Arbeitskit sind sie enthalten. Ohne Notizen bleibt das Präsentieren möglich, der Teleprompter hat dann keinen Sprechtext. Die Zusatzfenster kann ein Browser als Tab öffnen oder blockieren. Bei einer Blockmeldung Popups für deine Kollo-Adresse beziehungsweise die lokale Datei zulassen und erneut öffnen.
 

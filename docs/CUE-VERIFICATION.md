@@ -1,6 +1,6 @@
 # Klicksignale und manuelle Phasen im Teleprompter
 
-Stand: 13. November 2026. Alle Beispiele verwenden denselben Player mit manueller Phasensteuerung und privaten Signalen im Sprechtext. Die Korrektur für Version 1.5.1 verbindet jeden Vorwärtsschritt mit Leseführung bis zum nächsten Signal und entfernt Bedienelemente aus dem Publikumsfenster. Die DELFI-Phasenkarte bleibt unverändert. Die lokale Prüfung der neuen Bedienung ist abgeschlossen. Frühere Prüfstände der Versionen 1.5.0 und 1.3 bleiben gesondert dokumentiert.
+Stand: 13. November 2026. Alle Beispiele verwenden denselben Player mit manueller Phasensteuerung und privaten Signalen im Sprechtext. Version 1.5.2 korrigiert die Aktualisierung im sichtbaren Teleprompter bei einem im Hintergrund liegenden Hauptfenster sowie die Abhängigkeit von der Systemuhr. Die seit Version 1.5.1 geltende Klick- und Leseführung bleibt erhalten. Die lokale Prüfung der Korrektur ist abgeschlossen; abgeschlossene Ergebnisse der Versionen 1.5.1, 1.5.0 und 1.3 bleiben getrennt dokumentiert.
 
 ## Aktuelles Verhalten
 
@@ -11,6 +11,8 @@ Die optionalen eigenen Notizzeilen `[KLICK]` und `[FOLIE]` bezeichnen die nächs
 - `←` kehrt zur vorherigen Phase zurück. Am Folienanfang öffnet die Taste den letzten Zustand der vorherigen Folie. Rückwärtsnavigation, Pos1, Ende und direkte Folienwahl richten den Text aus und lassen ihn zum Nachlesen pausiert.
 - Ein früher Vorwärtsschritt wählt bewusst die nächste Phase samt Erklärung, auch wenn der vorherige Absatz noch nicht vollständig gelesen wurde. Eine ausdrückliche Pause oder manuelles Scrollen stoppt die Leseführung; der nächste Vorwärtsschritt startet sie im neuen Abschnitt wieder.
 - Die Leseführung löst keine Animation und keinen Folienwechsel aus. Auch der Vortragstimer steuert keine Phasen. Das Lesetempo bleibt eine Schätzung ohne Spracherkennung.
+
+Die vorhandene Statuszeile unterscheidet laufende Leseführung, bewusste Pause, Warten am Klicksignal und Sprechtextende. Manuelles Scrollen und die Wahl eines Wortes pausieren absichtlich. Das Hauptfenster muss offen bleiben, darf aber im Hintergrund liegen, während der getrennte Teleprompter sichtbar ist. Eine vollständig angehaltene Browser- oder Betriebssystemsitzung gehört nicht zum zugesicherten Betrieb.
 
 Version 1.5.1 ändert die Regel von Version 1.5.0, nach der jeder Phasenwechsel die Leseführung pausierte. Die phasengenaue Textzuordnung bleibt erhalten; vorwärts läuft der zugehörige Text nun bis zum nächsten Signal. Die Regel gilt im Studio und in den HTML-Beispielen mit ihren gemeinsam gesteuerten Fenstern.
 
@@ -23,6 +25,14 @@ Ohne Marken bleibt die tatsächliche nächste Aktion sichtbar; eine genaue Zuord
 Für das DELFI-Original sind **81 Klicksignale und 15 abschließende Folienwechsel** aus `showcases/delfi/phases.json` ableitbar. Alle 16 Startbilder und 81 Phasenendbilder wurden visuell geprüft. Die Einfügepositionen bewahren den vollständigen ursprünglichen Sprechtext; die Prüfsummen der Texte und des Videos bleiben erhalten. Einzelheiten, Herkunft und Grenzen dieser Prüfung stehen in [DELFI-VERIFICATION.md](DELFI-VERIFICATION.md).
 
 Die ursprünglichen HTML- und PPTX-Dateien enthielten keine solchen Phasenmarken. Die neue Zuordnung wurde anhand der tatsächlichen Videoaufbauten kuratiert. Sie ist keine automatisch aus beliebigen Zeitabständen abgeleitete Klickfolge. Zusammenhängende oder parallel laufende Bewegung darf eine gemeinsame Phase bilden; rein dekorative Bewegung braucht keinen zusätzlichen Klick.
+
+## Reproduzierte Ausgangsfehler und abgeschlossene Prüfung, Version 1.5.2
+
+Ein gezielter Laufzeitversuch unterdrückte die regelmäßigen 100-ms-Aktualisierungen des Hauptfensters, während das sichtbare getrennte Sprechpult weiterhin eigene Timer ausführen konnte. Trotzdem blieb seine Anzeige stehen. Ein weiterer Versuch simulierte `Date.now()`-Sprünge um eine Stunde vor und zurück; die zeitabhängige Führung sprang vor beziehungsweise zurück. Diese Reproduktionen belegen konkrete Fehlerpfade, aber nicht den genauen Auslöser einer gemeldeten Sitzung.
+
+Die Korrektur lässt ein sichtbares, weiterhin verbundenes Zusatzfenster die gemeinsame Aktualisierung übernehmen und verwendet für Leser und Vortragsuhr eine einzige monotone Zeitbasis aus `host.performance.now()`. Die bestehende Statuszeile macht den tatsächlichen Lesezustand sichtbar, ohne eine zusätzliche Bedienfläche einzuführen. Die manuellen Phasen- und Klickregeln werden nicht geändert.
+
+44 Node-Tests, 30 Python-Tests und alle 42 Browserfälle bestanden. Vier gezielte Zeitsteuerungsfälle prüfen unterdrückte Hauptfenster-Aktualisierungen bei weiterlaufendem sichtbarem Zusatzfenster, Schließen und Wiederöffnen, Warten am Signal, Systemzeitsprünge um minus und plus eine Stunde sowie gemeinsames Lesetempo ohne doppelte Aktualisierung. Drei dieser Regressionen schlugen vor der Korrektur fehl und bestehen mit ihr. Die echte Geräteuhr wurde dabei nicht verändert. Im zusätzlichen Vergleich am tatsächlichen DELFI-Player blieb Version 1.5.1 bei unterdrücktem Hauptfenster-Takt auf „heute“ stehen (Wortindex 4). Die korrigierte lokale und Offline-Fassung liefen unter derselben Bedingung bis „PyTutorAI-Projekt“ weiter (Index 9), ohne die Phase zu ändern. Vollständig suspendierte Browser oder Betriebssysteme sind damit nicht geprüft; der konkrete Auslöser der gemeldeten Sitzung wurde nicht nachgewiesen. CI und Produktionsarchive werden für denselben Release-Commit separat abgeglichen.
 
 ## Abgeschlossene lokale Prüfung, Version 1.5.1
 

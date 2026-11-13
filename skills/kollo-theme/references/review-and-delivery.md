@@ -41,6 +41,10 @@ Prüfe zuerst den pausierten Anfangszustand. Drücke `→` auch vor Erreichen ei
 
 Kontrolliere kompakte einzeilige Signale, Lesefokus und eine schmale Ansicht. Bei manuell unterteiltem Video muss jeder Abschnitt am eigenen Halt stoppen. Ein zweites `→` während der Bewegung beendet denselben Abschnitt, ohne den nächsten zu überspringen oder die Leseposition zurückzusetzen; eine laufende Leseführung läuft weiter, eine wartende bleibt am Signal. Die Probe mit gesprochener Sprache bleibt nötig; ein Zeitmesser ist keine Spracherkennung.
 
+Unterscheide bei einem stehenden Text die sichtbaren Zustände: bewusst pausiert nach Scrollen, Wortwahl oder Pause, wartend am echten Klicksignal und am Ende der Notizen. Prüfe die passende Fortsetzung und die Statuszeile in beiden privaten Ansichten. Lass außerdem das Hauptfenster offen im Hintergrund und den getrennten Teleprompter im Vordergrund laufen. Die Leseführung und Vortragsuhr sollen dabei weiter aktualisiert werden und an Signalen weiterhin halten.
+
+Bei einer Prüfung der Laufzeit selbst gezielt die regelmäßigen Aktualisierungen des Hauptfensters aussetzen, während die des sichtbaren Zusatzfensters weiterlaufen. Simuliere außerdem Sprünge der Systemzeit um eine Stunde vor und zurück, ohne die tatsächliche Geräteuhr zu verändern. Leser und Vortragsuhr dürfen dadurch weder vorspringen noch zurücklaufen. Dokumentiere den tatsächlichen Testaufbau; ein bestandener gezielter Test belegt weder die genaue Ursache eines gemeldeten Einzelfalls noch Betrieb bei vollständig angehaltenem Browser oder Betriebssystem.
+
 Öffne den tatsächlich heruntergeladenen HTML-Export lokal. Prüfe dort das zusätzliche Fenster, Popup-Blockierung, Schließen und Wiederöffnen, sowie die Meldung bei getrennter Steuerverbindung. Den Browser und geprüften Betriebsweg nennen. Zwei Browserfenster auf demselben Monitor sind ein sinnvoller Funktionstest, aber kein Nachweis für eine reale Beamer-/Mehrmonitorprobe. Für diese muss die Anzeige erweitert und das reine Publikumsfenster auf dem Zielbildschirm kontrolliert werden.
 
 ## Benötigte Ausgaben öffnen
