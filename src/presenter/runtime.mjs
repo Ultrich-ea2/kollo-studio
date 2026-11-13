@@ -6,6 +6,7 @@
 export function mountPresenter(root, options) {
   "use strict";
   const host = root.ownerDocument.defaultView;
+  const clockNow = () => host.performance.now();
   const hasMediaSource =
     typeof options.media?.src === "string" && Boolean(options.media.src.trim());
   let invalidMediaPlan = false;
@@ -105,6 +106,7 @@ export function mountPresenter(root, options) {
     ),
   );
   let disposed = false;
+  let lastTick = -Infinity;
   let popupOrdinal = 0;
   let mediaState = null;
   let status = invalidMediaPlan
@@ -140,10 +142,10 @@ export function mountPresenter(root, options) {
     `<footer class="presenter-controls" aria-label="Präsentationssteuerung">${button("previous", "← Zurück", 'aria-label="Vorherige Einblendung oder Folie"')}<span id="count" class="presenter-count"></span>${button("next", "Weiter →", 'aria-label="Nächste Einblendung oder Folie"')}${button("black-toggle", "Schwarzbild (B)", 'aria-pressed="false"')}${button("fullscreen", "Vollbild (F)")}</footer>`;
   const header = (role) =>
     `<header class="presenter-bar"><div class="presenter-tools">${role === "controller" && options.onClose ? button("close", "← Zur Werkstatt", 'aria-label="Präsentation beenden"') : ""}<span class="presenter-label">${role === "teleprompter" ? "Kollo / Sprechpult" : "Kollo / Präsentation"}</span><span class="presenter-count" data-count></span></div><div class="presenter-tools"><span id="clock" class="presenter-clock" aria-label="Verstrichene Vortragszeit">00:00</span>${button("timer-toggle", "Timer starten (T)", 'aria-pressed="false"')}${button("timer-reset", "Timer zurücksetzen (R)")}</div></header>`;
-  function elapsed(now = Date.now()) {
+  function elapsed(now = clockNow()) {
     return state.elapsed + (state.running ? now - state.started : 0);
   }
-  function readerPosition(now = Date.now()) {
+  function readerPosition(now = clockNow()) {
     return (
       state.readerPosition +
       (state.reading ? ((now - state.readerStarted) / 60000) * state.speed : 0)
@@ -164,7 +166,7 @@ export function mountPresenter(root, options) {
       return;
     }
     state.readerPosition = readerPosition();
-    state.readerStarted = Date.now();
+    state.readerStarted = clockNow();
     state.reading = value;
     tick();
   }
@@ -201,7 +203,7 @@ export function mountPresenter(root, options) {
       (item) => item.kind === "KLICK" && item.order === step,
     );
     state.readerPosition = cue?.at ?? 0;
-    state.readerStarted = Date.now();
+    state.readerStarted = clockNow();
     state.reading = reading;
     state.waitingCue = null;
     state.readerRevision++;
@@ -294,13 +296,13 @@ export function mountPresenter(root, options) {
   }
   function toggleTimer() {
     state.elapsed = elapsed();
-    state.started = Date.now();
+    state.started = clockNow();
     state.running = !state.running;
     tick();
   }
   function resetTimer() {
     state.elapsed = 0;
-    state.started = Date.now();
+    state.started = clockNow();
     tick();
   }
   function toggleBlack() {
@@ -717,7 +719,7 @@ export function mountPresenter(root, options) {
       // Clicking a word is a deliberate reading-position change, never a slide command.
       word.addEventListener("click", () => {
         state.readerPosition = from;
-        state.readerStarted = Date.now();
+        state.readerStarted = clockNow();
         state.reading = false;
         state.waitingCue = null;
         state.readerRevision++;
@@ -767,7 +769,7 @@ export function mountPresenter(root, options) {
       });
       listen(view, node(view, "#prompt-speed"), "input", (e) => {
         state.readerPosition = readerPosition();
-        state.readerStarted = Date.now();
+        state.readerStarted = clockNow();
         state.speed = Number(e.target.value);
         draw();
       });
@@ -804,7 +806,7 @@ export function mountPresenter(root, options) {
       },
       "reader-reset": () => {
         state.readerPosition = 0;
-        state.readerStarted = Date.now();
+        state.readerStarted = clockNow();
         state.reading = false;
         state.readerRevision++;
         state.waitingCue = null;
@@ -883,17 +885,24 @@ export function mountPresenter(root, options) {
       };
       views.push(view);
       buildView(view);
-      // A browser/process can close the controller without beforeunload. The
-      // child owns this timer, so it can retire an orphaned private window.
+      // A visible child keeps the shared reader alive even if its controller's
+      // timers are throttled. Its heartbeat also retires an orphaned window.
       const watchdog = child.setInterval(() => {
-        if (host.closed && ownsView(view)) {
+        if (disposed) return;
+        if (!ownsView(view)) {
+          dropView(view);
+          return;
+        }
+        if (host.closed) {
           try {
             child.close();
           } catch {
             /* Already closed. */
           }
+          return;
         }
-      }, 250);
+        if (view.doc.visibilityState === "visible") pulse();
+      }, 100);
       view.cleanups.push(() => child.clearInterval(watchdog));
       listen(view, child, "pagehide", () => {
         dropView(view);
@@ -1050,9 +1059,13 @@ export function mountPresenter(root, options) {
     const current = views[0].slideElements[state.index];
     return current?.innerHTML || slides[state.index].svg;
   }
+  function pulse() {
+    if (!disposed && clockNow() - lastTick >= 80) tick();
+  }
   function tick() {
     if (disposed) return;
-    const now = Date.now();
+    const now = clockNow();
+    lastTick = now;
     const script = scripts[state.index];
     let position = readerPosition(now);
     const reachedCue = script.cues.find(
@@ -1102,7 +1115,9 @@ export function mountPresenter(root, options) {
           ? "Jetzt weiter · Leseführung wartet"
           : position >= script.total && script.total > 0
             ? "Sprechtext zu Ende"
-            : "Nächster Klick",
+            : state.reading
+              ? "Leseführung läuft"
+              : "Leseführung pausiert",
       );
       text(
         view,
@@ -1256,7 +1271,7 @@ export function mountPresenter(root, options) {
   buildView(main);
   initMedia();
   draw();
-  const interval = host.setInterval(tick, 100);
+  const interval = host.setInterval(pulse, 100);
   host.addEventListener("pagehide", pageHide);
   return dispose;
 }
