@@ -6,13 +6,13 @@ Die originale PyTutorAI-Präsentation von Ultrich Edima Edima, mit André Greube
 
 Dieses Beispiel verwendet dieselbe Vortragssteuerung wie die bearbeitbaren Kollo-Beispiele. `presentation.html` enthält Video, Vorschauen, Sprechtext und Steuerung in einer Datei. Herunterladen und im Browser öffnen. Das Originalvideo hat keine Tonspur; du sprichst selbst.
 
-1. Im Hauptfenster steht der private Sprechtext neben dem Bild. Die hellen Hinweise mitten im Text nennen die nächste Aktion und die Taste **→**.
-2. **→** spielt genau eine Animationsphase und hält an deren Ende. Ein weiterer Druck während der Animation beendet diese Phase, ohne die nächste vorzumerken. Erst ein neuer Druck nach der letzten Phase wechselt die Szene.
-3. **←** geht eine Phase zurück. Am Anfang einer Szene führt die Taste zur letzten Phase der vorherigen Szene. Bild, private Markierung und Leseposition bleiben zusammen.
-4. **Publikumsfenster öffnen** zeigt ausschließlich das Bild. **Teleprompter öffnen** öffnet denselben privaten Leser separat. Die Fenster können auf verschiedene Bildschirme gezogen werden; das Hauptfenster bleibt offen.
-5. Die optionale Leseführung startet nur nach einem bewussten Klick. Sie hält vor einem Klicksignal an und schaltet die Präsentation niemals selbst weiter. Eine manuelle Phasenwahl pausiert sie und setzt den Text zur passenden Erklärung. Schriftgröße, Spiegeln und Lesefokus sind in beiden Lesern verfügbar.
+1. Im Hauptfenster steht der private Sprechtext neben dem Bild. Kurze einzeilige Pfeilhinweise mitten im Text nennen die nächste Aktion. Beim Öffnen ist die Leseführung pausiert.
+2. **→** spielt genau eine Animationsphase und startet die Leseführung im zugehörigen Abschnitt. Das Bild hält am Phasenende, der Text am nächsten Klicksignal. Ein weiterer Druck während der Animation beendet nur diese Phase; er setzt die Leseposition nicht zurück und lässt die laufende oder wartende Leseführung unverändert. Erst ein neuer Druck nach der letzten Phase wechselt die Szene.
+3. **←** geht eine Phase zurück. Am Anfang einer Szene führt die Taste zur letzten Phase der vorherigen Szene. Bild und Leseposition passen zusammen; der Text bleibt zum Nachlesen pausiert. Auch Pos1, Ende und direkte Szenenwahl pausieren die Leseführung.
+4. **Publikumsfenster öffnen** zeigt ausschließlich das Bild, ohne Schaltflächen oder Bedienleiste. **F** schaltet dort weiterhin Vollbild. **Teleprompter öffnen** öffnet denselben privaten Leser separat. Die Fenster können auf verschiedene Bildschirme gezogen werden; das Hauptfenster bleibt offen.
+5. **Leseführung starten** kann auch den Ausgangstext führen. Eine ausdrückliche Pause oder manuelles Scrollen hält die Führung an; der nächste Vorwärtsschritt startet sie beim neuen Abschnitt wieder. Sie hält am nächsten Klicksignal und schaltet die Präsentation niemals selbst weiter. Schriftgröße, Spiegeln und Lesefokus sind in beiden Lesern verfügbar.
 
-Es gibt keinen automatischen Durchlauf. 6:32 beschreibt die Länge des zugrunde liegenden Bildmaterials; die tatsächliche Vortragsdauer hängt von deinem Tempo ab. Standbilder zwischen Animationen werden übersprungen, soweit sie keine neue Bildinformation enthalten.
+Die nächste Phase beginnt erst mit deinem Tastendruck. 6:32 beschreibt die Länge des zugrunde liegenden Bildmaterials; die tatsächliche Vortragsdauer hängt von deinem Tempo ab. Standbilder zwischen Animationen werden übersprungen, soweit sie keine neue Bildinformation enthalten.
 
 ## Herkunft der neuen Klickphasen
 

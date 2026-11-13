@@ -1,18 +1,18 @@
 # Klicksignale und manuelle Phasen im Teleprompter
 
-Stand: 13. November 2026. Alle Beispiele verwenden denselben Player mit manueller Phasensteuerung und privaten Signalen im Sprechtext. Die neue DELFI-Phasenkarte ist geprüft. Die lokalen Laufzeitprüfungen der Version 1.5.0 sind abgeschlossen; CI und Release werden am exakten Commit geprüft; die weiter unten genannten Testzahlen dokumentieren ausdrücklich den früheren Stand der Version 1.3.
+Stand: 13. November 2026. Alle Beispiele verwenden denselben Player mit manueller Phasensteuerung und privaten Signalen im Sprechtext. Die Korrektur für Version 1.5.1 verbindet jeden Vorwärtsschritt mit Leseführung bis zum nächsten Signal und entfernt Bedienelemente aus dem Publikumsfenster. Die DELFI-Phasenkarte bleibt unverändert. Die lokale Prüfung der neuen Bedienung ist abgeschlossen. Frühere Prüfstände der Versionen 1.5.0 und 1.3 bleiben gesondert dokumentiert.
 
 ## Aktuelles Verhalten
 
-Die optionalen eigenen Notizzeilen `[KLICK]` und `[FOLIE]` bezeichnen die nächste Einblendungsphase beziehungsweise den nächsten Folienwechsel. Der Teleprompter stellt sie zwischen den gesprochenen Abschnitten als private Regiehinweise dar. Sie zählen nicht zur gesprochenen Wortmenge und erscheinen nicht im Publikumsfenster.
+Die optionalen eigenen Notizzeilen `[KLICK]` und `[FOLIE]` bezeichnen die nächste Einblendungsphase beziehungsweise den nächsten Folienwechsel. Beide privaten Leseansichten stellen sie zwischen den gesprochenen Abschnitten als kompakte einzeilige Pfeilhinweise dar. Sie zählen nicht zur gesprochenen Wortmenge. Das Publikumsfenster zeigt ausschließlich Folieninhalt ohne Schaltflächen, Bedienleiste oder Notizen; **F** bleibt für Vollbild verfügbar.
 
-- `→` löst genau die nächste Phase aus. Erst nach deren letztem Zustand führt ein weiterer Schritt zur nächsten Folie. Bei DELFI spielt die Phase ihren definierten Videoabschnitt ab und hält anschließend.
-- Ein Druck auf `→` während eines noch laufenden Videoabschnitts beendet zunächst die aktuelle Animation. Er überspringt keine zusätzliche Phase. Ein weiterer Druck führt weiter.
-- `←` kehrt zur vorherigen Phase zurück. Am Folienanfang öffnet die Taste den letzten Zustand der vorherigen Folie.
-- Jeder Phasenwechsel richtet den Teleprompter auf den zugehörigen Sprechtext aus und pausiert die Leseführung. Ein früher Klick wählt bewusst die nächste Phase samt Erklärung, auch wenn der vorherige Absatz noch nicht vollständig gelesen wurde.
-- Die Leseführung startet nur auf Wunsch und wartet an einer noch offenen Marke. Sie löst keine Animation und keinen Folienwechsel aus. Auch der Vortragstimer steuert keine Phasen. Das Lesetempo bleibt eine Schätzung ohne Spracherkennung.
+- Beim Öffnen ist die Leseführung pausiert. `→` oder **Weiter** löst genau die nächste Phase aus, richtet den Text aus und startet die Leseführung bis zum nächsten Signal. Dort wartet sie auf den nächsten Vorwärtsschritt. Erst nach dem letzten Phasenzustand führt ein weiterer Schritt zur nächsten Folie.
+- Bei DELFI spielt die Phase ihren definierten Videoabschnitt ab und hält anschließend. Ein Druck auf `→` während dieses Abschnitts beendet nur die aktuelle Animation. Leseposition und laufende oder wartende Leseführung bleiben unverändert. Ein weiterer Druck führt zur nächsten Phase.
+- `←` kehrt zur vorherigen Phase zurück. Am Folienanfang öffnet die Taste den letzten Zustand der vorherigen Folie. Rückwärtsnavigation, Pos1, Ende und direkte Folienwahl richten den Text aus und lassen ihn zum Nachlesen pausiert.
+- Ein früher Vorwärtsschritt wählt bewusst die nächste Phase samt Erklärung, auch wenn der vorherige Absatz noch nicht vollständig gelesen wurde. Eine ausdrückliche Pause oder manuelles Scrollen stoppt die Leseführung; der nächste Vorwärtsschritt startet sie im neuen Abschnitt wieder.
+- Die Leseführung löst keine Animation und keinen Folienwechsel aus. Auch der Vortragstimer steuert keine Phasen. Das Lesetempo bleibt eine Schätzung ohne Spracherkennung.
 
-Damit ersetzt die neue Steuerung das frühere Verhalten, bei dem ein früher Klick die alte Leseposition behielt und eine zuvor laufende Leseführung nach der Bestätigung fortgesetzt werden konnte. Die aktuelle Regel gilt im Studio, in den HTML-Beispielen und in den getrennten Teleprompter- und Publikumsfenstern.
+Version 1.5.1 ändert die Regel von Version 1.5.0, nach der jeder Phasenwechsel die Leseführung pausierte. Die phasengenaue Textzuordnung bleibt erhalten; vorwärts läuft der zugehörige Text nun bis zum nächsten Signal. Die Regel gilt im Studio und in den HTML-Beispielen mit ihren gemeinsam gesteuerten Fenstern.
 
 ## Zuordnung von Inhalt und Signalen
 
@@ -24,11 +24,15 @@ Für das DELFI-Original sind **81 Klicksignale und 15 abschließende Folienwechs
 
 Die ursprünglichen HTML- und PPTX-Dateien enthielten keine solchen Phasenmarken. Die neue Zuordnung wurde anhand der tatsächlichen Videoaufbauten kuratiert. Sie ist keine automatisch aus beliebigen Zeitabständen abgeleitete Klickfolge. Zusammenhängende oder parallel laufende Bewegung darf eine gemeinsame Phase bilden; rein dekorative Bewegung braucht keinen zusätzlichen Klick.
 
-## Prüfstatus der aktuellen Umstellung
+## Abgeschlossene lokale Prüfung, Version 1.5.1
+
+44 Node-Tests, 30 Python-Tests und alle 38 Browserfälle bestanden. Der Skill-Validator bestätigt das Paket ebenfalls. Acht Cue-Fälle, fünf Medienfälle, vier Fensterfälle und fünf DELFI-Fälle prüfen die geänderte Steuerung: wiederholtes Weiterlesen bis zum nächsten Signal, erneutes Weiter nach Pause oder Scrollen, pausierte Rücksprünge, Erhalt des Lesestands beim Beenden einer laufenden Videophase sowie Offline-HTML. Das Publikumsfenster enthält auch bei Hover und Fokus keine Schaltflächen; echtes Ein- und Ausschalten von Vollbild mit F ist geprüft. Die kurzen Hinweise bleiben bei 1440 und 390 Pixeln in der Prüffassung unter 34 Pixeln Höhe. Alle Wörter und gewöhnlichen Absatzwechsel bleiben erhalten. Die DELFI-Hauptansicht wurde zusätzlich bei 1440, 1024, 768 und 390 Pixeln visuell geprüft. CI und veröffentlichte Archive werden für denselben Release-Commit separat abgeglichen.
+
+## Abgeschlossene Laufzeitprüfung, Version 1.5.0
 
 Abgeschlossen sind die Daten- und Sichtprüfung der DELFI-Phasenkarte einschließlich vollständiger Rekonstruktion der Originaltexte sowie 44 Node-, 30 Python- und 35 Browserfälle. Sechs Cue-Fälle, fünf DELFI-Fälle und vier gezielte Medienfälle prüfen die neue Steuerung. Der Offline-Test öffnet die erzeugten HTML-Dateien ohne Netzwerk. CI und Produktionsarchive werden anschließend für denselben Git-Stand geprüft.
 
-Die aktuelle Verhaltensprüfung deckt insbesondere folgende Fälle ab:
+Die damalige Verhaltensprüfung deckte insbesondere folgende Fälle ab:
 
 - Vorwärts- und Rückwärtsnavigation durch jede Einblendung und über Foliengrenzen hinweg, jeweils mit passender Textzuordnung.
 - Videoabschnitte, die am Phasenende halten, sowie ein zweiter Tastendruck während einer laufenden Animation.
@@ -69,4 +73,4 @@ Die damaligen Browserfälle prüften insbesondere:
 
 Bei der Prüfung wurden ein veralteter Statustext nach Klickbestätigung und ein erhaltener Fortsetzungswunsch nach `pagehide` gefunden und korrigiert. Eine zurückkehrende pausierte Sitzung startet die Leseführung dadurch nicht allein mit dem Bestätigen eines Hinweises neu.
 
-Die historischen Erwartungen zum Erhalt der Leseposition und zur Fortsetzung der Leseführung wurden durch die aktuelle ausdrückliche Ausrichtung auf die gewählte Phase ersetzt. Für die neue Release-Prüfung sind zusätzlich die bestehenden Import-, Export-, Fenster-, Sicherheits- und Archivtests erneut auszuführen. CI und Live-Prüfungen beziehen sich auf den exakten veröffentlichten Commit; deren tatsächliches Ergebnis und Download-Prüfsummen werden im lokalen Release-Protokoll festgehalten. PowerPoint übernimmt die Marken als Notiztext, ohne die HTML-Steuerung. Die Leseführung bleibt eine Tempo-Schätzung und erkennt keine gesprochene Sprache.
+Die damaligen Erwartungen zum Erhalt der alten Leseposition unterscheiden sich von der heutigen Ausrichtung auf die gewählte Phase. Für die neue Release-Prüfung sind zusätzlich die bestehenden Import-, Export-, Fenster-, Sicherheits- und Archivtests erneut auszuführen. CI und Live-Prüfungen beziehen sich auf den exakten veröffentlichten Commit; deren tatsächliches Ergebnis und Download-Prüfsummen werden im lokalen Release-Protokoll festgehalten. PowerPoint übernimmt die Marken als Notiztext, ohne die HTML-Steuerung. Die Leseführung bleibt eine Tempo-Schätzung und erkennt keine gesprochene Sprache.

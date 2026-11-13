@@ -1,6 +1,6 @@
 # Sprechtext, Probe und getrennte Fenster
 
-Kollo trennt die öffentliche Folie von der privaten Leseansicht. Alle Beispiele und HTML-Exporte verwenden dieselbe Vortragssteuerung. Folie, Animationsphase, Schwarzbild und Vortragsuhr werden gemeinsam gesteuert. Die Notizansicht im Hauptfenster und der getrennte Teleprompter zeigen die `notes` mit denselben eingebetteten Klicksignalen. Die Leseposition folgt dem manuell gewählten Phasenstand; zusätzlich lässt sich ausdrücklich eine tempoabhängige Leseführung starten. Es gibt keine Spracherkennung oder Tonaufnahme.
+Kollo trennt die öffentliche Folie von der privaten Leseansicht. Alle Beispiele und HTML-Exporte verwenden dieselbe Vortragssteuerung. Folie, Animationsphase, Schwarzbild und Vortragsuhr werden gemeinsam gesteuert. Die Notizansicht im Hauptfenster und der getrennte Teleprompter zeigen die `notes` mit denselben eingebetteten Klicksignalen. Ein Vorwärtsschritt wählt den passenden Textabschnitt und führt ihn bis zum nächsten Signal; Rücksprünge lassen ihn zum Nachlesen pausiert. Das Publikumsfenster enthält ausschließlich Folieninhalt ohne Schaltflächen, Notizen oder Bedienleiste. Es gibt keine Spracherkennung oder Tonaufnahme.
 
 ## Sprechtext erstellen
 
@@ -17,11 +17,11 @@ Wenn ein Vortrag mit Klicksignalen gewünscht ist, plane den Sprechtext mit den 
 | `[KLICK]` | Jetzt die nächste Einblendung auf derselben Folie zeigen. |
 | `[FOLIE]` | Jetzt zur nächsten Folie wechseln.                        |
 
-Leerzeichen oder Tabulatoren vor und nach der Marke sind erlaubt. Die Marken sind keine gesprochenen Wörter. In beiden Leseansichten erscheinen sie mitten im Sprechtext als hervorgehobene Anweisungen zum Drücken von `→`. Sie benennen die nächste Phase beziehungsweise ausdrücklich den Folienwechsel. Der allgemeine Hinweis zur nächsten Aktion ergänzt diese Stellen, ersetzt sie aber nicht.
+Leerzeichen oder Tabulatoren vor und nach der Marke sind erlaubt. Die Marken sind keine gesprochenen Wörter. In beiden Leseansichten erscheinen sie mitten im Sprechtext als kompakte einzeilige Pfeilhinweise. Sie benennen die nächste Phase beziehungsweise ausdrücklich den Folienwechsel. Halte eigene Aktionsbezeichnungen kurz; die ausführliche Erklärung gehört in den gesprochenen Absatz. Der allgemeine Hinweis zur nächsten Aktion ergänzt diese Stellen, ersetzt sie aber nicht.
 
-`→`, **Weiter** oder der Signal-Knopf führt genau den nächsten manuellen Schritt aus und richtet die Leseposition auf den dazugehörigen Abschnitt aus. Solange noch eine Einblendung offen ist, bleibt die aktuelle Folie stehen. Erst ein weiterer Schritt nach dem letzten Einblendungszustand wechselt die Folie. `←` geht genau eine Phase zurück, auch im Sprechtext. Am Anfang einer Folie führt es zum Endzustand der vorherigen Folie. Ein früher Tastendruck wählt bewusst die nächste Phase samt Text; er wartet nicht, bis ein Lesetimer den Marker erreicht.
+`→`, **Weiter** oder der Signal-Knopf führt genau den nächsten manuellen Schritt aus, richtet die Leseposition auf den dazugehörigen Abschnitt aus und startet dessen Leseführung bis zum nächsten Signal. Solange noch eine Einblendung offen ist, bleibt die aktuelle Folie stehen. Erst ein weiterer Schritt nach dem letzten Einblendungszustand wechselt die Folie. `←` geht genau eine Phase zurück, auch im Sprechtext, und pausiert zum Nachlesen. Am Anfang einer Folie führt es zum Endzustand der vorherigen Folie. Ein früher Tastendruck wählt bewusst die nächste Phase samt Text; er wartet nicht, bis ein Lesetimer den Marker erreicht.
 
-Die tempoabhängige Leseführung beginnt nur nach **Leseführung starten**. Erreicht sie eine offene Marke, hält sie dort an, ohne die Animation oder Folie auszulösen. Nach einem manuellen Phasenwechsel bleibt sie pausiert, bis du sie wieder ausdrücklich startest. Ohne gestartete Leseführung bleibt der Text beim gewählten Abschnitt, bis du navigierst oder selbst eine Leseposition wählst.
+Beim Öffnen ist die tempoabhängige Leseführung pausiert. **Leseführung starten** kann den Ausgangsabschnitt führen; jeder Vorwärtsschritt startet sie beim neu gewählten Abschnitt. Erreicht sie eine offene Marke, hält sie dort an, ohne die Animation oder Folie auszulösen. Der nächste Vorwärtsschritt setzt den Ablauf fort. Eine ausdrückliche Pause oder manuelles Scrollen stoppt die Führung; `→` startet sie beim nächsten Abschnitt wieder. `←`, Pos1, Ende und direkte Folienwahl richten den Text aus und lassen ihn pausiert. Am Ende des Sprechtexts hält die Leseführung ebenfalls an.
 
 Beispiel für eine Folie mit zwei tatsächlich vorhandenen, zunächst verborgenen Gruppen und einer folgenden Folie. Der erste Absatz erklärt den Ausgangszustand, jeder folgende Absatz den gerade eingeblendeten Zustand:
 
@@ -46,14 +46,14 @@ Für einen vollständig markierten Ablauf eine passende Marke für jeden nötige
 
 Weitere Regiehinweise, etwa `[PAUSE: Frage abwarten]` oder die ältere Schreibweise `[KLICK: Vergleich zeigen]`, bleiben gewöhnlicher Notiztext. Sie erzeugen kein Signal und werden bei der Lesegeschwindigkeit mitgezählt. Auch ein mitten im Satz stehendes `[KLICK]` ist keine Marke. Für ein nutzbares Klicksignal die unterstützte Zeile verwenden; eine Beschreibung des folgenden Schrittes bei Bedarf daneben als eigenen Satz schreiben. Keine zusätzlichen JSON-Steuerfelder oder ausführbaren Befehle erfinden.
 
-**Individuelle Mediensequenzen:** Ein fertig gerendertes Video ist keine bearbeitbare Kollo-Folie. Soll es dieselbe manuelle Phasensteuerung erhalten, braucht der geprüfte Präsentationscode passende stabile Haltepunkte und eine Zuordnung zum Sprechtext. Ein Tastendruck spielt dann höchstens den zugehörigen Abschnitt bis zu seinem Halt; ein weiterer Druck während dieser Bewegung beendet dieselbe Phase sofort. Er löst keine zusätzliche Phase aus. Medienzeit darf weder die nächste Phase noch die nächste Folie oder den Sprechtext automatisch wählen. Die reine Videolänge ist nicht die Dauer des manuell gehaltenen Vortrags. Diese Anpassung gehört in vertrauenswürdigen Quellcode, nicht in erfundene Video- oder Zeitachsenfelder einer `.kollo.json`. Details für einen solchen Codeauftrag stehen in [Erweiterungen im Code](advanced-code.md).
+**Individuelle Mediensequenzen:** Ein fertig gerendertes Video ist keine bearbeitbare Kollo-Folie. Soll es dieselbe manuelle Phasensteuerung erhalten, braucht der geprüfte Präsentationscode passende stabile Haltepunkte und eine Zuordnung zum Sprechtext. Ein Vorwärtsschritt startet einen Abschnitt bis zu seinem Halt sowie die Leseführung bis zum nächsten Signal. Ein weiterer Druck während dieser Bewegung beendet nur dieselbe Videophase sofort; er lässt Leseposition und laufende oder wartende Leseführung unverändert. Medienzeit darf weder die nächste Phase noch die nächste Folie oder den Sprechtext automatisch wählen. Die reine Videolänge ist nicht die Dauer des manuell gehaltenen Vortrags. Diese Anpassung gehört in vertrauenswürdigen Quellcode, nicht in erfundene Video- oder Zeitachsenfelder einer `.kollo.json`. Details für einen solchen Codeauftrag stehen in [Erweiterungen im Code](advanced-code.md).
 
 `seconds` ist die geplante Sprechzeit pro Folie, `duration` die Gesamtdauer in Minuten. Beide ersetzen keine gesprochene Probe und schalten keine Folie automatisch weiter. Plane Erklärung, Klicks, bewusste Pausen und Fragenzeit mit ein. Wähle keine pauschale feste Wortzahl als Bestehensgrenze; sprechbare Notation und fachliche Dichte verändern das Tempo.
 
 ## Fenster aufbauen
 
 1. Im Studio den Präsentationsmodus öffnen oder die exportierte HTML-Datei im Browser starten.
-2. **Publikumsfenster öffnen** wählen. Dieses Fenster zeigt die Folien ohne Sprechtext.
+2. **Publikumsfenster öffnen** wählen. Dieses Fenster zeigt nur Folieninhalt, ohne Schaltflächen, Notizen oder Bedienleiste. **F** schaltet dort weiterhin Vollbild.
 3. Im Hauptfenster **Sprechtext (N)** einschalten oder **Teleprompter öffnen** wählen. Beide bieten dieselben Inline-Signale und dieselbe Leseposition; das getrennte Sprechpult zeigt zusätzlich Vorschauen, Steuerung und Uhr.
 4. Für einen Beamer oder zweiten Monitor die Betriebssystemanzeige **erweitern** und das Publikumsfenster auf den gewünschten Bildschirm ziehen. Nur dieses Fenster für eine Videokonferenz teilen. Spiegeln der gesamten Anzeige würde auch private Fenster sichtbar machen.
 5. Vollbild bei Bedarf im jeweiligen Fenster aktivieren. Die Browserentscheidung über Fenster, Tab und Bildschirmposition bleibt beim Nutzer.
@@ -74,9 +74,9 @@ Leseführung und Vortragsuhr haben getrennte Start-/Pause-Steuerungen. Das Pausi
 
 | Taste                            | Wirkung                                                |
 | -------------------------------- | ------------------------------------------------------ |
-| Pfeil rechts, Bild ab, Leertaste | Genau nächste Phase; erst nach der letzten Phase zur nächsten Folie |
-| Pfeil links, Bild auf            | Genau vorherige Phase; am Folienanfang zur letzten Phase der vorherigen Folie |
-| Pos1 / Ende                      | Erste Folie beziehungsweise letzte Folie im Endzustand |
+| Pfeil rechts, Bild ab, Leertaste | Nächste Phase und Leseführung bis zum nächsten Signal; erst nach der letzten Phase zur nächsten Folie |
+| Pfeil links, Bild auf            | Vorherige Phase mit pausiertem Text; am Folienanfang zur letzten Phase der vorherigen Folie |
+| Pos1 / Ende                      | Erste Folie beziehungsweise letzte Folie im Endzustand; Text pausiert |
 | T oder P                         | Vortragsuhr starten/pausieren                          |
 | R                                | Vortragsuhr zurücksetzen                               |
 | B                                | Schwarzbild an/aus                                     |

@@ -1,6 +1,6 @@
 # DELFI-Originalbeispiel: Prüfstand
 
-Stand: 13. November 2026. Die aktuelle Umstellung verbindet das Originalvideo mit dem gemeinsamen Sprechpult und manuell ausgelösten Animationsphasen. Die Prüfung der neuen Phasenmetadaten, Standbilder und lokalen Laufzeit ist abgeschlossen. CI und Veröffentlichung werden für den exakten Release-Commit gesondert geprüft. Die weiter unten genannten früheren Testergebnisse gelten ausdrücklich für Version 1.2.0.
+Stand: 13. November 2026. Das Originalvideo verwendet das gemeinsame Sprechpult mit manuell ausgelösten Animationsphasen. Version 1.5.1 ergänzt Leseführung nach jedem Vorwärtsschritt bis zum nächsten Signal, kompakte einzeilige Hinweise und ein Publikumsfenster ohne Schaltflächen. Die Phasenmetadaten und Originalmedien bleiben unverändert. Die lokale Prüfung der geänderten Bedienung ist abgeschlossen. Frühere Metadaten- und Laufzeitergebnisse der Versionen 1.5.0 und 1.2.0 bleiben gesondert erhalten; die Veröffentlichung wird am neuen Release-Commit geprüft.
 
 ## Geprüfte Originalfassung
 
@@ -30,10 +30,10 @@ Die MP4-Metadaten nennen den Titel „PyTutorAI – DELFI 2026“, Ultrich Edima
 
 DELFI verwendet denselben Player wie die bearbeitbaren Beispiele und HTML-Exporte. Das Video wird über einen Adapter eingebunden; das importierbare Kollo-JSON-Format erhält dadurch keine Videofelder.
 
-- `→` startet die nächste definierte Animationsphase. Ihr Videoabschnitt hält am festgelegten Ende. Ein weiterer Druck während der laufenden Animation beendet zunächst diese Phase; erst der folgende Druck löst die nächste aus.
-- `←` stellt den vorherigen Phasenzustand wieder her. Vom Anfang einer Szene geht es zum letzten Zustand der vorherigen Szene. Nach der letzten Phase ist ein eigener Vorwärtsschritt für den Szenenwechsel erforderlich.
-- Die gewählte Phase richtet den Sprechtext auf ihre zugehörige Textstelle aus und pausiert die Leseführung. Lesetempo und Vortragstimer lösen weder Phasen noch Szenenwechsel aus. Es gibt keine Spracherkennung oder Tonaufnahme.
-- Die privaten Signale stehen innerhalb des Sprechtexts. Teleprompter und Publikumsfenster verwenden die gemeinsame Steuerung; Regiehinweise gehören nicht ins Publikumsbild.
+- `→` startet die nächste definierte Animationsphase sowie die Leseführung in ihrem Textabschnitt. Das Video hält am festgelegten Phasenende, die Leseführung am nächsten Signal. Ein weiterer Druck während der laufenden Animation beendet nur diese Videophase und erhält Leseposition sowie laufende oder wartende Leseführung; erst der folgende Druck löst die nächste Phase aus.
+- `←` stellt den vorherigen Phasenzustand mit pausiertem Sprechtext wieder her. Vom Anfang einer Szene geht es zum letzten Zustand der vorherigen Szene. Auch Pos1, Ende und direkte Szenenwahl pausieren den ausgerichteten Text. Nach der letzten Phase ist ein eigener Vorwärtsschritt für den Szenenwechsel erforderlich.
+- Beim Öffnen steht die Leseführung still. Ein Vorwärtsschritt richtet den Sprechtext aus und startet ihn bis zum nächsten Signal, wo er auf erneutes Weiter wartet. Eine ausdrückliche Pause oder manuelles Scrollen stoppt die Führung; der nächste Vorwärtsschritt startet sie erneut. Lesetempo und Vortragstimer lösen weder Phasen noch Szenenwechsel aus. Es gibt keine Spracherkennung oder Tonaufnahme.
+- Die privaten Signale stehen als kompakte einzeilige Pfeilhinweise innerhalb des Sprechtexts. Das Publikumsfenster enthält ausschließlich Folieninhalt, ohne Schaltflächen, Bedienleiste oder Regiehinweise; **F** bleibt für Vollbild verfügbar.
 
 Die Medienlänge bleibt 6:32 Minuten. Die tatsächliche Vortragsdauer hängt von Klicks und Sprechpausen ab. Definierte Animationsanfänge überspringen reine Wartezeiten im Originalvideo; zusammenhängende Bewegung bleibt erhalten. Eine Änderung des Sprechtexts verändert die bereits gerenderten Videobilder nicht.
 
@@ -53,11 +53,11 @@ Die zusätzlich untersuchte Originaldatei `PyTutorAI_DELFI_Animationen.pptx` ent
 
 Diese Ergebnisse bestätigen die kuratierten Daten und ihre visuelle Zuordnung. Sie ersetzen noch keinen Browsernachweis, dass Wiedergabe, Tastatur, Leseposition und mehrere Fenster dieselben Zustände tatsächlich gemeinsam erreichen.
 
-## Prüfstatus der aktuellen Laufzeit und Pakete
+## Abgeschlossene lokale Prüfung, Version 1.5.1
 
-Die abschließenden automatisierten Testzahlen und die Release-Ergebnisse werden nach dem vollständigen Lauf ergänzt. Zu prüfen sind insbesondere alle Phasen vorwärts und rückwärts, das Beenden einer laufenden Phase, die getrennten Fenster, pausierte Leseführung, Offline-HTML, mobile Ansichten, CSP und die tatsächlich ausgelieferten Downloadarchive. Frühere grüne Läufe gelten nicht als Nachweis für die neue Phasensteuerung.
+44 Node-Tests, 30 Python-Tests und alle 38 Browserfälle bestanden. Der Skill-Validator bestätigt das Paket ebenfalls. Acht Cue-Fälle, fünf Medienfälle, vier Fensterfälle und fünf DELFI-Fälle prüfen die geänderte Steuerung: wiederholtes Weiterlesen bis zum nächsten Signal, erneutes Weiter nach Pause oder Scrollen, pausierte Rücksprünge, Erhalt des Lesestands beim Beenden einer laufenden Videophase sowie Offline-HTML. Das Publikumsfenster enthält auch bei Hover und Fokus keine Schaltflächen; echtes Ein- und Ausschalten von Vollbild mit F ist geprüft. Die kurzen Hinweise bleiben bei 1440 und 390 Pixeln in der Prüffassung unter 34 Pixeln Höhe. Alle Wörter und gewöhnlichen Absatzwechsel bleiben erhalten. Die DELFI-Hauptansicht wurde zusätzlich bei 1440, 1024, 768 und 390 Pixeln visuell geprüft. CI und veröffentlichte Archive werden für denselben Release-Commit separat abgeglichen.
 
-## Aktuelle Laufzeitprüfung, Version 1.5.0
+## Abgeschlossene Laufzeitprüfung, Version 1.5.0
 
 - 44 Node-Tests, 30 Python-Tests und 35 Browserfälle bestanden. Der lokale Browserlauf verwendet Microsoft Edge unter Windows; ein veralteter Testselektor für die frühere Notizansicht wurde an das neue private Sprechtextfenster angepasst und erneut erfolgreich geprüft.
 - Alle 81 Phasen und alle 16 Szenen wurden vorwärts durchlaufen, einschließlich der Textzuordnung und Rücksprünge über jede Foliengrenze. Echte Bewegung stoppt am vorgesehenen Phasenende; ein zweiter Druck beendet nur die laufende Phase. Stillstand und Timer lösen keinen Folienwechsel aus.

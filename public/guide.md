@@ -49,9 +49,9 @@ Die zusätzliche Präsentation **PyTutorAI – Feedback, das den nächsten Schri
 
 Auf der Website öffnet **Vorführen** das Sprechpult. Nach dem Herunterladen `examples/delfi/presentation.html` öffnen. Im einzelnen DELFI-ZIP `presentation.html` öffnen. Video und Sprechtext sind in der Offline-HTML enthalten, eine Installation oder Internetverbindung ist dafür nicht nötig. Nur der freiwillig geöffnete Link zur ursprünglichen Feedback-Demo benötigt Internet.
 
-Wie in den anderen Beispielen zeigt `→` die nächste Phase auf derselben Folie. Der zugehörige Videoabschnitt läuft bis zu seinem Halt und wartet dort. Ein zweiter Druck während der Bewegung beendet genau diesen Abschnitt sofort; er startet keine zusätzliche Phase. `←` kehrt zum vorherigen Zustand zurück. Erst wenn alle Phasen gezeigt wurden, führt der nächste Druck zur nächsten Szene. Es gibt keinen automatischen Szenenwechsel und keine Tonaufnahme.
+Wie in den anderen Beispielen zeigt `→` die nächste Phase auf derselben Folie und startet deren Leseführung. Der zugehörige Videoabschnitt läuft bis zu seinem Halt und wartet dort. Ein zweiter Druck während der Bewegung beendet genau diesen Abschnitt sofort; er startet keine zusätzliche Phase und verändert die laufende oder wartende Leseführung nicht. `←` kehrt zum vorherigen Zustand zurück und pausiert den Text zum Nachlesen. Erst wenn alle Phasen gezeigt wurden, führt der nächste Druck zur nächsten Szene. Es gibt keinen automatischen Szenenwechsel und keine Tonaufnahme.
 
-Mit **Sprechtext (N)** erscheint der Sprechtext im Hauptfenster. **Teleprompter öffnen** und **Publikumsfenster öffnen** öffnen die gleichen getrennten Ansichten wie bei den anderen Beispielen. Der ausgewählte Phasenstand bestimmt die Leseposition. Direkt im Text steht **→ Jetzt drücken** bei der nächsten passenden Handlung. Eine laufende Videoanimation bewegt den Text nicht selbstständig weiter. Die zusätzliche Leseführung lässt sich bewusst starten und hält am nächsten Klicksignal. Schriftgröße, Spiegeln, Lesefokus und die unten beschriebene Tastaturbelegung gelten für alle Beispiele.
+Mit **Sprechtext (N)** erscheint der Sprechtext im Hauptfenster. **Teleprompter öffnen** und **Publikumsfenster öffnen** öffnen die gleichen getrennten Ansichten wie bei den anderen Beispielen. Der ausgewählte Phasenstand bestimmt den passenden Textabschnitt. Kurze einzeilige Pfeilhinweise markieren darin die nächste Handlung. Nach `→` läuft die Leseführung bis zu diesem Signal und wartet dort; die Videozeit steuert sie nicht. Schriftgröße, Spiegeln, Lesefokus und die unten beschriebene Tastaturbelegung gelten für alle Beispiele.
 
 Die Datei ist ein Vorführbeispiel für abgestimmte Bewegung und Erklärtext. Sie kann nicht als `.kollo.json` importiert oder als native, bearbeitbare PPTX exportiert werden. Für eigene Folien beginne mit einer der drei Kollo-Reihen. Wer eine eigene Videopräsentation programmieren möchte, findet unter `showcases/delfi/` getrennte Dateien für Inhalt, HTML-Vorlage, CSS, JavaScript und Medien. `GESTALTUNG.md` beschreibt die Gestaltung, `provenance.json` die Herkunft. Eine Änderung des Sprechtexts verändert nicht die Bilder im fertigen Video; dafür muss auch das Video überarbeitet und erneut mit den Szenenzeiten geprüft werden.
 
@@ -84,13 +84,13 @@ Der Kollo-Folieneditor unterstützt keine frei programmierbaren Videozeitleisten
 
 ## Teleprompter und Publikumsfenster
 
-Öffne im Präsentationsmodus **Publikumsfenster öffnen** und **Teleprompter öffnen**. Das Publikumsfenster zeigt nur die Folien. Das Sprechpult zeigt deine Notizen, die aktuelle Folie, eine Vorschau der nächsten Folie und gemeinsame Steuerung. Mit **Sprechtext (N)** kannst du denselben Sprechtext samt Klicksignalen direkt im Hauptfenster lesen. Folie, Animationsphase, Leseposition, Schwarzbild und Vortragsuhr bleiben zusammen.
+Öffne im Präsentationsmodus **Publikumsfenster öffnen** und **Teleprompter öffnen**. Das Publikumsfenster zeigt ausschließlich den Folieninhalt, ohne Schaltflächen, Notizen oder Bedienleiste. Mit **F** lässt es sich weiterhin auf Vollbild schalten. Das Sprechpult zeigt deine Notizen, die aktuelle Folie, eine Vorschau der nächsten Folie und gemeinsame Steuerung. Mit **Sprechtext (N)** kannst du denselben Sprechtext samt Klicksignalen direkt im Hauptfenster lesen. Folie, Animationsphase, Leseposition, Schwarzbild und Vortragsuhr bleiben zusammen.
 
 Für einen Beamer oder zweiten Monitor die Anzeige im Betriebssystem **erweitern** und das Publikumsfenster dorthin ziehen. Teile in einer Videokonferenz nur dieses Fenster. Eine Spiegelung des ganzen Bildschirms könnte deine privaten Notizen zeigen. Vollbild wird jeweils im aktiven Fenster eingeschaltet; Kollo verschiebt Fenster nicht automatisch auf einen bestimmten Bildschirm.
 
 Der Teleprompter verwendet die Vortragsnotizen der jeweiligen Folie. Wähle Schriftgröße, Lesetempo, bei Bedarf Spiegelung für Teleprompterglas und den Lesefokus ohne Vorschauleiste. **Leseführung starten** führt auf Wunsch durch den Text. Manuelles Scrollen pausiert die Führung; ein Wort anklicken wählt eine neue Leseposition. **Textanfang** setzt den Text zurück, ohne sichtbare Einblendungen zu ändern. Beim nächsten Phasenwechsel richtet sich der Text wieder auf den zugehörigen Abschnitt aus.
 
-Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute und beginnt nur, wenn du sie ausdrücklich startest. Sie hört dir nicht zu. Nach Navigation bleibt sie pausiert. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
+Die Leseführung folgt einem einstellbaren Tempo von 60 bis 240 Wörtern pro Minute. Beim Öffnen ist sie pausiert. Mit **Leseführung starten** kannst du den Ausgangstext lesen lassen. Jeder Vorwärtsschritt mit `→` oder **Weiter** startet sie beim zugehörigen Abschnitt und führt bis zum nächsten Klicksignal. Dort wartet sie. Eine ausdrückliche Pause oder manuelles Scrollen stoppt sie; der nächste Vorwärtsschritt startet sie erneut. Rückwärtsnavigation, Pos1, Ende und direkte Folienwahl lassen sie zum Nachlesen pausiert. Sie hört dir nicht zu. Die Vortragsuhr wird getrennt gestartet und pausiert. Folien und Einblendungen wechselst du selbst; die eingetragenen Sekunden schalten nichts automatisch weiter.
 
 ### Signale zum Weiterdrücken
 
@@ -108,7 +108,7 @@ Damit können wir zur Auswertung übergehen.
 
 Dieses Beispiel passt zu zwei einzeln eingeblendeten Gruppen auf einer Folie, auf die eine weitere Folie folgt. Bei eingeschalteten Einblendungen sind diese Gruppen zunächst verborgen: Setze den ersten `[KLICK]` deshalb vor ihre erste Erklärung. Pro Einblendung ein `[KLICK]`, anschließend höchstens ein `[FOLIE]` am Ende der Notizen. Auf der letzten Folie entfällt `[FOLIE]`. Ohne Einblendungen sind keine `[KLICK]`-Zeilen nötig.
 
-Die exakt geschriebenen Marker stehen jeweils auf einer eigenen Zeile. In der Notizansicht und im getrennten Teleprompter erscheinen sie mitten im Text als **→ Jetzt drücken** mit der passenden Aktion. Sie zählen nicht zum gesprochenen Text. Erreicht die laufende Leseführung einen noch offenen Marker, hält sie an. **Weiter**, Pfeil rechts oder eine passende Presenter-Taste führt genau die nächste Phase aus und wählt deren Textabschnitt. Erst nach der letzten Phase folgt die nächste Folie. Die Leseführung bleibt nach diesem Schritt pausiert. Die Präsentation schaltet niemals allein wegen eines Markers weiter. Prüfe im Sprechpult, ob die Hinweise zur Anzahl und Reihenfolge der tatsächlichen Einblendungen passen.
+Die exakt geschriebenen Marker stehen jeweils auf einer eigenen Zeile. In beiden Leseansichten erscheinen sie mitten im Text als kompakte einzeilige Pfeilhinweise mit der passenden Aktion. Sie zählen nicht zum gesprochenen Text. Erreicht die laufende Leseführung einen noch offenen Marker, hält sie an. **Weiter**, Pfeil rechts oder eine passende Presenter-Taste führt genau die nächste Phase aus und lässt deren Textabschnitt bis zum nächsten Signal weiterlaufen. Erst nach der letzten Phase folgt die nächste Folie. Die Präsentation schaltet niemals allein wegen eines Markers weiter. Prüfe im Sprechpult, ob die Hinweise zur Anzahl und Reihenfolge der tatsächlichen Einblendungen passen.
 
 Ein vorzeitiger Klick wählt bewusst die nächste Phase samt ihrer Erklärung, auch wenn du den vorherigen Absatz noch nicht gelesen hast. `←` stellt die vorherige Phase samt Sprechtext wieder her; am Folienanfang geht es zum letzten Zustand der vorherigen Folie. Auch Präsentationen ohne Marker funktionieren weiterhin; dann gibt es den allgemeinen Hinweis zur nächsten Aktion, aber keine genaue Zuordnung zu einer Textstelle. Andere Klammertexte wie `[PAUSE: Frage abwarten]` bleiben gewöhnliche Notizen. Zusätzliche `[KLICK]`-Zeilen erzeugen keine neuen Animationen auf statischen Folien.
 
@@ -118,9 +118,9 @@ Beim DELFI-Beispiel gelten dieselben Regeln. Die Phase spielt jeweils ihren Vide
 
 | Taste                   | Wirkung                            |
 | ----------------------- | ---------------------------------- |
-| → / Bild ab / Leertaste | Genau nächste Phase; erst nach der letzten Phase zur nächsten Folie |
-| ← / Bild auf            | Genau vorherige Phase; am Folienanfang zur letzten Phase der vorherigen Folie |
-| Pos1 / Ende             | Erste / letzte Folie               |
+| → / Bild ab / Leertaste | Nächste Phase und Leseführung bis zum nächsten Signal; erst nach der letzten Phase zur nächsten Folie |
+| ← / Bild auf            | Vorherige Phase mit pausiertem Text; am Folienanfang zur letzten Phase der vorherigen Folie |
+| Pos1 / Ende             | Erste / letzte Folie, Text pausiert |
 | T oder P                | Vortragsuhr starten oder pausieren |
 | R                       | Vortragsuhr zurücksetzen           |
 | B                       | Schwarzbild                        |
