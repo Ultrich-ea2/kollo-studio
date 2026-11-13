@@ -95,51 +95,66 @@ async function reachCue(controller: Page, prompt: Page, order: number) {
   await expect(prompt.locator(".prompt-action")).toHaveClass(/is-waiting/);
 }
 
-test("authored click signals stop only the reader, announce actual actions and stay private", async ({
+test("forward confirmation resumes reading to two checkpoints without advancing the audience automatically", async ({
   page,
 }) => {
   await importDeck(page);
   const audience = await open(page, "Publikumsfenster öffnen");
   const prompt = await open(page, "Teleprompter öffnen");
   await expect(prompt.locator(".prompt-marker")).toHaveCount(3);
-  await expect(prompt.locator(".prompt-word")).not.toContainText([
-    "[KLICK]",
-    "[FOLIE]",
-  ]);
-  await expect(prompt.locator("#next-action")).toHaveText(
-    "Einblendung 1 von 2",
-  );
-  await prompt.locator("#reader-toggle").click();
-  await reachCue(page, prompt, 0);
-  await expect(prompt.locator("#cue-status")).toHaveText("Phase 0 / 2");
-  await page.clock.runFor(20000);
-  await expect(prompt.locator("#cue-status")).toHaveText("Phase 0 / 2");
-  await prompt.locator("#cue-next").click();
-  await expect(prompt.locator("#cue-status")).toHaveText("Phase 1 / 2");
   await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
     "aria-pressed",
     "false",
   );
   await prompt.locator("#reader-toggle").click();
-  await reachCue(page, prompt, 1);
-  await audience.keyboard.press("ArrowRight");
-  await expect(prompt.locator("#cue-status")).toHaveText("Phase 2 / 2");
-  await prompt.locator("#reader-toggle").click();
-  await reachCue(page, prompt, 2);
-  await expect(prompt.locator("#next-action")).toHaveText(
-    "Folie 2: Ein klarer Schluss",
+  await reachCue(page, prompt, 0);
+  await page.clock.runFor(20000);
+  await expect(prompt.locator("#cue-status")).toHaveText("Phase 0 / 2");
+  await prompt.locator("#cue-next").click();
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
   );
+  const firstPosition = await prompt.locator(".prompt-word.is-read").count();
+  await page.clock.runFor(600);
+  expect(await prompt.locator(".prompt-word.is-read").count()).toBeGreaterThan(
+    firstPosition,
+  );
+  await reachCue(page, prompt, 1);
+  await expect(prompt.locator("#cue-status")).toHaveText("Phase 1 / 2");
+  await audience.keyboard.press("ArrowRight");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const secondPosition = await prompt.locator(".prompt-word.is-read").count();
+  await page.clock.runFor(600);
+  expect(await prompt.locator(".prompt-word.is-read").count()).toBeGreaterThan(
+    secondPosition,
+  );
+  await reachCue(page, prompt, 2);
+  await page.clock.runFor(20000);
   await expect(page.locator("#count")).toHaveText("1 / 2");
+  await expect(prompt.locator("#cue-status")).toHaveText("Phase 2 / 2");
+  await expect(prompt.locator(".prompt-marker.is-current")).toHaveText(
+    "→ Nächste Folie",
+  );
+  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
+    "aria-label",
+    /Ein klarer Schluss/,
+  );
   await prompt.locator("#cue-next").click();
   await expect(page.locator("#count")).toHaveText("2 / 2");
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
     "data-cue",
     "0",
   );
-  await expect(prompt.locator("#next-action")).toHaveText(
-    "Einblendung 1 von 1",
-  );
   await prompt.locator("#cue-next").click();
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await page.clock.runFor(10000);
   await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
     "aria-pressed",
     "false",
@@ -151,39 +166,43 @@ test("authored click signals stop only the reader, announce actual actions and s
   expect(await audience.content()).not.toMatch(
     /Privater Einstieg|\[KLICK\]|\[FOLIE\]/,
   );
-  await expect(audience.locator(".prompt-marker,#next-action")).toHaveCount(0);
-  await expect(prompt.locator(".presenter-status")).not.toContainText(
-    "Regiehinweis erreicht",
-  );
+  await expect(
+    audience.locator(".prompt-marker,#next-action,button"),
+  ).toHaveCount(0);
 });
 
-test("early clicks align narration to phases, rewind restores narration, and reopening preserves pending state", async ({
+test("early forward clicks align and resume narration while rewind, reset and jump stay paused", async ({
   page,
 }) => {
   await importDeck(page);
   let prompt = await open(page, "Teleprompter öffnen");
   await page.locator("#next").click();
-  await expect(prompt.locator(".prompt-word.is-current")).toHaveText("Erster");
-  await expect(prompt.locator('.prompt-marker[data-cue="0"]')).toHaveClass(
-    /is-done/,
+  await expect(
+    prompt.locator(".prompt-word.is-active-phase").first(),
+  ).toHaveText("Erster");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
   );
-  await prompt.locator("#reader-toggle").click();
   await reachCue(page, prompt, 1);
   await prompt.close();
   prompt = await open(page, "Teleprompter öffnen");
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
     "data-cue",
     "1",
   );
   await prompt.locator("#previous").click();
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
-    "data-cue",
-    "0",
+  await expect(prompt.locator(".prompt-word.is-current")).toHaveText(
+    "Privater",
+  );
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
   );
   await prompt.locator("#cue-next").click();
   await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
     "aria-pressed",
-    "false",
+    "true",
   );
   await prompt.locator("#reader-reset").click();
   await expect(prompt.locator('.prompt-marker[data-cue="0"]')).toHaveClass(
@@ -192,15 +211,30 @@ test("early clicks align narration to phases, rewind restores narration, and reo
   await expect(prompt.locator(".prompt-word.is-current")).toHaveText(
     "Privater",
   );
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
   await prompt.locator("#jump").selectOption("1");
   await prompt.locator("#jump").selectOption("0");
   await expect(prompt.locator("#cue-status")).toHaveText("Phase 0 / 2");
   await expect(prompt.locator(".prompt-word.is-current")).toHaveText(
     "Privater",
   );
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  for (const key of ["End", "Home"]) {
+    await prompt.keyboard.press(key);
+    await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+  }
 });
 
-test("exact own-line markers handle first and adjacent cues; malformed plans stay usable in focus and mobile", async ({
+test("exact own-line and adjacent cues work while malformed plans remain usable", async ({
   page,
 }) => {
   await importDeck(
@@ -217,24 +251,26 @@ test("exact own-line markers handle first and adjacent cues; malformed plans sta
     "Regieplan prüfen",
   );
   await prompt.locator("#cue-next").click();
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
     "data-cue",
     "1",
   );
   await prompt.locator("#cue-next").click();
-  await expect(
-    prompt.locator(".prompt-word").filter({ hasText: "[Klick]" }),
-  ).toHaveCount(1);
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await expect(prompt.locator(".prompt-script")).toContainText(
     "[KLICK: nur ein Hinweis]",
   );
-  await prompt.locator("#reader-toggle").click();
+  await expect(
+    prompt.locator(".prompt-word").filter({ hasText: "[Klick]" }),
+  ).toHaveCount(1);
   await page.clock.runFor(30000);
   await expect(prompt.locator("#count")).toHaveText("1 / 2");
   await expect(prompt.locator(".prompt-marker.is-current")).toHaveCount(0);
   await prompt.locator("#focus-toggle").click();
   await expect(prompt.locator(".prompt-preview")).toBeHidden();
-  await expect(prompt.locator("#next-action")).toBeVisible();
   await prompt.setViewportSize({ width: 390, height: 844 });
   await expect(prompt.locator("#cue-next")).toBeVisible();
   expect(
@@ -247,7 +283,7 @@ test("exact own-line markers handle first and adjacent cues; malformed plans sta
   await expect(prompt.locator("#count")).toHaveText("2 / 2");
 });
 
-test("downloaded HTML preserves private cues and manual actions without a network", async ({
+test("downloaded HTML resumes and stops private narration offline without automatic audience changes", async ({
   page,
   context,
 }) => {
@@ -262,13 +298,12 @@ test("downloaded HTML preserves private cues and manual actions without a networ
   const card = page.locator(".export-card").filter({
     has: page.getByRole("heading", { name: "Auf die Bühne", exact: true }),
   });
-  const wait = page.waitForEvent("download");
+  const pending = page.waitForEvent("download");
   await card
     .getByRole("button", { name: "Herunterladen", exact: true })
     .click();
-  const download = await wait;
   const file = path.resolve("qa/cues-downloaded.html");
-  await download.saveAs(file);
+  await (await pending).saveAs(file);
   const requests: string[] = [],
     errors: string[] = [];
   context.on("request", (request) => {
@@ -280,24 +315,37 @@ test("downloaded HTML preserves private cues and manual actions without a networ
   const prompt = await open(page, "Teleprompter öffnen");
   const audience = await open(page, "Publikumsfenster öffnen");
   await prompt.locator("#reader-toggle").click();
-  // Across the app-to-file navigation, use the real running clock. Moving the
-  // injected clock across that navigation can stall Playwright itself.
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
     "data-cue",
     "0",
   );
+  await prompt.locator("#cue-next").click();
   await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
     "aria-pressed",
-    "false",
+    "true",
   );
-  await prompt.locator("#cue-next").click();
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
+    "data-cue",
+    "1",
+  );
   await expect(prompt.locator("#cue-status")).toHaveText("Phase 1 / 2");
+  await audience.keyboard.press("ArrowRight");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(prompt.locator(".prompt-marker.is-waiting")).toHaveAttribute(
+    "data-cue",
+    "2",
+  );
+  await expect(page.locator("#count")).toHaveText("1 / 2");
+  await expect(audience.locator("button")).toHaveCount(0);
   expect(await audience.content()).not.toContain("Privater Einstieg");
   expect(requests).toEqual([]);
   expect(errors).toEqual([]);
 });
 
-test("a suspended controller clears cue resume intent before reconnecting", async ({
+test("suspension stays paused until a new explicit forward confirmation", async ({
   page,
 }) => {
   await importDeck(page);
@@ -311,46 +359,36 @@ test("a suspended controller clears cue resume intent before reconnecting", asyn
   );
   await expect.poll(() => prompt.isClosed()).toBe(true);
   prompt = await open(page, "Teleprompter öffnen");
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
-    "data-cue",
-    "0",
-  );
-  await prompt.locator("#cue-next").click();
   await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
     "aria-pressed",
     "false",
   );
-  await page.clock.runFor(10000);
-  await expect(prompt.locator(".prompt-marker.is-current")).toHaveAttribute(
-    "data-cue",
-    "1",
+  await prompt.locator("#cue-next").click();
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
   );
-  await expect(prompt.locator(".prompt-word.is-current")).toHaveText("Erster");
+  await reachCue(page, prompt, 1);
   await expect(prompt.locator("#cue-status")).toHaveText("Phase 1 / 2");
 });
 
-test("integrated and detached readers share manual phases, including the previous slide final state", async ({
+test("integrated and detached readers share forward flow and paused reverse navigation", async ({
   page,
 }) => {
   await importDeck(page);
   await expect(page.locator("#notes")).toBeHidden();
   await page.locator("#notes-toggle").click();
-  await expect(page.locator(".stage")).toBeVisible();
   await page.locator("#notes #focus-toggle").click();
   await expect(page.locator(".stage")).toBeHidden();
   await page.locator("#notes #focus-toggle").click();
   await expect(page.locator(".stage")).toBeVisible();
   const prompt = await open(page, "Teleprompter öffnen");
   const audience = await open(page, "Publikumsfenster öffnen");
-  await expect(page.locator("#notes .prompt-marker")).toHaveCount(3);
   await expect(page.locator("#notes .prompt-marker.is-current")).toHaveText(
-    "→ Jetzt drücken: Einblendung 1 von 2",
+    "→ Einblendung 1 von 2",
   );
   await page.keyboard.press("ArrowRight");
   for (const reader of [page, prompt]) {
-    await expect(reader.locator(".prompt-word.is-current")).toHaveText(
-      "Erster",
-    );
     await expect(reader.locator(".prompt-word.is-active-phase")).toHaveText([
       "Erster",
       "Punkt",
@@ -358,13 +396,15 @@ test("integrated and detached readers share manual phases, including the previou
     ]);
     await expect(reader.locator("#reader-toggle")).toHaveAttribute(
       "aria-pressed",
-      "false",
+      "true",
     );
   }
   await prompt.keyboard.press("ArrowRight");
-  await expect(page.locator(".prompt-word.is-current")).toHaveText("Zweiter");
-  await expect(prompt.locator(".prompt-marker.is-current")).toContainText(
-    "[FOLIE]",
+  await expect(page.locator(".prompt-word.is-active-phase").first()).toHaveText(
+    "Zweiter",
+  );
+  await expect(prompt.locator(".prompt-marker.is-current")).toHaveText(
+    "→ Nächste Folie",
   );
   await audience.keyboard.press("ArrowRight");
   await expect(page.locator("#count")).toHaveText("2 / 2");
@@ -374,6 +414,10 @@ test("integrated and detached readers share manual phases, including the previou
     "2",
   );
   await expect(prompt.locator(".prompt-word.is-current")).toHaveText("Zweiter");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
   await prompt.keyboard.press("ArrowLeft");
   await expect(page.locator(".prompt-word.is-current")).toHaveText("Erster");
   await prompt.keyboard.press("ArrowLeft");
@@ -384,7 +428,113 @@ test("integrated and detached readers share manual phases, including the previou
     "0",
   );
   await expect(page.locator(".prompt-word.is-current")).toHaveText("Privater");
-  await expect(audience.locator(".prompt-script,.prompt-marker")).toHaveCount(
-    0,
+  await expect(
+    audience.locator(".prompt-script,.prompt-marker,button"),
+  ).toHaveCount(0);
+});
+
+test("compact checkpoints retain every word, preserve paragraphs and fit mobile", async ({
+  page,
+}) => {
+  await importDeck(
+    page,
+    "Privater Einstieg.\n\nNoch ein Absatz.\n[KLICK]\nErster Punkt erklärt.\n[KLICK]\nZweiter Punkt erklärt.\n[FOLIE]",
   );
+  const prompt = await open(page, "Teleprompter öffnen");
+  await expect(prompt.locator(".prompt-script")).toContainText(
+    "Privater Einstieg.\n\nNoch ein Absatz.",
+  );
+  for (const width of [1440, 390]) {
+    await prompt.setViewportSize({ width, height: 900 });
+    const geometry = await prompt
+      .locator(".prompt-marker")
+      .evaluateAll((markers) =>
+        markers.map((marker) => {
+          const box = marker.getBoundingClientRect(),
+            next = marker.nextElementSibling;
+          return {
+            height: box.height,
+            before: getComputedStyle(marker, "::before").content,
+            adjacentWhitespace: [
+              marker.previousSibling,
+              marker.nextSibling,
+            ].some(
+              (sibling) =>
+                sibling?.nodeType === Node.TEXT_NODE &&
+                /^\s+$/.test(sibling.textContent || ""),
+            ),
+            gap: next ? next.getBoundingClientRect().top - box.bottom : 0,
+          };
+        }),
+      );
+    for (const marker of geometry) {
+      expect(marker.height).toBeLessThan(34);
+      expect(["none", "normal", '""']).toContain(marker.before);
+      expect(marker.adjacentWhitespace).toBe(false);
+      expect(marker.gap).toBeLessThan(62);
+    }
+    await expect(prompt.locator(".prompt-word")).toHaveText([
+      "Privater",
+      "Einstieg.",
+      "Noch",
+      "ein",
+      "Absatz.",
+      "Erster",
+      "Punkt",
+      "erklärt.",
+      "Zweiter",
+      "Punkt",
+      "erklärt.",
+    ]);
+  }
+});
+
+test("manual pause and scroll stop reading until the next explicit phase", async ({
+  page,
+}) => {
+  await importDeck(page);
+  const prompt = await open(page, "Teleprompter öffnen");
+  await page.keyboard.press("ArrowRight");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await prompt.locator("#reader-toggle").click();
+  await page.clock.runFor(10000);
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-phase",
+    "1",
+  );
+  await page.keyboard.press("ArrowRight");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await prompt.locator(".prompt-reader").dispatchEvent("wheel");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  const pausedWord = await prompt
+    .locator(".prompt-word.is-current")
+    .textContent();
+  await page.clock.runFor(10000);
+  await expect(prompt.locator(".prompt-word.is-current")).toHaveText(
+    pausedWord!,
+  );
+  await page.keyboard.press("ArrowLeft");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  await page.keyboard.press("ArrowRight");
+  await expect(prompt.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await reachCue(page, prompt, 2);
 });

@@ -172,7 +172,7 @@ export function mountPresenter(root, options) {
     if (state.reading) setReading(false);
     if (state.waitingCue !== null) {
       announce(
-        "Regiehinweis wartet. Mit Weiter die angezeigte Aktion ausführen; die Leseführung bleibt danach pausiert.",
+        "Regiehinweis wartet. Weiter führt die angezeigte Aktion aus und setzt den Sprechtext fort.",
       );
       return;
     }
@@ -195,21 +195,21 @@ export function mountPresenter(root, options) {
     const media = slides[index].media;
     return step > 0 ? media.stops[step - 1] : media.start;
   }
-  function alignReader() {
+  function alignReader(reading = false) {
     const step = state.steps[state.index];
     const cue = scripts[state.index].cues.find(
       (item) => item.kind === "KLICK" && item.order === step,
     );
     state.readerPosition = cue?.at ?? 0;
     state.readerStarted = Date.now();
-    state.reading = false;
+    state.reading = reading;
     state.waitingCue = null;
     state.readerRevision++;
   }
-  function transitionTo(index, step = 0) {
+  function transitionTo(index, step = 0, reading = false) {
     state.index = Math.max(0, Math.min(slides.length - 1, index));
     state.steps[state.index] = Math.max(0, Math.min(groupCount(), step));
-    alignReader();
+    alignReader(reading);
     if (slides[state.index].media)
       seekMedia(phaseTime(state.index, state.steps[state.index]));
     else stopMedia();
@@ -259,7 +259,7 @@ export function mountPresenter(root, options) {
     }
     if (slides[state.index].reveal && state.steps[state.index] < groupCount()) {
       const step = ++state.steps[state.index];
-      alignReader();
+      alignReader(true);
       const media = slides[state.index].media;
       if (media)
         seekMedia(
@@ -269,10 +269,10 @@ export function mountPresenter(root, options) {
           reducedMotion?.matches ? null : media.stops[step - 1],
         );
       announce(
-        `${phaseLabel(state.index, step)}. Sprechtext ist ausgerichtet; Leseführung pausiert.`,
+        `${phaseLabel(state.index, step)}. Sprechtext läuft bis zum nächsten Hinweis.`,
       );
     } else if (state.index < slides.length - 1) {
-      transitionTo(state.index + 1);
+      transitionTo(state.index + 1, 0, true);
       return;
     }
     draw();
@@ -630,7 +630,7 @@ export function mountPresenter(root, options) {
     return `<div class="prompt-settings"><label>Schrift <input id="prompt-font" type="range" min="22" max="68" step="2" value="36" aria-label="Teleprompter-Schriftgröße"><output id="font-value">36 px</output></label><label>Tempo <input id="prompt-speed" type="range" min="60" max="240" step="10" value="130" aria-label="Lesetempo in Wörtern pro Minute"><output id="speed-value">130 W/min</output></label>${button("reader-toggle", "Leseführung starten", 'aria-pressed="false"')}${button("reader-reset", "Textanfang")}${button("mirror-toggle", "Spiegeln", 'aria-pressed="false"')}${button("focus-toggle", "Lesefokus", 'aria-pressed="false"')}</div>`;
   }
   function readerColumn() {
-    return `<section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><div class="prompt-script"></div></div><div class="prompt-action"><div><p id="cue-heading" class="presenter-label"></p><p id="next-action" role="status" aria-live="polite"></p></div>${button("cue-next", "Weiter →", 'aria-label="Angezeigte nächste Aktion ausführen"')}<p id="cue-warning" class="cue-warning" hidden></p></div><div class="prompt-footer">Jede Phase und jeder Folienwechsel per →. ← geht eine Phase zurück. Leseführung nur auf Wunsch, ohne Spracherkennung.</div></section>`;
+    return `<section class="prompt-column"><header class="prompt-heading"><span class="presenter-label" id="prompt-section"></span><h1 id="prompt-title"></h1></header><div class="prompt-reader" tabindex="0" aria-label="Sprechtext; manuelles Scrollen pausiert die Leseführung"><div class="prompt-script"></div></div><div class="prompt-action"><div><p id="cue-heading" class="presenter-label"></p><p id="next-action" role="status" aria-live="polite"></p></div>${button("cue-next", "Weiter →", 'aria-label="Angezeigte nächste Aktion ausführen"')}<p id="cue-warning" class="cue-warning" hidden></p></div><div class="prompt-footer">→ zeigt die nächste Phase und setzt den Sprechtext fort. Am nächsten Hinweis hält der Text an. ← geht eine Phase zurück.</div></section>`;
   }
   function addSlides(view) {
     const stage = node(view, ".stage");
@@ -670,14 +670,36 @@ export function mountPresenter(root, options) {
     script.replaceChildren();
     view.words = [];
     view.cues = [];
-    scripts[state.index].parts.forEach((part) => {
+    const parts = [];
+    let whitespace = [];
+    let followsCue = false;
+    for (const part of scripts[state.index].parts) {
+      if (part.space) {
+        whitespace.push(part);
+        continue;
+      }
+      // Block cues provide their own spacing; preserve normal paragraphs.
+      if (!followsCue && !part.cue)
+        for (const space of whitespace) parts.push(space);
+      whitespace = [];
+      parts.push(part);
+      followsCue = Boolean(part.cue);
+    }
+    if (!followsCue) for (const space of whitespace) parts.push(space);
+    parts.forEach((part) => {
       if (part.cue) {
         const marker = view.doc.createElement("span");
         marker.className = "prompt-marker";
         marker.textContent =
           part.cue.kind === "KLICK"
-            ? `→ Jetzt drücken: ${phaseLabel(state.index, part.cue.order)}`
-            : `→ Jetzt drücken: [FOLIE] ${slides[state.index + 1]?.title || "Ende"}`;
+            ? `→ ${phaseLabel(state.index, part.cue.order)}`
+            : "→ Nächste Folie";
+        const description =
+          part.cue.kind === "KLICK"
+            ? `Pfeiltaste rechts: ${phaseLabel(state.index, part.cue.order)}`
+            : `Pfeiltaste rechts: nächste Folie, ${slides[state.index + 1]?.title || "Ende"}`;
+        marker.title = description;
+        marker.setAttribute("aria-label", description);
         marker.dataset.cue = String(part.cue.id);
         view.cues.push({ cue: part.cue, element: marker });
         script.append(marker);
@@ -721,7 +743,8 @@ export function mountPresenter(root, options) {
     content.style.display = "contents";
     view.root.append(content);
     if (view.role === "audience") {
-      content.innerHTML = `<main class="stage" aria-label="Präsentation"></main>${button("fullscreen", "Vollbild (F)", 'class="audience-fullscreen"')}`;
+      content.innerHTML =
+        '<main class="stage" aria-label="Präsentation"></main>';
       addSlides(view);
     } else if (view.role === "teleprompter") {
       content.innerHTML = `${header(view.role)}${readerSettings()}<div class="prompt-workspace">${readerColumn()}<aside class="prompt-preview"><p class="preview-label">Jetzt im Publikum</p><div id="current-preview"></div><p class="prompt-cue" id="cue-status"></p><p class="preview-label">Als Nächstes</p><div id="next-preview"></div><p class="preview-title" id="next-title"></p><label class="preview-label" for="jump">Direkt zu Folie</label><select id="jump" aria-label="Zu Folie springen"></select></aside></div>${controlBar()}<p class="presenter-status" role="status" aria-live="polite"></p>`;

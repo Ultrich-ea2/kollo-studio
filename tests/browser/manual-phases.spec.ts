@@ -145,7 +145,7 @@ test("one decoder gates each video phase and synchronizes private text and every
   const prompt = await open(page, "#teleprompter-open");
   const stage = '.slide[aria-current="true"] canvas';
   await expect(page.locator("video")).toHaveCount(1);
-  await expect(audience.locator("video")).toHaveCount(0);
+  await expect(audience.locator("video,button")).toHaveCount(0);
   await expect(prompt.locator("video")).toHaveCount(0);
   await page.keyboard.press("ArrowRight");
   await expect(page.locator(".kollo-presenter")).toHaveAttribute(
@@ -173,7 +173,13 @@ test("one decoder gates each video phase and synchronizes private text and every
   const finalFrame = await pixels(page, stage);
   await page.waitForTimeout(500);
   await stopped(page, 3.8);
-  await expect(page.locator(".prompt-word.is-current")).toHaveText("Second");
+  await expect(page.locator(".prompt-word.is-active-phase").first()).toHaveText(
+    "Second",
+  );
+  await expect(page.locator(".prompt-marker.is-waiting")).toHaveAttribute(
+    "data-cue",
+    "2",
+  );
   expect(await pixels(page, stage)).toBe(finalFrame);
   expect(await pixels(audience, stage)).toBe(finalFrame);
   expect(await pixels(prompt, "#current-preview canvas")).toBe(finalFrame);
@@ -312,4 +318,60 @@ test("navigation while metadata loads commits only the latest phase without stal
   await expect(page.locator(".prompt-word.is-current")).toHaveText(
     "Introduction.",
   );
+});
+
+test("finishing a running animation preserves both flowing and manually paused narration", async ({
+  page,
+}) => {
+  await fixture(page);
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const initialRead = await page.locator(".prompt-word.is-read").count();
+  await expect
+    .poll(() => page.locator(".prompt-word.is-read").count(), {
+      intervals: [50],
+    })
+    .toBeGreaterThan(initialRead);
+  const flowingRead = await page.locator(".prompt-word.is-read").count();
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-media-playing",
+    "true",
+  );
+  await page.keyboard.press("ArrowRight");
+  await stopped(page, 1.4);
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-phase",
+    "1",
+  );
+  expect(
+    await page.locator(".prompt-word.is-read").count(),
+  ).toBeGreaterThanOrEqual(flowingRead);
+  await expect(page.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowRight");
+  await page.locator("#reader-toggle").click();
+  const pausedWord = await page
+    .locator(".prompt-word.is-current")
+    .textContent();
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-media-playing",
+    "true",
+  );
+  await page.keyboard.press("ArrowRight");
+  await stopped(page, 1.4);
+  await expect(page.locator(".kollo-presenter")).toHaveAttribute(
+    "data-phase",
+    "1",
+  );
+  await expect(page.locator("#reader-toggle")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  await expect(page.locator(".prompt-word.is-current")).toHaveText(pausedWord!);
 });

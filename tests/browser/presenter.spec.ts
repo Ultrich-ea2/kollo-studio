@@ -79,6 +79,20 @@ test("live presenter synchronizes clean audience, private reader, reveals, clock
   await expect(prompt.locator(".prompt-script")).toContainText(secret);
   expect(await audience.locator("body").textContent()).not.toContain(secret);
   expect(await audience.content()).not.toContain("Zweite private Notiz");
+  await audience.mouse.move(100, 100);
+  await expect(
+    audience.locator("button,[role=button],input,select,textarea"),
+  ).toHaveCount(0);
+  if (await audience.evaluate(() => document.fullscreenEnabled)) {
+    await audience.keyboard.press("f");
+    await expect
+      .poll(() => audience.evaluate(() => Boolean(document.fullscreenElement)))
+      .toBe(true);
+    await audience.keyboard.press("f");
+    await expect
+      .poll(() => audience.evaluate(() => Boolean(document.fullscreenElement)))
+      .toBe(false);
+  }
   await page.evaluate(() => {
     const cancelled = new Event("beforeunload", { cancelable: true });
     cancelled.preventDefault();

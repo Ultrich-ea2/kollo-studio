@@ -168,7 +168,7 @@ test("DELFI advances one real animation phase with inline narration and identica
   );
   expect(await audience.content()).not.toContain(speeches[0]);
   await expect(
-    audience.locator(".prompt-script, .prompt-marker, #phase-media"),
+    audience.locator(".prompt-script, .prompt-marker, #phase-media, button"),
   ).toHaveCount(0);
   await expect(prompt.locator("#phase-media")).toHaveCount(0);
   const initialWord = await page
@@ -191,11 +191,13 @@ test("DELFI advances one real animation phase with inline narration and identica
     .trimStart()
     .split(/\s+/)[0];
   for (const reader of [page, prompt]) {
-    await expect(reader.locator(".prompt-word.is-current")).toHaveText(word);
+    await expect(
+      reader.locator(".prompt-word.is-active-phase").first(),
+    ).toHaveText(word);
     await expect(reader.locator(".prompt-marker.is-done")).toHaveCount(1);
     await expect(reader.locator("#reader-toggle")).toHaveAttribute(
       "aria-pressed",
-      "false",
+      "true",
     );
   }
   await prompt.keyboard.press("ArrowRight");
@@ -246,9 +248,9 @@ test("all 16 scenes keep every curated phase, inline cue and speech position rea
         .trimStart()
         .split(/\s+/)[0];
       for (const reader of [page, prompt]) {
-        await expect(reader.locator(".prompt-word.is-current")).toHaveText(
-          word,
-        );
+        await expect(
+          reader.locator(".prompt-word.is-active-phase").first(),
+        ).toHaveText(word);
         await expect(reader.locator(".prompt-marker.is-done")).toHaveCount(
           phase,
         );
